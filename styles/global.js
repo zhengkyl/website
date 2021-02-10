@@ -17,15 +17,45 @@ const globalStyles = (
         border: 0;
         font-size: 100%;
       }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
       html {
         font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #FCFCFC;
+        color:#423d52;
       }
       h1 {
         font-size: 200%;
+        color:#0a0a0a
+      }
+      h2 {
+        font-size: 175%;
+        color:#111111
+      }
+      h3 {
+        font-size: 150%;
+        color:#111111
+      }
+      h4 {
+        font-size: 150%;
+        color:#111111
+      }
+      h5 {
+        font-size: 125%;
+        color:#111111
+      }
+      h6 {
+        font-size: 125%;
+        color:#111111
       }
       ${bpMq[0]} {
         h1 {
           font-size: 250%;
+        }
+        h2{
+          font-size: 
         }
       }
       ${bpMq[1]} {
