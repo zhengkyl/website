@@ -2,6 +2,12 @@ import Head from "next/head";
 import Image from "next/image";
 import { Container, BigTitle, SectionTitle } from "../components/basic";
 import BaseLayout from "../components/baseLayout"
+import styled from '@emotion/styled'
+
+const Blurb = styled.h2`
+  color:${props=>props.theme.colors.text};
+  font-weight:400;
+`
 
 export default function Home() {
   return (
@@ -9,9 +15,11 @@ export default function Home() {
       <main>
         <Container>
         <BigTitle>
-          Ahoy!🦜<br/>
-          This is Kyle Zheng.
+          Ahoy! I'm Kyle Zheng.🦜
         </BigTitle>
+          <Blurb>
+            I'm a computer science student looking for a Summer 2021 internship.
+          </Blurb>
           <Image
             src="/images/main_greenpink.png"
             alt="Picture of Kyle working"
@@ -19,16 +27,19 @@ export default function Home() {
             height={1710}
             layout="responsive"
           />
-
-
-          <p>
-            I'm studying computer science and math at Purdue University. Also, I'm looking for an internship for Summer 2021.
-          </p>
           <SectionTitle>
             Projects
           </SectionTitle>
+          <div>
+            Sentivents
+            <p>
+            Collaborated on a mood tracker app based on the open source DeepMoji sentiment analysis model. 
+            I worked on transforming and presenting emoji sentiment data using React Native chart libraries. Used breakdowns of positive, neutral, and negative sentiment to estimate and graph relative mood.
 
-          Sentivents
+            </p>
+          </div>
+
+          
 
           FarmAssist
 

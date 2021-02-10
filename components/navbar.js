@@ -8,6 +8,8 @@ const NavContainer = styled(Container.withComponent("nav"))`
   flex-direction:row;
   justify-content:space-between;
   align-items:center;
+  margin-top:16px;
+  margin-bottom:16px;
 `
 
 const AnchorLink = styled.a`

@@ -3,7 +3,7 @@ import { css, Global,  } from '@emotion/react'
 export const theme = {
   colors: {
     title: '#0a0a0a',
-    text:'#423d52',
+    text:'#292333',
     background:'#FCFCFC',
   },
   breakpoints: [600, 960, 1200]
@@ -37,7 +37,7 @@ const globalStyles = (
         color:${theme.colors.title};
       }
       h2 {
-        font-size: 175%;
+        font-size: 165%;
         color:${theme.colors.title};
       }
       h3 {
@@ -61,17 +61,23 @@ const globalStyles = (
           font-size: 250%;
         }
         h2{
-          font-size: 
+          font-size: 215%;
         }
       }
       ${bpMq[1]} {
         h1 {
           font-size: 300%;
         }
+        h2{
+          font-size: 265%;
+        }
       }
       ${bpMq[2]} {
         h1 {
-          font-size: 350%;
+          font-size: 400%;
+        }
+        h2{
+          font-size: 315%;
         }
       }
     `}
