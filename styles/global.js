@@ -1,9 +1,15 @@
-import { css, Global } from '@emotion/react'
+import { css, Global,  } from '@emotion/react'
 
-const breakpoints = [600, 960, 1200]
+export const theme = {
+  colors: {
+    title: '#0a0a0a',
+    text:'#423d52',
+    background:'#FCFCFC',
+  },
+  breakpoints: [600, 960, 1200]
+}
 
-//breakpointMediaquery
-export const bpMq = breakpoints.map(bp=>`@media (min-width: ${bp}px)`)
+export const bpMq = theme.breakpoints.map(bp=>`@media (min-width: ${bp}px)`)
 
 const globalStyles = (
   <Global
@@ -23,32 +29,32 @@ const globalStyles = (
       }
       html {
         font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
-        background-color: #FCFCFC;
-        color:#423d52;
+        background-color: ${theme.colors.background};
+        color:${theme.colors.text};
       }
       h1 {
         font-size: 200%;
-        color:#0a0a0a
+        color:${theme.colors.title};
       }
       h2 {
         font-size: 175%;
-        color:#111111
+        color:${theme.colors.title};
       }
       h3 {
         font-size: 150%;
-        color:#111111
+        color:${theme.colors.title};
       }
       h4 {
         font-size: 150%;
-        color:#111111
+        color:${theme.colors.title};
       }
       h5 {
         font-size: 125%;
-        color:#111111
+        color:${theme.colors.title};
       }
       h6 {
         font-size: 125%;
-        color:#111111
+        color:${theme.colors.title};
       }
       ${bpMq[0]} {
         h1 {

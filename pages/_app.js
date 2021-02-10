@@ -1,9 +1,12 @@
-import globalStyles from "../styles/global";
+import globalStyles, { theme } from "../styles/global";
+import { ThemeProvider } from "@emotion/react";
 
 const App = ({ Component, pageProps }) => (
   <>
     {globalStyles}
-    <Component {...pageProps} />
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
   </>
 );
 
