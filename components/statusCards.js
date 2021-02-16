@@ -22,7 +22,7 @@ const linkStyle=css`
     text-decoration:underline;
   }
 `
-export default function LastPlayed() {
+export function LastPlayed() {
   const { data, error } = useSWR("/api/last-played", fetcher);
   const song = data
     ? data
@@ -48,6 +48,36 @@ export default function LastPlayed() {
         <div css={infoStyle}>
           <a css={linkStyle}href={song.link}>{song.title}</a>
           <span>{song.artist}</span>
+        </div>
+      </PlayCard>
+    </div>
+  );
+}
+
+export function LastWatched() {
+  const { data, error } = useSWR("/api/last-watched", fetcher);
+  const movie = data
+    ? data
+    : {
+        imageUrl: "/images/zheng512.png",
+        year: "2021",
+        title: "Nothing playing",
+      };
+  return (
+    <div>
+      <h5>Last Watched</h5>
+      <PlayCard>
+        <Image
+          src={movie.imageUrl}
+          alt="Movie Poster"
+          width={80}
+          height={120}
+          layout="fixed"
+          css={coverStyle}
+        />
+        <div css={infoStyle}>
+          <a css={linkStyle}>{movie.title}</a>
+          <span>{movie.year}</span>
         </div>
       </PlayCard>
     </div>
