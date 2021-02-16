@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Container, BigTitle, SectionTitle } from "../components/basic";
 import BaseLayout from "../components/baseLayout"
+import LastPlayed from "../components/lastPlayed"
 import styled from '@emotion/styled'
 
 const Blurb = styled.h2`
@@ -14,6 +15,7 @@ export default function Home() {
     <BaseLayout>
       <main>
         <Container>
+          <LastPlayed/>
         <BigTitle>
           Ahoy! I'm Kyle Zheng.🦜
         </BigTitle>
