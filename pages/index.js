@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Container, BigTitle, SectionTitle } from "../components/basic";
 import BaseLayout from "../components/baseLayout"
 import LastPlayed from "../components/lastPlayed"
+import LastWatched from "../components/lastWatched"
 import styled from '@emotion/styled'
 
 const Blurb = styled.h2`
@@ -15,7 +16,11 @@ export default function Home() {
     <BaseLayout>
       <main>
         <Container>
+          <div style={{display:"flex", flexDirection:"row", alignContent:"center"}}>
           <LastPlayed/>
+          <LastWatched/>
+
+          </div>
         <BigTitle>
           Ahoy! I'm Kyle Zheng.🦜
         </BigTitle>

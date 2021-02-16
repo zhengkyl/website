@@ -22,32 +22,30 @@ const linkStyle=css`
     text-decoration:underline;
   }
 `
-export default function LastPlayed() {
-  const { data, error } = useSWR("/api/last-played", fetcher);
-  const song = data
+export default function LastWatched() {
+  const { data, error } = useSWR("/api/last-watched", fetcher);
+  const movie = data
     ? data
     : {
         imageUrl: "/images/zheng512.png",
-        link: "kylezhe.ng",
+        year: "2021",
         title: "Nothing playing",
-        artist: "Kyle Zheng",
-        playing: false,
       };
   return (
     <div>
-      <h5>{song.playing ? "Now Playing" : "Last Played"}</h5>
+      <h5>Last Watched</h5>
       <PlayCard>
         <Image
-          src={song.imageUrl}
-          alt="Song Album Cover"
-          width={90}
-          height={90}
+          src={movie.imageUrl}
+          alt="Movie Poster"
+          width={80}
+          height={120}
           layout="fixed"
           css={coverStyle}
         />
         <div css={infoStyle}>
-          <a css={linkStyle}href={song.link}>{song.title}</a>
-          <span>{song.artist}</span>
+          <a css={linkStyle}>{movie.title}</a>
+          <span>{movie.year}</span>
         </div>
       </PlayCard>
     </div>

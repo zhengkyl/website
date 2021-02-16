@@ -1,4 +1,4 @@
-import {getLastPlayed} from "../../src/spotify"
+import {getLastPlayed} from "../../server/spotify"
 
 export default async function(_, res) {
   const response = await getLastPlayed()
