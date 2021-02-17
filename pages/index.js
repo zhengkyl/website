@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Container, BigTitle, SectionTitle } from "../components/basic";
 import BaseLayout from "../components/baseLayout"
+import InfoCard from "../components/infoCard"
 import {LastPlayed, LastWatched} from "../components/statusCards"
 import styled from '@emotion/styled'
 
@@ -16,8 +17,8 @@ export default function Home() {
       <main>
         <Container>
           <div style={{display:"flex", flexDirection:"row", alignContent:"center"}}>
-          <LastPlayed/>
-          <LastWatched/>
+          {/* <LastPlayed/>
+          <LastWatched/> */}
 
           </div>
         <BigTitle>
@@ -36,24 +37,42 @@ export default function Home() {
           <SectionTitle>
             Projects
           </SectionTitle>
-          <div>
-            Sentivents
-            <p>
-            Collaborated on a mood tracker app based on the open source DeepMoji sentiment analysis model. 
-            I worked on transforming and presenting emoji sentiment data using React Native chart libraries. Used breakdowns of positive, neutral, and negative sentiment to estimate and graph relative mood.
 
-            </p>
-          </div>
-
+          <InfoCard title="Movielo">
+            <p>Interesting description about a project</p>
+            <Image
+            src="/images/movielo_splash.png"
+            alt="Movielo project"
+            width={400}
+            height={300}
+            layout="responsive"
+          />
+          </InfoCard>
+          <InfoCard title="Sentivents">
+            <p>Collaborated on a mood tracker app based on the open source DeepMoji sentiment analysis model. 
+            I worked on transforming and presenting emoji sentiment data using React Native chart libraries. Used breakdowns of positive, neutral, and negative sentiment to estimate and graph relative mood.</p>
+            <Image
+            src="/images/sentivents_splash.png"
+            alt="Sentivents project"
+            width={400}
+            height={300}
+            layout="responsive"
+          />
+          </InfoCard>
+          <InfoCard title="FarmAssist">
+            <p>Interesting description about a project</p>
+            <Image
+            src="/images/farmassist_splash.png"
+            alt="FarmAssist project"
+            width={400}
+            height={300}
+            layout="responsive"
+          />
+          </InfoCard>
+          <InfoCard title="Movielo">
+            <p>Interesting description about a project</p>
+          </InfoCard>
           
-
-          FarmAssist
-
-
-
-          Movielo
-          Purdue Buildings???
-
           <SectionTitle>
             Work
           </SectionTitle>
