@@ -1,6 +1,6 @@
-import { Container, BigTitle, SectionTitle } from "../components/basic";
+import { Container  } from "../components/basic";
 import Image from "next/image";
-import { jsx } from "@emotion/react";
+// import { jsx } from "@emotion/react";
 import styled from '@emotion/styled'
 
 const NavContainer = styled(Container.withComponent("nav"))`

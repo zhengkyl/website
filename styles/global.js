@@ -1,23 +1,64 @@
-import { css, Global,  } from '@emotion/react'
+import { css, Global } from "@emotion/react";
 
 export const theme = {
   colors: {
-    title: '#0a0a0a',
-    text:'#292333',
-    background:'#FCFCFC',
+    title: "#0a0a0a",
+    text: "#292333",
+    background: "#FCFCFC",
   },
-  breakpoints: [600, 960, 1200]
-}
-
-export const bpMq = theme.breakpoints.map(bp=>`@media (min-width: ${bp}px)`)
+  standard: {
+    contentWidth: 960,
+    contentSpacing: 24,
+  },
+  breakpoints: [600, 960, 1200],
+};
+export const bpMq = theme.breakpoints.map(
+  (bp) => `@media (min-width: ${bp}px)`
+);
 
 const globalStyles = (
   <Global
     styles={css`
-      html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, code, img, 
-      small, strike, strong, sub, sup,  ol, ul, li, fieldset, form, label, table, caption,
-      tbody, tfoot, thead, tr, th, td, canvas, footer, header, nav,section,
-      {
+      html,
+      body,
+      div,
+      span,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      code,
+      img,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      canvas,
+      footer,
+      header,
+      nav,
+      section {
         margin: 0;
         padding: 0;
         border: 0;
@@ -28,60 +69,99 @@ const globalStyles = (
         text-decoration: none;
       }
       html {
-        font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica,
+          Arial, sans-serif;
         background-color: ${theme.colors.background};
-        color:${theme.colors.text};
+        color: ${theme.colors.text};
       }
       h1 {
-        font-size: 200%;
-        color:${theme.colors.title};
+        font-size: 250%;
+        color: ${theme.colors.title};
       }
       h2 {
-        font-size: 165%;
-        color:${theme.colors.title};
+        font-size: 225%;
+        color: ${theme.colors.title};
       }
       h3 {
-        font-size: 150%;
-        color:${theme.colors.title};
+        font-size: 175%;
+        color: ${theme.colors.title};
       }
       h4 {
-        font-size: 150%;
-        color:${theme.colors.title};
+        font-size: 175%;
+        color: ${theme.colors.title};
+        font-weight: 600;
       }
       h5 {
-        font-size: 125%;
-        color:${theme.colors.title};
+        font-size: 150%;
+        color: ${theme.colors.title};
       }
       h6 {
-        font-size: 125%;
-        color:${theme.colors.title};
+        font-size: 150%;
+        color: ${theme.colors.title};
+        font-weight: 600;
       }
       ${bpMq[0]} {
         h1 {
-          font-size: 250%;
+          font-size: 300%;
         }
-        h2{
-          font-size: 215%;
+        h2 {
+          font-size: 275%;
+        }
+        h3 {
+          font-size: 200%;
+        }
+        h4 {
+          font-size: 200%;
+        }
+        h5 {
+          font-size: 175%;
+        }
+        h6 {
+          font-size: 175%;
         }
       }
       ${bpMq[1]} {
         h1 {
-          font-size: 300%;
+          font-size: 350%;
         }
-        h2{
-          font-size: 265%;
+        h2 {
+          font-size: 325%;
+        }
+        h3 {
+          font-size: 250%;
+        }
+        h4 {
+          font-size: 250%;
+        }
+        h5 {
+          font-size: 200%;
+        }
+        h6 {
+          font-size: 200%;
         }
       }
       ${bpMq[2]} {
         h1 {
-          font-size: 400%;
+          font-size: 450%;
         }
-        h2{
-          font-size: 315%;
+        h2 {
+          font-size: 375%;
+        }
+        h3 {
+          font-size: 300%;
+        }
+        h4 {
+          font-size: 300%;
+        }
+        h5 {
+          font-size: 250%;
+        }
+        h6 {
+          font-size: 250%;
         }
       }
     `}
   />
-)
+);
 
-export default globalStyles
+export default globalStyles;

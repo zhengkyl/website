@@ -1,120 +1,129 @@
 import Head from "next/head";
 import Image from "next/image";
-import { Container, BigTitle, SectionTitle } from "../components/basic";
-import BaseLayout from "../components/baseLayout"
-import InfoCard from "../components/infoCard"
-import {LastPlayed, LastWatched} from "../components/statusCards"
-import styled from '@emotion/styled'
-
+import AdaptiveImage from "../components/adaptiveImage"
+import {
+  Container,
+  BigTitle,
+  SectionTitle,
+  SectionTitleWithBar,
+} from "../components/basic";
+import BaseLayout from "../components/baseLayout";
+import InfoCard from "../components/infoCard";
+import { LastPlayed, LastWatched } from "../components/statusCards";
+import styled from "@emotion/styled";
+import { css } from "@emotion/react";
+import { bpMq } from "../styles/global";
 const Blurb = styled.h2`
-  color:${props=>props.theme.colors.text};
-  font-weight:400;
-`
+  color: ${(props) => props.theme.colors.text};
+  font-weight: 400;
+  font-size: 175%;
+  ${bpMq[0]} {
+    font-size: 200%;
+  }
+  ${bpMq[1]} {
+    font-size: 250%;
+  }
+  ${bpMq[2]} {
+    font-size: 300%;
+  }
+`;
 
 export default function Home() {
   return (
     <BaseLayout>
       <main>
         <Container>
-          <div style={{display:"flex", flexDirection:"row", alignContent:"center"}}>
-          {/* <LastPlayed/>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+            }}
+          >
+            {/* <LastPlayed/>
           <LastWatched/> */}
-
           </div>
-        <BigTitle>
-          Ahoy! I'm Kyle Zheng.🦜
-        </BigTitle>
+          <BigTitle>
+            Ahoy there! 🦜
+            <br />
+            I'm Kyle Zheng.
+          </BigTitle>
           <Blurb>
             I'm a computer science student looking for a Summer 2021 internship.
           </Blurb>
-          <Image
+
+          <AdaptiveImage
             src="/images/main_greenpink.png"
             alt="Picture of Kyle working"
-            width={3990}
-            height={1710}
-            layout="responsive"
+            height={400}
+            objectPosition="60%"
           />
-          <SectionTitle>
-            Projects
-          </SectionTitle>
 
-          <InfoCard title="Movielo">
-            <p>Interesting description about a project</p>
-            <Image
+          <SectionTitleWithBar>Projects</SectionTitleWithBar>
+
+          <InfoCard imageSrc="/images/movielo_splash.png">
+            <h3>Movielo</h3>
+            <p>
+              A movie ranking web app inspired by <em>The Social Network</em> as
+              well as a love of charts, rankings, and visualizations.
+            </p>
+            {/* <Image
             src="/images/movielo_splash.png"
             alt="Movielo project"
             width={400}
             height={300}
-            layout="responsive"
-          />
+            layout="intrinsic"
+          /> */}
           </InfoCard>
-          <InfoCard title="Sentivents">
-            <p>Collaborated on a mood tracker app based on the open source DeepMoji sentiment analysis model. 
-            I worked on transforming and presenting emoji sentiment data using React Native chart libraries. Used breakdowns of positive, neutral, and negative sentiment to estimate and graph relative mood.</p>
-            <Image
+          <InfoCard imageSrc="/images/sentivents_splash.png" imageLeft>
+            <h3>Sentivents</h3>
+            <p>
+              Mood tracking for the stressed Zoomer. Uses the open source
+              DeepMoji model to gain nuanced insight into emotional state as
+              represented by emojis.
+            </p>
+            {/* <Image
             src="/images/sentivents_splash.png"
             alt="Sentivents project"
             width={400}
             height={300}
-            layout="responsive"
-          />
+            layout="intrinsic"
+          /> */}
           </InfoCard>
-          <InfoCard title="FarmAssist">
-            <p>Interesting description about a project</p>
-            <Image
-            src="/images/farmassist_splash.png"
-            alt="FarmAssist project"
-            width={400}
-            height={300}
-            layout="responsive"
-          />
+          <InfoCard imageSrc="/images/farmassist_splash.png">
+            <h3>FarmAssist</h3>
+            <p>
+              Web dashboard for combine harvesters. Data playback allows speed
+              and yield metric analysis. 1st in Computing Day John Deere
+              Challenge.
+            </p>
           </InfoCard>
-          <InfoCard title="Movielo">
-            <p>Interesting description about a project</p>
-          </InfoCard>
-          
-          <SectionTitle>
-            Work
-          </SectionTitle>
-          <h3>
-            Purdue Cognition and Learning Lab
-          </h3>
-          <p>
+          <SectionTitleWithBar>Experience</SectionTitleWithBar>
+          <h3>Purdue Cognition and Learning Lab</h3>
+          <h4>Web Programmer</h4>
 
-          </p>
-          <SectionTitle>
-            Education
-          </SectionTitle>
-          <h3>
-            Purdue University, West Lafayette
-          </h3>
+          <SectionTitleWithBar>Education</SectionTitleWithBar>
+          <h3>Purdue University</h3>
+          <p>B.S. in Computer Science and Math, Minor in Linguistics</p>
+          <h6>Relevant Courses</h6>
           <p>
-            B.S. in Computer Science and Math, Minor in Linguistics
+            Analysis of Algorithms, Systems Programming, Data Structures &
+            Algorithms, Competitive Programming
           </p>
-          <h3>
-          Relevant Courses
-          </h3>  
+
+          <SectionTitleWithBar>Interests</SectionTitleWithBar>
           <p>
-            Analysis of Algorithms, Systems Programming, Data Structures & Algorithms, Competitive Programming
-          </p>
-          
-          <SectionTitle>
-            Interests
-          </SectionTitle>
-          <p>
-            After a long day of programming, I like to wind down with some competitive programming.
+            After a long day of programming, I like to wind down with some
+            competitive programming.
           </p>
           <p>
-            I like graphing movies and shows I watch. Here's all the anime I've watched.
+            I like graphing movies and shows I watch. Here's all the anime I've
+            watched.
           </p>
-          <p>
-            Spotify
-          </p>
-          <p>
-            Discord status/current game
-          </p>
+          <p>Spotify</p>
+          <p>Discord status/current game</p>
         </Container>
       </main>
     </BaseLayout>
   );
-};
+}
