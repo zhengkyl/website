@@ -81,7 +81,7 @@ export default function Home() {
           </Blurb>
 
           <AdaptiveImage
-            src="/images/main_greenpink.png"
+            src="/images/main_washed.png"
             alt="Picture of Kyle working"
             height={400}
             objectPosition="60%"
