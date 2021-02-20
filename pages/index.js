@@ -1,11 +1,12 @@
 import Head from "next/head";
 import Image from "next/image";
-import AdaptiveImage from "../components/adaptiveImage"
+import AdaptiveImage from "../components/adaptiveImage";
 import {
   Container,
   BigTitle,
   SectionTitle,
   SectionTitleWithBar,
+  SplitAlign,
 } from "../components/basic";
 import BaseLayout from "../components/baseLayout";
 import InfoCard from "../components/infoCard";
@@ -28,21 +29,29 @@ const Blurb = styled.h2`
   }
 `;
 
+const StatusContainer = styled.div`
+  // margin-left: 16px;
+  // margin-right: 16px;
+`;
+
+const interestStyle = css`
+  ${bpMq[0]} {
+    display: flex;
+    & > :first-child {
+      min-width: 250px;
+      margin-right: 32px;
+    }
+  }
+  & > div {
+    margin-top: 24px;
+  }
+`;
+
 export default function Home() {
   return (
     <BaseLayout>
       <main>
         <Container>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignContent: "center",
-            }}
-          >
-            {/* <LastPlayed/>
-          <LastWatched/> */}
-          </div>
           <BigTitle>
             Ahoy there! 🦜
             <br />
@@ -67,13 +76,6 @@ export default function Home() {
               A movie ranking web app inspired by <em>The Social Network</em> as
               well as a love of charts, rankings, and visualizations.
             </p>
-            {/* <Image
-            src="/images/movielo_splash.png"
-            alt="Movielo project"
-            width={400}
-            height={300}
-            layout="intrinsic"
-          /> */}
           </InfoCard>
           <InfoCard imageSrc="/images/sentivents_splash.png" imageLeft>
             <h3>Sentivents</h3>
@@ -82,13 +84,6 @@ export default function Home() {
               DeepMoji model to gain nuanced insight into emotional state as
               represented by emojis.
             </p>
-            {/* <Image
-            src="/images/sentivents_splash.png"
-            alt="Sentivents project"
-            width={400}
-            height={300}
-            layout="intrinsic"
-          /> */}
           </InfoCard>
           <InfoCard imageSrc="/images/farmassist_splash.png">
             <h3>FarmAssist</h3>
@@ -100,11 +95,43 @@ export default function Home() {
           </InfoCard>
           <SectionTitleWithBar>Experience</SectionTitleWithBar>
           <h3>Purdue Cognition and Learning Lab</h3>
-          <h4>Web Programmer</h4>
+          <SplitAlign>
+            <h4>Web Programmer</h4>
+            <span>
+              <b>
+                <em>May 2020-Present</em>
+              </b>
+            </span>
+          </SplitAlign>
+          <p>
+            At the PCLLAB, I collaborate with psychology researchers to develop
+            custom online experiments.
+          </p>
+          <br />
+          <p>
+            I frequently create reusable experiment plugins and components using
+            various Javascript libraries for experiment frontends, and I mostly
+            rely upon MongoDB, NGINX, Node.js and a custom data interface to
+            host and maintain experiment data.
+          </p>
+          <br />
+          <p>
+            Other tasks include setting up websites and creating documentation
+            to maintain knowledge of lab programming procedures.
+          </p>
 
           <SectionTitleWithBar>Education</SectionTitleWithBar>
-          <h3>Purdue University</h3>
-          <p>B.S. in Computer Science and Math, Minor in Linguistics</p>
+          <SplitAlign>
+            <h3>Purdue University</h3>
+            <span>
+              <b>
+                <em>May 2023</em>
+              </b>
+            </span>
+          </SplitAlign>
+          <p>Bachelor of Science in Computer Science and Math</p>
+          <p>Minor in Linguistics</p>
+
           <h6>Relevant Courses</h6>
           <p>
             Analysis of Algorithms, Systems Programming, Data Structures &
@@ -112,16 +139,28 @@ export default function Home() {
           </p>
 
           <SectionTitleWithBar>Interests</SectionTitleWithBar>
-          <p>
-            After a long day of programming, I like to wind down with some
-            competitive programming.
-          </p>
-          <p>
-            I like graphing movies and shows I watch. Here's all the anime I've
-            watched.
-          </p>
-          <p>Spotify</p>
-          <p>Discord status/current game</p>
+
+          <small>
+            Here you can see the song and movie I've listened to/watched most
+            recently. Implemented using the Spotify and Movielo API.
+          </small>
+          <div css={interestStyle}>
+            <StatusContainer>
+              <LastPlayed />
+              <LastWatched />
+            </StatusContainer>
+            <div>
+              <h3>Competitive Programming</h3>
+              <p>
+                After a long day of programming, I like to relax with some
+                competitve programming.
+              </p>
+              <h3>Watching Movies</h3>
+              <p>
+                This isn't really a hobby, but I obviously do it pretty often.
+              </p>
+            </div>
+          </div>
         </Container>
       </main>
     </BaseLayout>

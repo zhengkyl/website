@@ -68,6 +68,9 @@ const globalStyles = (
         color: inherit;
         text-decoration: none;
       }
+      small {
+        font-size:75%;
+      }
       html {
         font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica,
           Arial, sans-serif;
@@ -101,6 +104,9 @@ const globalStyles = (
         font-weight: 600;
       }
       ${bpMq[0]} {
+        html {
+          font-size:105%;
+        }
         h1 {
           font-size: 300%;
         }
@@ -121,6 +127,9 @@ const globalStyles = (
         }
       }
       ${bpMq[1]} {
+        html {
+          font-size:110%;
+        }
         h1 {
           font-size: 350%;
         }
@@ -141,6 +150,9 @@ const globalStyles = (
         }
       }
       ${bpMq[2]} {
+        html {
+          font-size:115%;
+        }
         h1 {
           font-size: 450%;
         }
@@ -154,10 +166,10 @@ const globalStyles = (
           font-size: 300%;
         }
         h5 {
-          font-size: 250%;
+          font-size: 225%;
         }
         h6 {
-          font-size: 250%;
+          font-size: 225%;
         }
       }
     `}

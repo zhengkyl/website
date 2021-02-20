@@ -17,14 +17,26 @@ export const Container = styled.div`
 
 export const BigTitle = styled.h1``;
 
-export const SectionTitle = styled.h2`
+const SectionTitleParent = styled.div`
   margin-top: 32px;
+  margin-bottom: 32px;
 `;
 export function SectionTitleWithBar({ children }) {
   return (
     <>
-      <SectionTitle>{children}</SectionTitle>
-      <hr />
+      <SectionTitleParent>
+        <h2>{children}</h2>
+        <hr />
+      </SectionTitleParent>
     </>
   );
+}
+
+const SplitAlignParent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+`;
+export function SplitAlign({ children }) {
+  return <SplitAlignParent>{children}</SplitAlignParent>;
 }

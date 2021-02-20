@@ -6,6 +6,9 @@ import fetcher from "../utils/fetcher"
 const PlayCard = styled.div`
   display:flex;
   flex-direction:row;
+  & :first-child {
+    flex-shrink: 0;
+  }
 `
 const infoStyle = css`
   display:flex;
@@ -17,10 +20,19 @@ const coverStyle= css`
   border-radius:2px;
 `
 const linkStyle=css`
+  font-size:150%;
   font-weight:600;
   &:hover {
     text-decoration:underline;
   }
+`
+const containerStyle=css`
+  margin-bottom:24px;
+`
+
+const largeTextStyle = css`
+  font-size:200%;
+  font-weight:700;
 `
 export function LastPlayed() {
   const { data, error } = useSWR("/api/last-played", fetcher);
@@ -34,8 +46,8 @@ export function LastPlayed() {
         playing: false,
       };
   return (
-    <div>
-      <h5>{song.playing ? "Now Playing" : "Last Played"}</h5>
+    <div css={containerStyle}>
+      <div css={largeTextStyle}>{song.playing ? "Now Playing" : "Last Played"}</div>
       <PlayCard>
         <Image
           src={song.imageUrl}
@@ -64,14 +76,14 @@ export function LastWatched() {
         title: "Nothing playing",
       };
   return (
-    <div>
-      <h5>Last Watched</h5>
+    <div css={containerStyle}>
+      <div css={largeTextStyle}>Last Watched</div>
       <PlayCard>
         <Image
           src={movie.imageUrl}
           alt="Movie Poster"
-          width={80}
-          height={120}
+          width={90}
+          height={135}
           layout="fixed"
           css={coverStyle}
         />
