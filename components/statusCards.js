@@ -27,7 +27,6 @@ const linkStyle=css`
   }
 `
 const containerStyle=css`
-  margin-bottom:24px;
 `
 
 const largeTextStyle = css`

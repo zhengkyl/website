@@ -1,10 +1,10 @@
-import Head from "next/head";
-import Image from "next/image";
+
 import AdaptiveImage from "../components/adaptiveImage";
 import {
   Container,
+  Chip,
   BigTitle,
-  SectionTitle,
+  LinkButton,
   SectionTitleWithBar,
   SplitAlign,
 } from "../components/basic";
@@ -30,9 +30,28 @@ const Blurb = styled.h2`
 `;
 
 const StatusContainer = styled.div`
-  // margin-left: 16px;
-  // margin-right: 16px;
+  & > :first-child {
+    margin-bottom: 24px;
+  }
 `;
+
+const infoStyle = css`
+  text-align:center;
+  & > a{
+    margin-bottom:24px;
+  }
+`
+const ResumeButtonStyle = css`
+display: block;
+font-size:150%;
+margin:auto;
+  max-width:400px;
+`
+
+const ChipContainer = styled.div`
+margin-top:8px;
+margin-bottom:8px;
+`
 
 const interestStyle = css`
   ${bpMq[0]} {
@@ -76,14 +95,30 @@ export default function Home() {
               A movie ranking web app inspired by <em>The Social Network</em> as
               well as a love of charts, rankings, and visualizations.
             </p>
+            <ChipContainer>
+              <Chip>Material UI</Chip>
+              <Chip>React</Chip>
+              <Chip>Firebase</Chip>
+              <Chip>REST API</Chip>
+              <Chip>TheMovieDatabase</Chip>
+            </ChipContainer>
+          <LinkButton href="https://github.com/zhengkyl/movielo">Github</LinkButton>
           </InfoCard>
           <InfoCard imageSrc="/images/sentivents_splash.png" imageLeft>
             <h3>Sentivents</h3>
             <p>
-              Mood tracking for the stressed Zoomer. Uses the open source
+              Mood tracking app for the stressed Zoomer. Uses the open source
               DeepMoji model to gain nuanced insight into emotional state as
               represented by emojis.
             </p>
+            <ChipContainer>
+              <Chip>React Native</Chip>
+              <Chip>react-native-chart-kit</Chip>
+              <Chip>pyTorch</Chip>
+              <Chip>BoilerMake8</Chip>
+            </ChipContainer>
+            <LinkButton href="https://github.com/cyu0003/sentivents">Github</LinkButton>
+
           </InfoCard>
           <InfoCard imageSrc="/images/farmassist_splash.png">
             <h3>FarmAssist</h3>
@@ -92,6 +127,13 @@ export default function Home() {
               and yield metric analysis. 1st in Computing Day John Deere
               Challenge.
             </p>
+            <ChipContainer>
+              <Chip>Leaflet.js</Chip>
+              <Chip>Chart.js</Chip>
+              <Chip>pyTorch</Chip>
+              <Chip>BoilerMake8</Chip>
+            </ChipContainer>
+            <LinkButton href="https://github.com/richzli/aitp-ccd-2020-jd">Github</LinkButton>
           </InfoCard>
           <SectionTitleWithBar>Experience</SectionTitleWithBar>
           <h3>Purdue Cognition and Learning Lab</h3>
@@ -155,11 +197,21 @@ export default function Home() {
                 After a long day of programming, I like to relax with some
                 competitve programming.
               </p>
-              <h3>Watching Movies</h3>
+              <h3>Linguistics</h3>
               <p>
-                This isn't really a hobby, but I obviously do it pretty often.
+                Languages are really cool. I'm still trying to learn my first one.
               </p>
+              <h3>Data Visualization</h3>
+              <p>
+                {`I <3 charts and graphs.`}
+              </p>
+              
             </div>
+          </div>
+          <SectionTitleWithBar id="resume">Important Things</SectionTitleWithBar>
+          <div css={infoStyle}>
+            <LinkButton css={ResumeButtonStyle} href="resume.pdf">Resume.pdf</LinkButton>
+            <h3>kylezheng73@gmail.com</h3>
           </div>
         </Container>
       </main>

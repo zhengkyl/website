@@ -10,7 +10,7 @@ export const theme = {
     contentWidth: 960,
     contentSpacing: 24,
   },
-  breakpoints: [600, 960, 1200],
+  breakpoints: [600, 960],
 };
 export const bpMq = theme.breakpoints.map(
   (bp) => `@media (min-width: ${bp}px)`
@@ -76,6 +76,7 @@ const globalStyles = (
           Arial, sans-serif;
         background-color: ${theme.colors.background};
         color: ${theme.colors.text};
+        scroll-behavior: smooth;
       }
       h1 {
         font-size: 250%;
@@ -105,7 +106,7 @@ const globalStyles = (
       }
       ${bpMq[0]} {
         html {
-          font-size:105%;
+          font-size:110%;
         }
         h1 {
           font-size: 300%;
@@ -128,14 +129,14 @@ const globalStyles = (
       }
       ${bpMq[1]} {
         html {
-          font-size:110%;
+          font-size:120%;
         }
         h1 {
+          font-size: 400%;
+        }
+        h2 {
           font-size: 350%;
         }
-        h2 {
-          font-size: 325%;
-        }
         h3 {
           font-size: 250%;
         }
@@ -148,30 +149,7 @@ const globalStyles = (
         h6 {
           font-size: 200%;
         }
-      }
-      ${bpMq[2]} {
-        html {
-          font-size:115%;
-        }
-        h1 {
-          font-size: 450%;
-        }
-        h2 {
-          font-size: 375%;
-        }
-        h3 {
-          font-size: 300%;
-        }
-        h4 {
-          font-size: 300%;
-        }
-        h5 {
-          font-size: 225%;
-        }
-        h6 {
-          font-size: 225%;
-        }
-      }
+      }  
     `}
   />
 );

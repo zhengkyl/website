@@ -31,13 +31,16 @@ const altCardStyle = css`
 export default function InfoCard({ children, imageSrc, imageLeft, ...others }) {
   return (
     <div {...others} css={imageLeft ? altCardStyle : cardStyle}>
+      <div>
+
       <Image
         src={imageSrc}
         alt="FarmAssist project"
         width={600}
         height={450}
         layout="intrinsic"
-      />
+        />
+        </div>
       <div>{children}</div>
     </div>
   );

@@ -33,8 +33,8 @@ export default function Navbar() {
         layout="fixed"
       />
       <div>
-        <AnchorLink href="resume">Resume</AnchorLink>
-        <AnchorLink href="contact">Contact</AnchorLink>
+        <AnchorLink href="#resume">Resume</AnchorLink>
+        <AnchorLink href="#resume">Contact</AnchorLink>
       </div>
     </NavContainer>
   );

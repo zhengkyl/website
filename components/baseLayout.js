@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Navbar from "./navbar"
+import Footer from "./footer"
 
 export default function BaseLayout({ children }) {
   return (
@@ -17,7 +18,7 @@ export default function BaseLayout({ children }) {
       </Head>
       <Navbar/>
       {children}
-      <footer>this do be the footer</footer>
+      <Footer/>
     </>
   );
 }
