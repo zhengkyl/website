@@ -1,9 +1,13 @@
 import styled from "@emotion/styled";
-import Image from "next/image";
-import { theme } from "../styles/global";
 const ImageParent = styled.div({ position: 'relative' }, (props) => ({
   height: props.height,
 }));
+const Image = styled.img`
+  object-fit:cover;
+  width:100%;
+  height:100%;
+  object-position:${props=>props.objectPosition}
+`
 
 export default function AdaptiveImage({ height, src, alt, objectPosition }) {
   return (
@@ -11,11 +15,7 @@ export default function AdaptiveImage({ height, src, alt, objectPosition }) {
       <Image
         src={src}
         alt={alt}
-        layout="fill"
-        objectFit="cover"
         objectPosition={objectPosition}
-        priority
-        sizes={`${theme.standard.contentWidth}px`}
       />
     </ImageParent>
   );
