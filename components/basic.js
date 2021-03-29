@@ -44,7 +44,7 @@ export function SplitAlign({ children }) {
 
 const linkButtonStyle = css`
   line-height:48px;
-  
+  margin-right:16px;
   padding: 0.35em 1.2em;
   border: 0.1em solid ${theme.colors.text};
   border-radius: 0.12em;
@@ -56,6 +56,9 @@ const linkButtonStyle = css`
     color: ${theme.colors.background};
     background-color: ${theme.colors.text};
     cursor:pointer;
+  }
+  &:last-child{
+    margin-right:0;
   }
 `;
 export function LinkButton({children, ...props}){

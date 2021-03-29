@@ -135,6 +135,18 @@ export default function Home() {
             </ChipContainer>
             <LinkButton href="https://github.com/richzli/aitp-ccd-2020-jd">Github</LinkButton>
           </InfoCard>
+          <InfoCard imageSrc="/images/kgg_splash.png" imageLeft>
+            <h3>KGG Website</h3>
+            <p>
+              Responsive site for Kappa Gamma Gamma gaming community. 
+            </p>
+            <ChipContainer>
+              <Chip>Material UI</Chip>
+              <Chip>GatsbyJS</Chip>
+            </ChipContainer>
+            <LinkButton href="https://github.com/zhengkyl/kgg-website">Github</LinkButton>
+            <LinkButton href="https://www.kgg.gg">KGG.GG</LinkButton>
+          </InfoCard>
           <SectionTitleWithBar>Experience</SectionTitleWithBar>
           <h3>Purdue Cognition and Learning Lab</h3>
           <SplitAlign>
