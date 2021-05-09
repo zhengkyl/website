@@ -77,7 +77,7 @@ export default function Home() {
             I'm Kyle Zheng.
           </BigTitle>
           <Blurb>
-            I'm a computer science student looking for a Summer 2021 internship.
+            A computer science student, not a pirate
           </Blurb>
 
           <AdaptiveImage
