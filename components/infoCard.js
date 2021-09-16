@@ -35,7 +35,7 @@ export default function InfoCard({ children, imageSrc, imageLeft, ...others }) {
 
       <Image
         src={imageSrc}
-        alt="FarmAssist project"
+        alt="Project Showcase Image"
         width={600}
         height={450}
         layout="intrinsic"
