@@ -25,13 +25,13 @@ const AnchorLink = styled.a`
 export default function Navbar() {
   return (
     <NavContainer>
-      <Image
+      {/* <Image
         src="/images/zheng512.png"
         alt="Home"
         width={32}
         height={32}
         layout="fixed"
-      />
+      /> */}
       <div>
         <AnchorLink href="#resume">Resume</AnchorLink>
         <AnchorLink href="#resume">Contact</AnchorLink>

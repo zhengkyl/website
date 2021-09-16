@@ -1,4 +1,3 @@
-
 import AdaptiveImage from "../components/adaptiveImage";
 import {
   Container,
@@ -14,18 +13,38 @@ import { LastPlayed, LastWatched } from "../components/statusCards";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { bpMq } from "../styles/global";
-const Blurb = styled.h2`
-  color: ${(props) => props.theme.colors.text};
-  font-weight: 400;
-  font-size: 175%;
-  ${bpMq[0]} {
-    font-size: 200%;
+import StarRanking from "../components/starRanking";
+
+const Blurb = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  & > h2 {
+    font-family: "Inconsolata", monospace;
+    color: ${(props) => props.theme.colors.text};
+    font-weight: 600;
+    font-size: 175%;
+    ${bpMq[0]} {
+      font-size: 200%;
+    }
+    ${bpMq[1]} {
+      font-size: 250%;
+    }
+    ${bpMq[2]} {
+      font-size: 300%;
+    }
   }
-  ${bpMq[1]} {
-    font-size: 250%;
-  }
-  ${bpMq[2]} {
-    font-size: 300%;
+  & > div {
+    font-size: 75%;
+    ${bpMq[0]} {
+      font-size: 100%;
+    }
+    ${bpMq[1]} {
+      font-size: 125%;
+    }
+    ${bpMq[2]} {
+      font-size: 150%;
+    }
   }
 `;
 
@@ -35,23 +54,23 @@ const StatusContainer = styled.div`
   }
 `;
 
-const infoStyle = css`
-  text-align:center;
-  & > a{
-    margin-bottom:24px;
-  }
-`
-const ResumeButtonStyle = css`
-display: block;
-font-size:150%;
-margin:auto;
-  max-width:400px;
-`
-
 const ChipContainer = styled.div`
-margin-top:8px;
-margin-bottom:8px;
-`
+  margin-top: 8px;
+  margin-bottom: 8px;
+`;
+
+const infoStyle = css`
+  text-align: center;
+  & > a {
+    margin-bottom: 24px;
+  }
+`;
+const resumeButtonStyle = css`
+  display: block;
+  font-size: 150%;
+  margin: auto;
+  max-width: 400px;
+`;
 
 const interestStyle = css`
   ${bpMq[0]} {
@@ -76,16 +95,19 @@ export default function Home() {
             <br />
             I'm Kyle Zheng.
           </BigTitle>
+          <br />
           <Blurb>
-            A computer science student, not a pirate
+            <h2>Ability:</h2>
+            <StarRanking filled={4} total={5} />
           </Blurb>
-
-          <AdaptiveImage
-            src="/images/main_washed_960.png"
-            alt="Picture of Kyle working"
-            height={400}
-            objectPosition="60%"
-          />
+          <Blurb>
+            <h2>Personality:</h2>
+            <StarRanking filled={2} total={3} />
+          </Blurb>
+          <Blurb>
+            <h2>Money:</h2>
+            <StarRanking filled={0} total={4} />
+          </Blurb>
 
           <SectionTitleWithBar>Projects</SectionTitleWithBar>
 
@@ -102,7 +124,9 @@ export default function Home() {
               <Chip>REST API</Chip>
               <Chip>TheMovieDatabase</Chip>
             </ChipContainer>
-          <LinkButton href="https://github.com/zhengkyl/movielo">Github</LinkButton>
+            <LinkButton href="https://github.com/zhengkyl/movielo">
+              Github
+            </LinkButton>
           </InfoCard>
           <InfoCard imageSrc="/images/sentivents_splash.png" imageLeft>
             <h3>Sentivents</h3>
@@ -117,8 +141,9 @@ export default function Home() {
               <Chip>pyTorch</Chip>
               <Chip>BoilerMake8</Chip>
             </ChipContainer>
-            <LinkButton href="https://github.com/cyu0003/sentivents">Github</LinkButton>
-
+            <LinkButton href="https://github.com/cyu0003/sentivents">
+              Github
+            </LinkButton>
           </InfoCard>
           <InfoCard imageSrc="/images/farmassist_splash.png">
             <h3>FarmAssist</h3>
@@ -133,19 +158,9 @@ export default function Home() {
               <Chip>pyTorch</Chip>
               <Chip>BoilerMake8</Chip>
             </ChipContainer>
-            <LinkButton href="https://github.com/richzli/aitp-ccd-2020-jd">Github</LinkButton>
-          </InfoCard>
-          <InfoCard imageSrc="/images/kgg_splash.png" imageLeft>
-            <h3>KGG Website</h3>
-            <p>
-              Responsive site for Kappa Gamma Gamma gaming community. 
-            </p>
-            <ChipContainer>
-              <Chip>Material UI</Chip>
-              <Chip>GatsbyJS</Chip>
-            </ChipContainer>
-            <LinkButton href="https://github.com/zhengkyl/kgg-website">Github</LinkButton>
-            <LinkButton href="https://www.kgg.gg">KGG.GG</LinkButton>
+            <LinkButton href="https://github.com/richzli/aitp-ccd-2020-jd">
+              Github
+            </LinkButton>
           </InfoCard>
           <SectionTitleWithBar>Experience</SectionTitleWithBar>
           <h3>Purdue Cognition and Learning Lab</h3>
@@ -158,20 +173,42 @@ export default function Home() {
             </span>
           </SplitAlign>
           <p>
-            At the PCLLAB, I collaborate with psychology researchers to develop
-            custom online experiments.
+            Here I help researchers create bespoke experiments that are run in
+            the browser (jsPsych).
+            <br />
+            <br />
+            All the gathered data is stored in a MongoDB database and made
+            available through a custom experiment management web application
+            (Angular, Express). This evolving project continues to grow as I add
+            new features to make it easier to manage experiments.
+            <br />
+            <br />
+            Besides experiments, I also handle the various websites and
+            documentation needed for the lab (MkDocs, docusaurus).
           </p>
           <br />
+          <h3>LifeOmic</h3>
+          <SplitAlign>
+            <h4>Software Engineer Intern</h4>
+            <span>
+              <b>
+                <em>May 2021-Aug 2021</em>
+              </b>
+            </span>
+          </SplitAlign>
+
           <p>
-            I frequently create reusable experiment plugins and components using
-            various Javascript libraries for experiment frontends, and I mostly
-            rely upon MongoDB, NGINX, Node.js and a custom data interface to
-            host and maintain experiment data.
-          </p>
-          <br />
-          <p>
-            Other tasks include setting up websites and creating documentation
-            to maintain knowledge of lab programming procedures.
+            I worked with a few members of the Wellness Product team to
+            implement a new transactions management and history feature. As I
+            worked on creating the necessary front-end interfaces (React), I was
+            able to test and influence the emerging API. After continous
+            iteration cycles with feedback from the team, I ultimately presented
+            the working interface to company shareholders.
+            <br />
+            <br />
+            With my remainging time, I was also able to prototype ideas such as data
+            visualizations based on the transactions and share them with the
+            team as potential future features.
           </p>
 
           <SectionTitleWithBar>Education</SectionTitleWithBar>
@@ -204,25 +241,22 @@ export default function Home() {
               <LastWatched />
             </StatusContainer>
             <div>
-              <h3>Competitive Programming</h3>
-              <p>
-                After a long day of programming, I like to relax with some
-                competitve programming.
-              </p>
               <h3>Linguistics</h3>
               <p>
-                Languages are really cool. I'm still trying to learn my first one.
+                Languages are really cool. I'm still trying to learn my first
+                one.
               </p>
               <h3>Data Visualization</h3>
-              <p>
-                {`I <3 charts and graphs.`}
-              </p>
-              
+              <p>{`I <3 charts and graphs.`}</p>
             </div>
           </div>
-          <SectionTitleWithBar id="resume">Important Things</SectionTitleWithBar>
+          <SectionTitleWithBar id="resume">
+            Important Things
+          </SectionTitleWithBar>
           <div css={infoStyle}>
-            <LinkButton css={ResumeButtonStyle} href="resume.pdf">Resume.pdf</LinkButton>
+            <LinkButton css={resumeButtonStyle} href="resume.pdf">
+              Resume.pdf
+            </LinkButton>
             <h3>kylezheng73@gmail.com</h3>
           </div>
         </Container>
