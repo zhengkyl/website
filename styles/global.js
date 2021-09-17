@@ -3,7 +3,7 @@ import { css, Global } from "@emotion/react";
 export const theme = {
   colors: {
     title: "#2b030d",
-    text: "#292333",
+    text: "#5c4848",
     background: "#FCFCFC",
   },
   standard: {
@@ -85,8 +85,8 @@ const globalStyles = (
         color: ${theme.colors.title};
       }
       h2 {
-        line-height: normal;
         font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        line-height: normal;
         font-size: 225%;
         color: ${theme.colors.title};
       }
@@ -98,9 +98,7 @@ const globalStyles = (
       }
       h4 {
         line-height: normal;
-        font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
         font-size: 175%;
-        color: ${theme.colors.title};
         font-weight: 600;
       }
       h5 {
@@ -111,9 +109,7 @@ const globalStyles = (
       }
       h6 {
         line-height: normal;
-        font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
         font-size: 150%;
-        color: ${theme.colors.title};
         font-weight: 600;
       }
       ${bpMq[0]} {

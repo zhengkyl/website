@@ -21,6 +21,7 @@ const Blurb = styled.div`
   align-items: center;
   & > h2 {
     font-family: "Inconsolata", monospace;
+    line-height: 1.4;
     color: ${(props) => props.theme.colors.text};
     font-weight: 600;
     font-size: 175%;

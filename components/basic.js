@@ -19,7 +19,7 @@ export const Container = styled.div`
 export const BigTitle = styled.h1``;
 
 const SectionTitleParent = styled.div`
-  margin-top: 32px;
+  margin-top: 176px;
   margin-bottom: 32px;
 `;
 export function SectionTitleWithBar({ children, id }) {
