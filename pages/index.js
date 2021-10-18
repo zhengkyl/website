@@ -207,7 +207,7 @@ export default function Home() {
             the working interface to company shareholders.
             <br />
             <br />
-            With my remainging time, I was also able to prototype ideas such as data
+            With my remaining time, I was also able to prototype ideas such as data
             visualizations based on the transactions and share them with the
             team as potential future features.
           </p>
