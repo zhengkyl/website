@@ -13,7 +13,8 @@ import { LastPlayed, LastWatched } from "../components/statusCards";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { bpMq } from "../styles/global";
-import StarRanking from "../components/starRanking";
+import StarRanking from "../components/starRanking"
+import Wordle from "../components/wordle"
 
 const Blurb = styled.div`
   display: flex;
@@ -94,21 +95,10 @@ export default function Home() {
           <BigTitle>
             Ahoy there! 🦜
             <br />
-            I'm Kyle Zheng.
+            What's my name?
           </BigTitle>
           <br />
-          <Blurb>
-            <h2>Ability:</h2>
-            <StarRanking filled={4} total={5} />
-          </Blurb>
-          <Blurb>
-            <h2>Personality:</h2>
-            <StarRanking filled={2} total={3} />
-          </Blurb>
-          <Blurb>
-            <h2>Money:</h2>
-            <StarRanking filled={0} total={4} />
-          </Blurb>
+          <Wordle words={["KYLE","ZHENG"]}/>
 
           <SectionTitleWithBar>Projects</SectionTitleWithBar>
 
