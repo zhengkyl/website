@@ -126,9 +126,9 @@ export function StatusBlock() {
             imgAlt="Song Album Cover"
             imgHeight={64}
             imgWidth={64}
-            mediaUrl={song.link}
-            mediaText={song.title}
-            mediaSubtext={song.artist}
+            mediaUrl={like.link}
+            mediaText={like.title}
+            mediaSubtext={like.artist}
           />
         </div>
       </div>
