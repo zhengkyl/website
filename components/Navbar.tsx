@@ -1,4 +1,3 @@
-// import { jsx } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import { Container } from "./basic";
@@ -10,16 +9,6 @@ const NavContainer = styled(Container.withComponent("nav"))`
   align-items: center;
   margin-top: 16px;
   margin-bottom: 16px;
-`;
-
-const AnchorLink = styled.a`
-  color: ${(props) => props.theme.colors.title};
-  font-size: 125%;
-  font-weight: 600;
-  padding: 8px;
-  &:last-child {
-    margin-right: -8px;
-  }
 `;
 
 export default function Navbar() {
