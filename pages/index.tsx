@@ -69,6 +69,8 @@ export default function Home() {
             Here you can see the song and movie I've listened to/watched most
             recently. Implemented using the Spotify and Movielo API.
           </small>
+          <br />
+          <br />
           <StatusBlock />
 
           <SectionTitleWithBar>Projects</SectionTitleWithBar>

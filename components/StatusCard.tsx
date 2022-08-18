@@ -8,6 +8,7 @@ import fetcher from "../utils/fetcher";
 
 const Card = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 const Relative = styled.div`
@@ -56,7 +57,6 @@ export default function StatusCard({
           layout="fixed"
           height={imgHeight}
           width={imgWidth}
-          // css={coverStyle}
         />
       </Relative>
       <div>
@@ -68,10 +68,13 @@ export default function StatusCard({
 }
 
 export function StatusBlock() {
-  const { data: songData } = useSWR("/api/lastPlayed", fetcher);
   const { data: movieData } = useSWR("/api/lastWatched", fetcher);
+  const { data: songData } = useSWR("/api/lastPlayed", fetcher);
+  const { data: likeData } = useSWR("/api/lastLiked", fetcher);
+
   const movie = movieData ?? {
     imageUrl: "/images/zheng512.png",
+    link: "kylezhe.ng",
     year: "2021",
     title: "Nothing watched",
   };
@@ -82,44 +85,50 @@ export function StatusBlock() {
     artist: "Kyle Zheng",
     playing: false,
   };
+  const like = likeData ?? {
+    imageUrl: "/images/zheng512.png",
+    link: "kylezhe.ng",
+    title: "Nothing playing",
+    artist: "Kyle Zheng",
+  };
 
   return (
     <div style={{ display: "flex", gap: 24 }}>
       <div>
-        <TitleText>{song.playing ? "Now Playing" : "Last Played"}</TitleText>
+        <TitleText>Last Watched</TitleText>
         <StatusCard
-          imgSrc={song.imageUrl}
-          imgAlt="Song Album Cover"
+          imgSrc={movie.imageUrl}
+          imgAlt="Movie Poster"
           imgHeight={165}
           imgWidth={110}
-          mediaUrl={song.link}
-          mediaText={song.title}
-          mediaSubtext={song.artist}
+          mediaUrl={movie.link}
+          mediaText={movie.title}
+          mediaSubtext={movie.year}
         />
       </div>
       <div>
         <div>
-          <TitleText>Last Watched</TitleText>
+          <TitleText>{song.playing ? "Now Playing" : "Last Played"}</TitleText>
           <StatusCard
-            imgSrc={movie.imageUrl}
-            imgAlt="Movie Poster"
+            imgSrc={song.imageUrl}
+            imgAlt="Song Album Cover"
             imgHeight={64}
             imgWidth={64}
-            mediaUrl={movie.link}
-            mediaText={movie.title}
-            mediaSubtext={movie.year}
+            mediaUrl={song.link}
+            mediaText={song.title}
+            mediaSubtext={song.artist}
           />
         </div>
         <div>
           <TitleText>Latest Earworm</TitleText>
           <StatusCard
-            imgSrc={movie.imageUrl}
-            imgAlt="Movie Poster"
+            imgSrc={like.imageUrl}
+            imgAlt="Song Album Cover"
             imgHeight={64}
             imgWidth={64}
-            mediaUrl={movie.link}
-            mediaText={movie.title}
-            mediaSubtext={movie.year}
+            mediaUrl={song.link}
+            mediaText={song.title}
+            mediaSubtext={song.artist}
           />
         </div>
       </div>
