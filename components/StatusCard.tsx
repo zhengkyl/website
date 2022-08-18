@@ -68,8 +68,8 @@ export default function StatusCard({
 }
 
 export function StatusBlock() {
-  const { data: songData } = useSWR("/api/last-played", fetcher);
-  const { data: movieData } = useSWR("/api/last-watched", fetcher);
+  const { data: songData } = useSWR("/api/lastPlayed", fetcher);
+  const { data: movieData } = useSWR("/api/lastWatched", fetcher);
   const movie = movieData ?? {
     imageUrl: "/images/zheng512.png",
     year: "2021",
