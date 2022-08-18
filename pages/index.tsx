@@ -1,54 +1,19 @@
-import AdaptiveImage from "../components/adaptiveImage";
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+
+import BaseLayout from "../components/BaseLayout";
 import {
-  Container,
-  Chip,
   BigTitle,
+  Chip,
+  Container,
   LinkButton,
   SectionTitleWithBar,
   SplitAlign,
 } from "../components/basic";
-import BaseLayout from "../components/baseLayout";
-import InfoCard from "../components/infoCard";
-import { LastPlayed, LastWatched } from "../components/statusCards";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+import InfoCard from "../components/InfoCard";
+import { StatusBlock } from "../components/StatusCard";
+import Wordle from "../components/wordle";
 import { bpMq } from "../styles/global";
-import StarRanking from "../components/starRanking"
-import Wordle from "../components/wordle"
-
-const Blurb = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  & > h2 {
-    font-family: "Inconsolata", monospace;
-    line-height: 1.4;
-    color: ${(props) => props.theme.colors.text};
-    font-weight: 600;
-    font-size: 175%;
-    ${bpMq[0]} {
-      font-size: 200%;
-    }
-    ${bpMq[1]} {
-      font-size: 250%;
-    }
-    ${bpMq[2]} {
-      font-size: 300%;
-    }
-  }
-  & > div {
-    font-size: 75%;
-    ${bpMq[0]} {
-      font-size: 100%;
-    }
-    ${bpMq[1]} {
-      font-size: 125%;
-    }
-    ${bpMq[2]} {
-      font-size: 150%;
-    }
-  }
-`;
 
 const StatusContainer = styled.div`
   & > :first-child {
@@ -87,18 +52,24 @@ const interestStyle = css`
   }
 `;
 
+const MediaBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export default function Home() {
   return (
     <BaseLayout>
       <main>
         <Container>
-          <BigTitle>
-            Ahoy there! 🦜
-            <br />
-            What's my name?
-          </BigTitle>
+          <BigTitle>Hello, 芥兰, 👋🥦</BigTitle>
           <br />
-          <Wordle words={["KYLE","ZHENG"]}/>
+          <br />
+          <small>
+            Here you can see the song and movie I've listened to/watched most
+            recently. Implemented using the Spotify and Movielo API.
+          </small>
+          <StatusBlock />
 
           <SectionTitleWithBar>Projects</SectionTitleWithBar>
 
@@ -154,12 +125,68 @@ export default function Home() {
             </LinkButton>
           </InfoCard>
           <SectionTitleWithBar>Experience</SectionTitleWithBar>
+          <SplitAlign>
+            <h3>Purdue University</h3>
+            <span>
+              <b>
+                <em>May 2023</em>
+              </b>
+            </span>
+          </SplitAlign>
+          <p>Bachelor of Science in Computer Science and Math</p>
+          <br />
+          <br />
+          <br />
+          <h3>Tulip</h3>
+          <SplitAlign>
+            <h4>Software Engineer Intern</h4>
+            <span>
+              <b>
+                <em>May 2022 - Aug 2022</em>
+              </b>
+            </span>
+          </SplitAlign>
+
+          <p>
+            As part of the App team, I worked on improving the core product, a
+            low/no-code platform to create manufacturing and frontline
+            operations software. I worked on enhancing the app editor. I owned
+            adding rich text functionality to existing text, which invovled
+            creating the user interface for rich text editing and integrating
+            and updating existing logic to deal with multilingual rich text.
+          </p>
+          <br />
+
+          <h3>LifeOmic</h3>
+          <SplitAlign>
+            <h4>Software Engineer Intern</h4>
+            <span>
+              <b>
+                <em>May 2021 - Aug 2021</em>
+              </b>
+            </span>
+          </SplitAlign>
+
+          <p>
+            I worked with a few members of the Wellness Product team to
+            implement a new transactions management and history feature. As I
+            worked on creating the necessary front-end interfaces (React), I was
+            able to test and influence the emerging API. After continous
+            iteration cycles with feedback from the team, I ultimately presented
+            the working interface to company shareholders.
+            <br />
+            <br />
+            With my remaining time, I was also able to prototype ideas such as
+            data visualizations based on the transactions and share them with
+            the team as potential future features.
+          </p>
+
           <h3>Purdue Cognition and Learning Lab</h3>
           <SplitAlign>
             <h4>Web Programmer</h4>
             <span>
               <b>
-                <em>May 2020-Present</em>
+                <em>May 2020 - Present</em>
               </b>
             </span>
           </SplitAlign>
@@ -177,79 +204,9 @@ export default function Home() {
             Besides experiments, I also handle the various websites and
             documentation needed for the lab (MkDocs, docusaurus).
           </p>
-          <br />
-          <h3>LifeOmic</h3>
-          <SplitAlign>
-            <h4>Software Engineer Intern</h4>
-            <span>
-              <b>
-                <em>May 2021-Aug 2021</em>
-              </b>
-            </span>
-          </SplitAlign>
 
-          <p>
-            I worked with a few members of the Wellness Product team to
-            implement a new transactions management and history feature. As I
-            worked on creating the necessary front-end interfaces (React), I was
-            able to test and influence the emerging API. After continous
-            iteration cycles with feedback from the team, I ultimately presented
-            the working interface to company shareholders.
-            <br />
-            <br />
-            With my remaining time, I was also able to prototype ideas such as data
-            visualizations based on the transactions and share them with the
-            team as potential future features.
-          </p>
-
-          <SectionTitleWithBar>Education</SectionTitleWithBar>
-          <SplitAlign>
-            <h3>Purdue University</h3>
-            <span>
-              <b>
-                <em>May 2023</em>
-              </b>
-            </span>
-          </SplitAlign>
-          <p>Bachelor of Science in Computer Science and Math</p>
-          <p>Minor in Linguistics</p>
-
-          <h6>Relevant Courses</h6>
-          <p>
-            Analysis of Algorithms, Systems Programming, Data Structures &
-            Algorithms, Competitive Programming
-          </p>
-
-          <SectionTitleWithBar>Interests</SectionTitleWithBar>
-
-          <small>
-            Here you can see the song and movie I've listened to/watched most
-            recently. Implemented using the Spotify and Movielo API.
-          </small>
-          <div css={interestStyle}>
-            <StatusContainer>
-              <LastPlayed />
-              <LastWatched />
-            </StatusContainer>
-            <div>
-              <h3>Linguistics</h3>
-              <p>
-                Languages are really cool. I'm still trying to learn my first
-                one.
-              </p>
-              <h3>Data Visualization</h3>
-              <p>{`I <3 charts and graphs.`}</p>
-            </div>
-          </div>
-          <SectionTitleWithBar id="resume">
-            Important Things
-          </SectionTitleWithBar>
-          <div css={infoStyle}>
-            <LinkButton css={resumeButtonStyle} href="resume.pdf">
-              Resume.pdf
-            </LinkButton>
-            <h3>kylezheng73@gmail.com</h3>
-          </div>
+          <SectionTitleWithBar>Remember my name?</SectionTitleWithBar>
+          <Wordle words={["KYLE", "ZHENG"]} />
         </Container>
       </main>
     </BaseLayout>

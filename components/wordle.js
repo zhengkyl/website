@@ -54,12 +54,12 @@ const greyStyles = css`
   border-color: ${grey};
 `;
 
-const indicatorStyles= css`
+const indicatorStyles = css`
   transition: opacity 200ms ease;
-`
+`;
 const hide = css`
   opacity: 0;
-`
+`;
 const inputStyles = css`
   opacity: 0;
   padding: 0;
@@ -68,19 +68,18 @@ const inputStyles = css`
 `;
 /**
  * Takes an array of uppercase words and makes a multi-word wordle-thing
- * @param {string} word
  */
 export default function Wordle({ words }) {
   const inputRef = useRef(null);
-  const [focused, setFocused] = useState(false)
+  const [focused, setFocused] = useState(false);
 
   const focusInput = () => {
     inputRef.current.focus();
   };
 
-  const handleFocus = ()=> setFocused(true)
-  const handleBlur = ()=>setFocused(false)
-  
+  const handleFocus = () => setFocused(true);
+  const handleBlur = () => setFocused(false);
+
   const [letterOcc, setLetterOcc] = useState({});
   const [guessResult, setGuessResult] = useState({});
   const [guessWord, setGuessWord] = useState("");
@@ -152,7 +151,14 @@ export default function Wordle({ words }) {
         css={inputStyles}
         ref={inputRef}
       />
-      <span css={css`${indicatorStyles}; ${focused ? hide: null}`}>Tap to focus</span>
+      <span
+        css={css`
+          ${indicatorStyles};
+          ${focused ? hide : null}
+        `}
+      >
+        Tap to focus
+      </span>
       <div css={wordleStyles} onClick={focusInput}>
         {words.map((word, i) => {
           const offset = words.reduce(

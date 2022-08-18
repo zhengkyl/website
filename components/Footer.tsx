@@ -1,13 +1,13 @@
-import { Container } from "../components/basic";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+
+import { Container } from "./basic";
 
 const FooterContainer = styled(Container.withComponent("footer"))`
   margin-top: 64px;
   text-align: center;
   & :last-child {
-    margin-top:16px;
-    display:block;
+    margin-top: 16px;
+    display: block;
   }
 `;
 const SocialLink = styled.a`
@@ -17,7 +17,6 @@ const SocialLink = styled.a`
   padding: 8px;
   margin-left: 16px;
   margin-right: 16px;
-  
 `;
 
 export default function Footer() {

@@ -1,7 +1,9 @@
-import Image from "next/image";
-import styled from "@emotion/styled";
-import { css, jsx } from "@emotion/react";
+import Image, { ImageProps } from "next/image";
+
+import { css } from "@emotion/react";
+
 import { bpMq } from "../styles/global";
+
 const cardStyle = css`
   margin-top: 32px;
   margin-bottom: 32px;
@@ -28,19 +30,29 @@ const altCardStyle = css`
   }
 `;
 
-export default function InfoCard({ children, imageSrc, imageLeft, ...others }) {
+type InfoCardProps = {
+  children?: React.ReactNode;
+  imageSrc: ImageProps["src"];
+  imageLeft?: boolean;
+};
+
+export default function InfoCard({
+  children,
+  imageSrc,
+  imageLeft,
+  ...others
+}: InfoCardProps) {
   return (
     <div {...others} css={imageLeft ? altCardStyle : cardStyle}>
       <div>
-
-      <Image
-        src={imageSrc}
-        alt="Project Showcase Image"
-        width={600}
-        height={450}
-        layout="intrinsic"
+        <Image
+          src={imageSrc}
+          alt="Project Showcase Image"
+          width={600}
+          height={450}
+          layout="intrinsic"
         />
-        </div>
+      </div>
       <div>{children}</div>
     </div>
   );
