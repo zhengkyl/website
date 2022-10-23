@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getAllPostPaths, getPostData } from "../../lib/posts";
+import { getAllPostPaths, getPostData } from "../../lib/server/posts";
 import { getMDXComponent } from "mdx-bundler/client";
 import { GetStaticPaths, GetStaticProps } from "next";
 
@@ -11,7 +11,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const postData = await getPostData(params.slug);
+  const postData = await getPostData(params.slug as string);
   return {
     props: {
       ...postData,

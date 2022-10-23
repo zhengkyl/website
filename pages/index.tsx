@@ -11,7 +11,7 @@ import {
   SplitAlign,
 } from "../components/basic";
 import InfoCard from "../components/InfoCard";
-import { StatusBlock } from "../components/StatusCard";
+import { StatusBlurb } from "../components/StatusBlurb";
 import Wordle from "../components/wordle";
 import { bpMq } from "../styles/global";
 
@@ -62,16 +62,10 @@ export default function Home() {
     <BaseLayout>
       <main>
         <Container>
-          <BigTitle>Hello, 芥兰, 👋🥦</BigTitle>
-          <br />
-          <br />
-          <small>
-            Here you can see the song and movie I've listened to/watched most
-            recently. Implemented using the Spotify and Movielo API.
-          </small>
-          <br />
-          <br />
-          <StatusBlock />
+          <div className="flex flex-col gap-8 sm:flex-row">
+            <h1 className="text-3xl whitespace-nowrap">Kyle Zheng</h1>
+            <StatusBlurb />
+          </div>
 
           <SectionTitleWithBar>Projects</SectionTitleWithBar>
 

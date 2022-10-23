@@ -1,4 +1,4 @@
-import { getLastWatched } from "../../server/movielo";
+import { getLastWatched } from "../../lib/server/movielo";
 
 export default async function (_, res) {
   const response = await getLastWatched();
