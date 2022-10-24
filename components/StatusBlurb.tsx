@@ -1,4 +1,5 @@
 import useSWR from "swr";
+
 import fetcher from "../utils/fetcher";
 
 {
@@ -31,12 +32,11 @@ const InlineSong = ({ song, punctuation }) => (
     </span>{" "}
     by{" "}
     {song.artists.map((artist, i) => (
-      <span className="inline-block">
+      <span className="inline-block" key={artist.link}>
         <a
           className="hover:underline font-bold in"
           href={artist.link}
           target="_blank"
-          key={artist.link}
         >
           {artist.name}
         </a>
@@ -56,7 +56,7 @@ const InlineMovie = ({ movie, punctuation }) => (
   </span>
 );
 
-export function StatusBlurb() {
+export const StatusBlurb = (props) => {
   // const { data: movieData } = useSWR("/api/lastWatched", fetcher);
   const movieData = null;
   const { data: songData } = useSWR("/api/lastPlayed", fetcher);
@@ -66,24 +66,24 @@ export function StatusBlurb() {
     imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
     year: "2021",
-    title: "Nothing watched",
+    title: "nothing",
   };
   const song = songData ?? {
     imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
-    title: "Nothing playing",
-    artists: [{ name: "Kyle Zheng", link: "" }],
+    title: "nothing",
+    artists: [{ name: "no one", link: "" }],
     playing: false,
   };
   const like = likeData ?? {
     imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
-    title: "Nothing playing",
-    artists: [{ name: "Kyle Zheng", link: "" }],
+    title: "nothing",
+    artists: [{ name: "no one", link: "" }],
   };
 
   return (
-    <div className="flex flex-col gap-12 text-3xl font-medium">
+    <div className="flex flex-col gap-12 text-3xl font-medium" {...props}>
       <p>
         {`${song.playing ? "is" : "was"}`} listening to{" "}
         <InlineSong song={song} punctuation="," /> and he really likes{" "}
@@ -101,4 +101,4 @@ export function StatusBlurb() {
       </p>
     </div>
   );
-}
+};

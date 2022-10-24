@@ -1,25 +1,19 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-import { bpMq } from "../styles/global";
 import { theme } from "../styles/global";
+import classnames from "classnames";
 
-export const Container = styled.div`
-  max-width: ${theme.standard.contentWidth}px;
-  padding: 16px;
-  margin: auto;
-  ${bpMq[0]} {
-    padding: ${theme.standard.contentSpacing}px;
-  }
-  ${bpMq[1]} {
-  }
-  ${bpMq[2]} {
-  }
-`;
-
-export const BigTitle = styled.h1``;
+export const Container = ({ children, className, ...props }) => (
+  <div
+    className={classnames("p-4 sm:p-8 max-w-screen-lg m-auto", className)}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
 const SectionTitleParent = styled.div`
-  margin-top: 176px;
+  margin-top: 90px;
   margin-bottom: 32px;
 `;
 

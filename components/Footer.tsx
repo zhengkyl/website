@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 import { Container } from "./basic";
 
-const FooterContainer = styled(Container.withComponent("footer"))`
+const FooterContainer = styled.div`
   margin-top: 64px;
   text-align: center;
   & :last-child {
