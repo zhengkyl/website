@@ -83,22 +83,45 @@ export const StatusBlurb = (props) => {
   };
 
   return (
-    <div className="flex flex-col gap-12 text-3xl font-medium" {...props}>
-      <p>
-        {`${song.playing ? "is" : "was"}`} listening to{" "}
-        <InlineSong song={song} punctuation="," /> and he really likes{" "}
-        <InlineSong song={like} punctuation="." />
-      </p>
-      <p>
-        recently watched <InlineMovie movie={movie} punctuation="." /> It was{" "}
-        <span>okay</span>.
-      </p>
-      <p>
-        develops web apps, because the web is{" "}
-        <span className="font-bold">cross-platform,</span>{" "}
-        <span className="font-bold">accessible,</span> and{" "}
-        <span className="font-bold">more performant than ever.</span>
-      </p>
-    </div>
+    <>
+      <div className="flex flex-col sm:flex-row gap-16 sm:gap-8 ">
+        <div
+          className="h-auto self-start sticky top-0 pt-32 -mt-32 mb-[-4.25rem] w-full sm:w-auto"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 95%, rgba(255,255,255,0) 100%)",
+          }}
+        >
+          <span className="text-3xl whitespace-nowrap font-bold">
+            Kyle Zheng
+          </span>
+        </div>
+        <div className="flex flex-col gap-12 text-3xl font-medium" {...props}>
+          <p>
+            {`${song.playing ? "is" : "was"}`} listening to{" "}
+            <InlineSong song={song} punctuation="," /> and he really likes{" "}
+            <InlineSong song={like} punctuation="." />
+          </p>
+          <p>
+            recently watched <InlineMovie movie={movie} punctuation="." /> It
+            was <span>okay</span>.
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-16 mt-16 sm:gap-8 sm:mt-8">
+        {/* Hidden and matches navbar name size. Still visible to screen readers. */}
+        <h1 className="text-3xl whitespace-nowrap hidden sm:block sm:invisible">
+          Kyle Zheng
+        </h1>
+        <div className="text-3xl font-medium" {...props}>
+          <p>
+            develops web apps, because the web is{" "}
+            <span className="font-bold">cross-platform,</span>{" "}
+            <span className="font-bold">accessible,</span> and{" "}
+            <span className="font-bold">more performant than ever.</span>
+          </p>
+        </div>
+      </div>
+    </>
   );
 };

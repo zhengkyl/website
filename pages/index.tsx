@@ -1,7 +1,6 @@
-import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useRef } from "react";
-import { ParallaxProvider, useParallax } from "react-scroll-parallax";
+import Link from "next/link";
+
 import BaseLayout from "../components/BaseLayout";
 import {
   Chip,
@@ -11,10 +10,8 @@ import {
   SplitAlign,
 } from "../components/basic";
 import InfoCard from "../components/InfoCard";
-import Navbar from "../components/Navbar";
 import { StatusBlurb } from "../components/StatusBlurb";
-import Wordle from "../components/wordle";
-import { bpMq } from "../styles/global";
+import Wordle from "../components/Wordle";
 
 const ChipContainer = styled.div`
   margin-top: 8px;
@@ -25,16 +22,24 @@ export default function Home() {
   return (
     <BaseLayout>
       {/* <Navbar /> */}
-      <Container className="mt-24 sticky top-0 mb-[-4.25rem] sm:mb-[-6.25rem] z-50">
-        <span className="text-3xl whitespace-nowrap font-bold">Kyle Zheng</span>
+      <Container className="mt-32">
+        {/* <div className="mt-24 sticky top-0 mb-[-6.25rem] z-50">
+          <span className="text-3xl whitespace-nowrap font-bold">
+            Kyle Zheng
+          </span>
+        </div>
+        <div className="flex flex-col gap-8 sm:flex-row"> */}
+        {/* Hidden and matches navbar name size. Still visible to screen readers. */}
+        {/* <h1 className="text-3xl whitespace-nowrap invisible">Kyle Zheng</h1>
+          <StatusBlurb />
+        </div> */}
+        <StatusBlurb />
       </Container>
       <Container>
-        <div className="flex flex-col gap-8 sm:flex-row">
-          {/* Hidden and matches navbar name size. Still visible to screen readers. */}
-          <h1 className="text-3xl whitespace-nowrap invisible">Kyle Zheng</h1>
-          <StatusBlurb />
+        <div className="sticky top-0 h-[6.25rem] bg-gradient-to-b from-white via-[#fffffff9] z-40">
+          <Link href="/posts">posts</Link>
+          <Link href="/projects">projects</Link>
         </div>
-        <div className="sticky top-0 h-[4.25rem] sm:h-[6.25rem] bg-gradient-to-b from-white via-[#fffffff9] z-40"></div>
 
         <SectionTitleWithBar>Projects</SectionTitleWithBar>
 

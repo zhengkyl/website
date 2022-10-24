@@ -1,11 +1,18 @@
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { theme } from "../styles/global";
 import classnames from "classnames";
+import React, { ReactNode } from "react";
 
-export const Container = ({ children, className, ...props }) => (
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+
+import { theme } from "../styles/global";
+
+export const Container = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={classnames("p-4 sm:p-8 max-w-screen-lg m-auto", className)}
+    className={classnames("px-8 max-w-screen-lg m-auto", className)}
     {...props}
   >
     {children}
