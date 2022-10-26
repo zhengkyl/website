@@ -108,7 +108,7 @@ export const StatusBlurb = () => {
           </p>
           <p className="snap-start snap-always">
             recently watched <InlineMovie movie={movie} punctuation="." /> It
-            was fun and definitely worth watching.
+            was pretty fun.
           </p>
         </div>
       </div>

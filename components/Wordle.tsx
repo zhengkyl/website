@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { useEffect, useState, useRef } from "react";
-import { css, keyframes } from "@emotion/react";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
+import { css, keyframes, SerializedStyles } from "@emotion/react";
 
 const grey = "#abb2bf";
 const yellow = "#e5c07b";
@@ -74,19 +74,22 @@ const inputStyles = css`
 /**
  * Takes an array of uppercase words and makes a multi-word wordle-thing
  */
-export default function Wordle({ words }) {
-  const inputRef = useRef(null);
+export default function Wordle({ words }: { words: string[] }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
 
   const focusInput = () => {
+    if (inputRef.current == null) return;
     inputRef.current.focus();
   };
 
   const handleFocus = () => setFocused(true);
   const handleBlur = () => setFocused(false);
 
-  const [letterOcc, setLetterOcc] = useState({});
-  const [guessResult, setGuessResult] = useState({});
+  const [letterOcc, setLetterOcc] = useState<Record<string, number>>({});
+  const [guessResult, setGuessResult] = useState<(SerializedStyles | null)[]>(
+    []
+  );
   const [guessWord, setGuessWord] = useState("");
   const [combinedWord, setCombinedWord] = useState("");
 
@@ -96,13 +99,13 @@ export default function Wordle({ words }) {
     setLetterOcc(
       [...combined].reduce(
         (obj, letter) => (obj[letter] ? obj[letter]++ : (obj[letter] = 1), obj),
-        {}
+        {} as Record<string, number>
       )
     );
     setCombinedWord(combined);
   }, [words]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const rawGuess = e.target.value;
 
     // get uppercase latin letters w/ length equal to word
@@ -113,7 +116,7 @@ export default function Wordle({ words }) {
 
     setGuessWord(cleanGuess);
 
-    const guessOcc = {};
+    const guessOcc: Record<string, number> = {};
 
     // Set all correct values first
     const firstPass = [...cleanGuess].reduce((result, letter, index) => {
@@ -124,25 +127,28 @@ export default function Wordle({ words }) {
         result.push(null);
       }
       return result;
-    }, []);
+    }, [] as (SerializedStyles | null)[]);
 
     // Correctly set incorrect values
-    const secondPass = [...cleanGuess].reduce((result, letter, index) => {
-      if (result[index]) return result;
+    const secondPass: (SerializedStyles | null)[] = [...cleanGuess].reduce(
+      (result, letter, index) => {
+        if (result[index]) return result;
 
-      guessOcc[letter] ? guessOcc[letter]++ : (guessOcc[letter] = 1);
+        guessOcc[letter] ? guessOcc[letter]++ : (guessOcc[letter] = 1);
 
-      // Determine letter color based on occ
-      if (guessOcc[letter] > (letterOcc[letter] || 0)) {
-        result[index] = greyStyles;
-      } else {
-        result[index] = yellowStyles;
-      }
-      return result;
-    }, firstPass);
+        // Determine letter color based on occ
+        if (guessOcc[letter] > (letterOcc[letter] || 0)) {
+          result[index] = greyStyles;
+        } else {
+          result[index] = yellowStyles;
+        }
+        return result;
+      },
+      firstPass
+    );
     setGuessResult(secondPass);
   };
-  const guessAt = (i) => {
+  const guessAt = (i: number) => {
     if (i > guessWord.length) {
       return "";
     }
@@ -183,13 +189,15 @@ export default function Wordle({ words }) {
                 const realIndex = j + offset;
                 const guessLetter = guessAt(realIndex);
                 const color =
-                  realIndex < guessWord.length ? guessResult[realIndex] : null;
+                  realIndex < guessResult.length
+                    ? guessResult[realIndex]
+                    : null;
                 return (
                   <LetterBox
                     key={realIndex}
                     css={css`
                       ${color};
-                      ${focused && realIndex === guessWord.length
+                      ${focused && realIndex === guessResult.length
                         ? blinkStyles
                         : null}
                     `}
