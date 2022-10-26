@@ -1,4 +1,4 @@
-import { getLastLiked } from "../../server/spotify";
+import { getLastLiked } from "../../lib/server/spotify";
 
 export default async function (_, res) {
   const response = await getLastLiked();
@@ -8,7 +8,10 @@ export default async function (_, res) {
   return res.status(200).json({
     title: song.track.name,
     imageUrl: song.track.album.images[0].url,
-    artist: song.track.artists.map((artist) => artist.name).join(", "),
+    artists: song.track.artists.map((artist) => ({
+      name: artist.name,
+      link: artist.external_urls.spotify,
+    })),
     link: song.track.external_urls.spotify,
   });
 }

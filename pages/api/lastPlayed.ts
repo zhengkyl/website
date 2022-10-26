@@ -1,17 +1,29 @@
-import { getLastPlayed } from "../../server/spotify";
+import { getCurrentSong, getLastPlayed } from "../../lib/server/spotify";
 
 export default async function (_, res) {
-  const response = await getLastPlayed();
-  //TODO status checking
-  const results = await response.json();
-  const song = results.items[0];
-  const playing =
-    Date.now() - new Date(song.played_at).getTime() < song.track.duration_ms;
+  const response = await getCurrentSong();
+
+  let song;
+  let playing;
+  if (response.status === 200) {
+    const results = await response.json();
+    song = results.item;
+    playing = true;
+  } else {
+    const response = await getLastPlayed();
+    const results = await response.json();
+    song = results.items[0].track;
+    playing = false;
+  }
+
   return res.status(200).json({
-    title: song.track.name,
-    imageUrl: song.track.album.images[0].url,
-    artist: song.track.artists.map((artist) => artist.name).join(", "),
-    link: song.track.external_urls.spotify,
+    title: song.name,
+    imageUrl: song.album.images[0].url,
+    artists: song.artists.map((artist) => ({
+      name: artist.name,
+      link: artist.external_urls.spotify,
+    })),
+    link: song.external_urls.spotify,
     playing: playing,
   });
 }

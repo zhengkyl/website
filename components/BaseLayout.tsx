@@ -1,9 +1,9 @@
 import Head from "next/head";
+import { ReactNode } from "react";
 
 import Footer from "./Footer";
-import Navbar from "./Navbar";
 
-export default function BaseLayout({ children }) {
+export default function BaseLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Head>
@@ -34,7 +34,6 @@ export default function BaseLayout({ children }) {
           rel="stylesheet"
         />
       </Head>
-      <Navbar />
       {children}
       <Footer />
     </>

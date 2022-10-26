@@ -17,12 +17,27 @@ async function getAccessToken() {
 
   return response.json();
 }
+
 const LAST_PLAYED_ENDPOINT =
   "https://api.spotify.com/v1/me/player/recently-played?limit=1";
+
 export async function getLastPlayed() {
   const { access_token } = await getAccessToken();
 
   return fetch(LAST_PLAYED_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+}
+
+const CURRENT_SONG_ENDPOINT =
+  "https://api.spotify.com/v1/me/player/currently-playing";
+
+export async function getCurrentSong() {
+  const { access_token } = await getAccessToken();
+
+  return fetch(CURRENT_SONG_ENDPOINT, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },

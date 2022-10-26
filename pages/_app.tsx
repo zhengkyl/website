@@ -1,13 +1,9 @@
-import globalStyles, { theme } from "../styles/global";
-import { ThemeProvider } from "@emotion/react";
+import "../styles/globals.css";
 
-const App = ({ Component, pageProps }) => (
-  <>
-    {globalStyles}
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
-  </>
+import { AppProps } from "next/app";
+
+const App = ({ Component, pageProps }: AppProps) => (
+  <Component {...pageProps} />
 );
 
 export default App;

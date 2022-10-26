@@ -1,28 +1,29 @@
 import styled from "@emotion/styled";
-import { useEffect, useState, useRef } from "react";
-import { css } from "@emotion/react";
-import { bpMq } from "../styles/global";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
+import { css, keyframes, SerializedStyles } from "@emotion/react";
 
 const grey = "#abb2bf";
 const yellow = "#e5c07b";
 const green = "#98c379";
-const black = "#282c24";
-const white = "#ffffff";
+// const black = "#282c24";
+// const white = "#ffffff";
+
+const flash = keyframes`
+  from {
+    color: ${grey};
+  }
+  to {
+    color: white;
+  }
+`;
 
 const wordleStyles = css`
   font-size: 250%;
   font-weight: 700;
-  ${bpMq[0]} {
-    font-size: 300%;
-  }
-  ${bpMq[1]} {
-    font-size: 300%;
-  }
   color: white;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4em 0.8em;
-  justify-content: space-between;
+  gap: 0.4em 1.2em;
   user-select: none;
 `;
 
@@ -30,15 +31,19 @@ const WordBox = styled.div`
   display: flex;
   gap: 0.2em;
 `;
+
 const LetterBox = styled.div`
   background-color: transparent;
   border: 2px solid ${grey};
-
   padding: 0.75em;
   line-height: 0;
   width: 0;
   display: flex;
   justify-content: center;
+`;
+
+const blinkStyles = css`
+  animation: ${flash} 1s steps(2, jump-none) infinite;
 `;
 
 const yellowStyles = css`
@@ -69,19 +74,22 @@ const inputStyles = css`
 /**
  * Takes an array of uppercase words and makes a multi-word wordle-thing
  */
-export default function Wordle({ words }) {
-  const inputRef = useRef(null);
+export default function Wordle({ words }: { words: string[] }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
 
   const focusInput = () => {
+    if (inputRef.current == null) return;
     inputRef.current.focus();
   };
 
   const handleFocus = () => setFocused(true);
   const handleBlur = () => setFocused(false);
 
-  const [letterOcc, setLetterOcc] = useState({});
-  const [guessResult, setGuessResult] = useState({});
+  const [letterOcc, setLetterOcc] = useState<Record<string, number>>({});
+  const [guessResult, setGuessResult] = useState<(SerializedStyles | null)[]>(
+    []
+  );
   const [guessWord, setGuessWord] = useState("");
   const [combinedWord, setCombinedWord] = useState("");
 
@@ -91,13 +99,13 @@ export default function Wordle({ words }) {
     setLetterOcc(
       [...combined].reduce(
         (obj, letter) => (obj[letter] ? obj[letter]++ : (obj[letter] = 1), obj),
-        {}
+        {} as Record<string, number>
       )
     );
     setCombinedWord(combined);
   }, [words]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const rawGuess = e.target.value;
 
     // get uppercase latin letters w/ length equal to word
@@ -108,7 +116,7 @@ export default function Wordle({ words }) {
 
     setGuessWord(cleanGuess);
 
-    const guessOcc = {};
+    const guessOcc: Record<string, number> = {};
 
     // Set all correct values first
     const firstPass = [...cleanGuess].reduce((result, letter, index) => {
@@ -119,26 +127,36 @@ export default function Wordle({ words }) {
         result.push(null);
       }
       return result;
-    }, []);
+    }, [] as (SerializedStyles | null)[]);
 
     // Correctly set incorrect values
-    const secondPass = [...cleanGuess].reduce((result, letter, index) => {
-      if (result[index]) return result;
+    const secondPass: (SerializedStyles | null)[] = [...cleanGuess].reduce(
+      (result, letter, index) => {
+        if (result[index]) return result;
 
-      guessOcc[letter] ? guessOcc[letter]++ : (guessOcc[letter] = 1);
+        guessOcc[letter] ? guessOcc[letter]++ : (guessOcc[letter] = 1);
 
-      // Determine letter color based on occ
-      if (guessOcc[letter] > (letterOcc[letter] || 0)) {
-        result[index] = greyStyles;
-      } else {
-        result[index] = yellowStyles;
-      }
-      return result;
-    }, firstPass);
-
+        // Determine letter color based on occ
+        if (guessOcc[letter] > (letterOcc[letter] || 0)) {
+          result[index] = greyStyles;
+        } else {
+          result[index] = yellowStyles;
+        }
+        return result;
+      },
+      firstPass
+    );
     setGuessResult(secondPass);
   };
-  const guessAt = (i) => (i >= guessWord.length ? "" : guessWord[i]);
+  const guessAt = (i: number) => {
+    if (i > guessWord.length) {
+      return "";
+    }
+    if (i === guessWord.length) {
+      return "｜";
+    }
+    return guessWord[i];
+  };
 
   return (
     <>
@@ -175,7 +193,15 @@ export default function Wordle({ words }) {
                     ? guessResult[realIndex]
                     : null;
                 return (
-                  <LetterBox key={realIndex} css={color}>
+                  <LetterBox
+                    key={realIndex}
+                    css={css`
+                      ${color};
+                      ${focused && realIndex === guessResult.length
+                        ? blinkStyles
+                        : null}
+                    `}
+                  >
                     {guessLetter}
                   </LetterBox>
                 );

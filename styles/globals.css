@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-5xl font-bold;
+  }
+  h2 {
+    @apply text-3xl font-bold;
+  }
+  h3 {
+    @apply text-2xl font-bold;
+  }
+  h4 {
+    @apply text-2xl font-bold;
+  }
+  html {
+    @apply text-gray-800 snap-y snap-proximity scroll-pt-[10.5rem] sm:scroll-pt-[8rem];
+  }
+}
+
+@layer components {
+  .highlight {
+    position: relative;
+    display: inline-block;
+  }
+  .highlight::before {
+    background-color: #fecde4;
+    content: "";
+    position: absolute;
+    height: 70%;
+    left: 0;
+    right:0;
+    top: 50%;
+    top: 55%;
+    z-index: -1;
+    transform: translateY(-50%) rotate(-2deg);
+  }
+  a.highlight::before {
+    @apply bg-gray-800;
+  }
+}

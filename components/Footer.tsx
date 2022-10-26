@@ -1,32 +1,28 @@
-import styled from "@emotion/styled";
-
 import { Container } from "./basic";
-
-const FooterContainer = styled(Container.withComponent("footer"))`
-  margin-top: 64px;
-  text-align: center;
-  & :last-child {
-    margin-top: 16px;
-    display: block;
-  }
-`;
-const SocialLink = styled.a`
-  &:hover {
-    text-decoration: underline;
-  }
-  padding: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
-`;
 
 export default function Footer() {
   return (
-    <FooterContainer>
-      <SocialLink href="https://github.com/zhengkyl">Github</SocialLink>
-      <SocialLink href="https://www.linkedin.com/in/zhengkyl/">
-        LinkedIn
-      </SocialLink>
-      <small>{`Made with <3 by Kyle Zheng`}</small>
-    </FooterContainer>
+    <Container className="py-8 mt-16">
+      <footer className="flex justify-between flex-wrap items-center">
+        <div className="flex gap-4">
+          <a
+            href="https://github.com/zhengkyl"
+            className="hover:underline font-bold text-pi highlight p-3"
+          >
+            github
+          </a>
+          <a
+            href="https://www.linkedin.com/in/zhengkyl/"
+            className="hover:underline font-bold text-pi highlight p-3"
+          >
+            linkedin
+          </a>
+        </div>
+        <p className="flex-grow text-right">
+          © 2022 made with <span className="font-bold highlight">{`<3`}</span>{" "}
+          by Kyle Zheng
+        </p>
+      </footer>
+    </Container>
   );
 }
