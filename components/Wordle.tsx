@@ -1,28 +1,29 @@
 import styled from "@emotion/styled";
 import { useEffect, useState, useRef } from "react";
-import { css } from "@emotion/react";
-import { bpMq } from "../styles/global";
+import { css, keyframes } from "@emotion/react";
 
 const grey = "#abb2bf";
 const yellow = "#e5c07b";
 const green = "#98c379";
-const black = "#282c24";
-const white = "#ffffff";
+// const black = "#282c24";
+// const white = "#ffffff";
+
+const flash = keyframes`
+  from {
+    color: ${grey};
+  }
+  to {
+    color: white;
+  }
+`;
 
 const wordleStyles = css`
   font-size: 250%;
   font-weight: 700;
-  ${bpMq[0]} {
-    font-size: 300%;
-  }
-  ${bpMq[1]} {
-    font-size: 300%;
-  }
   color: white;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4em 0.8em;
-  justify-content: space-between;
+  gap: 0.4em 1.2em;
   user-select: none;
 `;
 
@@ -30,15 +31,19 @@ const WordBox = styled.div`
   display: flex;
   gap: 0.2em;
 `;
+
 const LetterBox = styled.div`
   background-color: transparent;
   border: 2px solid ${grey};
-
   padding: 0.75em;
   line-height: 0;
   width: 0;
   display: flex;
   justify-content: center;
+`;
+
+const blinkStyles = css`
+  animation: ${flash} 1s steps(2, jump-none) infinite;
 `;
 
 const yellowStyles = css`
@@ -135,10 +140,17 @@ export default function Wordle({ words }) {
       }
       return result;
     }, firstPass);
-
     setGuessResult(secondPass);
   };
-  const guessAt = (i) => (i >= guessWord.length ? "" : guessWord[i]);
+  const guessAt = (i) => {
+    if (i > guessWord.length) {
+      return "";
+    }
+    if (i === guessWord.length) {
+      return "｜";
+    }
+    return guessWord[i];
+  };
 
   return (
     <>
@@ -171,11 +183,17 @@ export default function Wordle({ words }) {
                 const realIndex = j + offset;
                 const guessLetter = guessAt(realIndex);
                 const color =
-                  realIndex < guessResult.length
-                    ? guessResult[realIndex]
-                    : null;
+                  realIndex < guessWord.length ? guessResult[realIndex] : null;
                 return (
-                  <LetterBox key={realIndex} css={color}>
+                  <LetterBox
+                    key={realIndex}
+                    css={css`
+                      ${color};
+                      ${focused && realIndex === guessWord.length
+                        ? blinkStyles
+                        : null}
+                    `}
+                  >
                     {guessLetter}
                   </LetterBox>
                 );
