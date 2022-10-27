@@ -81,15 +81,6 @@ export default function Wordle({ words }: { words: string[] }) {
 
   return (
     <>
-      <input
-        type="text"
-        value={guessWord}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        ref={inputRef}
-        className="opacity-0 w-0"
-      />
       <div
         onClick={focusInput}
         className="text-white font-bold text-3xl sm:text-5xl flex flex-wrap justify-center gap-x-12 gap-y-4"
@@ -130,6 +121,15 @@ export default function Wordle({ words }: { words: string[] }) {
           );
         })}
       </div>
+      <input
+        type="text"
+        value={guessWord}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        ref={inputRef}
+        className="opacity-0 w-0"
+      />
     </>
   );
 }
