@@ -1,16 +1,9 @@
 import Link from "next/link";
 
-import styled from "@emotion/styled";
-
 import BaseLayout from "../components/BaseLayout";
 import { Container, SplitAlign } from "../components/basic";
 import { StatusBlurb } from "../components/StatusBlurb";
 import Wordle from "../components/Wordle";
-
-const ChipContainer = styled.div`
-  margin-top: 8px;
-  margin-bottom: 8px;
-`;
 
 export default function Home() {
   return (

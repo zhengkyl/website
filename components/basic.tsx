@@ -1,8 +1,6 @@
 import classnames from "classnames";
 import React from "react";
 
-import styled from "@emotion/styled";
-
 export const Container = ({
   children,
   className,
@@ -16,29 +14,6 @@ export const Container = ({
   </div>
 );
 
-const SectionTitleParent = styled.div`
-  margin-top: 90px;
-  margin-bottom: 32px;
-`;
-
-type SectionTitleWithBarProps = {
-  id?: string;
-  children?: React.ReactNode;
-};
-export function SectionTitleWithBar({
-  children,
-  id,
-}: SectionTitleWithBarProps) {
-  return (
-    <>
-      <SectionTitleParent id={id}>
-        <h2>{children}</h2>
-        <hr />
-      </SectionTitleParent>
-    </>
-  );
-}
-
 export const SplitAlign = ({
   children,
   className,
@@ -49,25 +24,3 @@ export const SplitAlign = ({
     </div>
   );
 };
-
-// const ChipContainer = styled.div`
-//   border-radius: 16px;
-//   border: 1px solid rgba(0, 0, 0, 0.23);
-//   font-size: 16px;
-//   height: 32px;
-//   margin: 4px;
-//   display: inline-flex;
-//   align-items: center;
-//   justify-content: center;
-//   & > span {
-//     padding-left: 12px;
-//     padding-right: 12px;
-//   }
-// `;
-// export function Chip({ children }) {
-//   return (
-//     <ChipContainer>
-//       <span>{children}</span>
-//     </ChipContainer>
-//   );
-// }
