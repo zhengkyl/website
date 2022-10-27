@@ -7,13 +7,13 @@ export default function Footer() {
         <div className="flex gap-4">
           <a
             href="https://github.com/zhengkyl"
-            className="hover:underline font-bold text-pi highlight p-3"
+            className="hover:underline font-bold text-rose-200 highlight p-3"
           >
             github
           </a>
           <a
             href="https://www.linkedin.com/in/zhengkyl/"
-            className="hover:underline font-bold text-pi highlight p-3"
+            className="hover:underline font-bold text-rose-200 highlight p-3"
           >
             linkedin
           </a>

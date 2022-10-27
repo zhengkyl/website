@@ -6,12 +6,15 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        yg: "#ceec97",
-        or: "#f4b393",
-        pi: "#fecde4",
-        pu: "#7a28cb",
-        da: "#494368",
+      keyframes: {
+        blink: {
+          from: {
+            opacity: 1,
+          },
+          to: {
+            opacity: 0,
+          },
+        },
       },
     },
   },

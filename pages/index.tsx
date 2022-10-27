@@ -21,12 +21,12 @@ export default function Home() {
       <Container>
         <div className="flex justify-evenly mt-32">
           <Link href="/posts">
-            <a className="text-2xl p-4 font-bold text-pi highlight hover:underline">
+            <a className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline">
               /posts
             </a>
           </Link>
           <Link href="/projects">
-            <a className="text-2xl p-4 font-bold text-pi highlight hover:underline">
+            <a className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline">
               /projects
             </a>
           </Link>
