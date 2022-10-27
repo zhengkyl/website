@@ -83,7 +83,7 @@ export default function Wordle({ words }: { words: string[] }) {
     <>
       <div
         onClick={focusInput}
-        className="text-white font-bold text-3xl sm:text-5xl flex flex-wrap justify-center gap-x-12 gap-y-4"
+        className="text-white font-bold text-3xl sm:text-5xl flex flex-wrap justify-center gap-x-12 gap-y-4 mt-8"
       >
         {words.map((word, i) => {
           const offset = words.reduce(
@@ -128,7 +128,7 @@ export default function Wordle({ words }: { words: string[] }) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={inputRef}
-        className="opacity-0 w-0"
+        className="opacity-0 w-0 h-0"
       />
     </>
   );
