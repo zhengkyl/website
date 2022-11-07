@@ -1,0 +1,152 @@
+---
+title: A Rant About Styling
+summary:
+posted:
+edited:
+---
+
+## Styling HTML is a terrible experience
+
+## Preface:
+
+I haven't edited this yet, and i still need to incorporate what MUI did with `sx` into it.
+
+I'm a college student who spent ~3 years making websites, mostly with React-based frameworks. I am far from being an expert or a seasoned web developer. I am under no delusion that I have an interesting or unique take. Much of this is a rehash of what others have said far more elequently.
+
+I'm just annoyed that this still isn't a solved issue.
+
+## The Shit I've Seen
+
+### Inline Styles
+
+These don't make sense in regular HTML, because it's an unformatted string and inline styles are "bad".
+
+But inline styles in React are really convenient.
+
+This is what I found myself defaulting to whenever I had to get an MVP ready, eg. Hackathons and school projects. Adding a style is quick, because it's just CSS with autocomplete. This can make the markup bloated and ugly, but it's easy to see where the styles are applied and what they affect.
+
+Problems
+
+- Boomer wisdom says "inline is bad"
+- Performance
+- Inline stuff is bad for security
+
+### CSS
+
+Create CSS files and put styles in there. Honestly, there's nothing wrong with this, but it's just annoying having to maintain extra files and constantly context switch. There is some sense of purity.
+
+Scoping can be annoying if you're raw dogging it without something like CSS modules or component-scoped styles. Although, some frameworks take it too far and make it impossible to create global or extendable styles. I only know this because I had to maintain an Angular app.
+
+This is how you should start when learning web development. Writing raw CSS makes you appreciate how far we've come.
+
+Problems
+
+- Coming up with id and class names
+- Making sure the names match across files
+- Scoping and extending at the same time
+
+### SCSS, LESS, and Preprocessors
+
+I don't have much experience with SCSS and company, but I don't think they provide much value for most use cases. Everytime I've had to edit projects with these, I've just ended up writing regular CSS.
+
+### JSS
+
+Now your CSS is in the same file as your component. This is better. You still have to come up with class names, but at least there is autocomplete now. Adding multiple classes still requires some dancing around using a library like `classnames`, but you have access to all of javascript to reuse, extend, and update styles.
+
+Performance aside, this is strictly superior to solutions requiring styles in a separate file. Surprisingly, I didn't hate using this, although it does share many (but not all) of the same problems as styled components.
+
+### Styled Components
+
+These libraries are not general styling solutions. The design emphasis is on reusability and composabiilty. They make sense if you want to create a component library. How suprising is it that it feels fucking terrible to add one-off styles.
+
+Here's an average workflow.
+
+You create a `div`. Eventually you realize you need to add some css property—say `display: flex;`. What should be a simple change becomes:
+
+- Go to fucking Narnia
+- Come up with a name for a component
+- Write the desired style and don't make a typo
+- Find where you where originally
+- Replace the tag you had originally
+
+This is insane.
+
+It involves one of the hardest things in programming: naming things. For _every_ component with _any_ styling. There is no standard and certainly no sane way to name most components, and that makes code hard to read.
+
+Because—and this may surprise you, but using styled components turns your styles into components. It gives components with logic and functionality as much visual emphasis as a wrapper element to center text. Does this `<DisplayCard>` do something or does it just have one css property?
+
+Adding or editing styles involves flow-killing context switching, because the place you write the style and the place you're actually working are so separated they might as well be in separate files.
+
+Stop using this as a general styling solution.
+
+### Component Libraries
+
+This is out of order, but bootstrap is components + classes like tailwind
+Bootstrap. So I have to learn all these classnames, and buy into their system? Ok. I have to install jQuery!?.
+
+MUI has an `sx` prop. It's pretty nice. It is inline, but also gives access to theme values.
+
+### Utility CSS Frameworks
+
+Tailwind. Its a utility CSS framework. So I have to learn a new name for every single css property I already know. At least the names are intuitive. This seems like inline styles with more steps. But these utilities are actually really nice? Using `sm:`, `hover:`, `before:` as prefixes is really nice. The sensible values for padding, margin, font size, and colors? That's amazing. Except every element now has a huge unsorted string attached to the classname. There is no syntax highlighting, autocomplete, and I still have to lookup a css property I already know to be able to use it (note: I realize there are tools/plugins to help with this, but I don't know of them and haven't used them). However, I will admit, Tailwind has been the closest to a decent solution out of everything I've worked with.
+
+## Final Thoughts
+
+### Separation of concerns is wrong
+
+Any solution that requires styling in a separate file is automatically wrong.
+
+Styles need to be defined with the content they style. This is not an argument. Wherever the notion that content and styling needed to be separate came from, it has been disproven collectively by generations of developers.
+
+When I participated in hackathons, I didn't create `css` files, or separate out every component I styled. I just used inline styles.
+
+```js
+// TODO inlien styles
+```
+
+Raw CSS is too unconstrained. I don't want to think about units, or consistency. I want a shared style framework across my entire app. But I don't want to remember another name, another alias for something I _already_ memorized.
+
+Here's my thought. CSS actually describes styling AND behavior.
+
+`display: flex;` is a behavior. I don't need a new name for it.
+
+`font-size: 1.25rem` is a style. I don't want to think about numbers and making sure it's consistent.
+
+Tailwind is amazing, because I can think in terms of small, big, and large instead of px, em, rem, %.
+
+Tailwind is annoying, because I want `pointer-events: none;`, but I have to look up `pointer-events-none`.
+
+I guess I want to write something like this
+
+```html
+<div
+  behavior={{ display: flex, justify-content: center, hover: { flex-direction: column } }}
+  style={{ font-size: sm, color: green-400 }}
+>
+  ...
+</div>
+```
+
+and I would love to even settle for this
+
+```html
+
+<div
+  style={
+    display: flex,
+    justify-content: center,
+    font-size: sm,
+    color: green-400,
+
+    hover: {
+      flex-direction: column;
+    },
+  }
+>
+...
+</div>
+```
+
+Maybe that's too verbose?
+
+The nice thing about keeping behavior and styling separate, is that you can mostly ignore behavior type properties so if your editor supports collapsing blocks, you could collapse them. Usually you just want to tweak the styling, and you could keep those expanded. You lose that ability to selectively collapse/ignore if you group them together, but grouping allows you to declare selectors like `hover:` only once instead of twice.

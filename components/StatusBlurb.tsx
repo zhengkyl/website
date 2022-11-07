@@ -30,7 +30,7 @@ const InlineSong = ({ song, punctuation }: SongProps) => (
     </span>{" "}
     by{" "}
     {song.artists.map((artist, i) => (
-      <span className="inline-block" key={artist.link}>
+      <span className="inline-block whitespace-pre-wrap" key={artist.link}>
         <a
           className="hover:underline font-bold"
           href={artist.link}

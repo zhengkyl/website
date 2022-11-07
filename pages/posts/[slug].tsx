@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { getAllPostPaths, getPostData } from "../../lib/server/posts";
 import { getMDXComponent } from "mdx-bundler/client";
 import { GetStaticPaths, GetStaticProps } from "next";
+import BaseLayout from "../../components/BaseLayout";
+import { Container } from "../../components/basic";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -24,8 +26,12 @@ const Post = ({ code, frontmatter }) => {
 
   return (
     <>
-      <p>Post title</p>
-      <PostContent />
+      <BaseLayout>
+        <Container>
+          <h1>{frontmatter.title}</h1>
+          <PostContent />
+        </Container>
+      </BaseLayout>
     </>
   );
 };
