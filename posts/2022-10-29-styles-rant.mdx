@@ -9,7 +9,20 @@ edited:
 
 ## Preface:
 
-I haven't edited this yet, and i still need to incorporate what MUI did with `sx` into it.
+I haven't edited this yet.
+//TODO
+
+- style code blocks
+- include links to utility class articles
+- [x] edit pass 1
+- [x] edit pass 2
+- [ ] edit pass 3
+- [ ] edit pass 4
+- [ ] edit pass 5
+- [ ] edit pass 6
+- [ ] edit pass 7
+- [ ] edit pass 8
+- [ ] edit pass 9
 
 I'm a college student who spent ~3 years making websites, mostly with React-based frameworks. I am far from being an expert or a seasoned web developer. I am under no delusion that I have an interesting or unique take. Much of this is a rehash of what others have said far more elequently.
 
@@ -66,7 +79,7 @@ You create a `div`. Eventually you realize you need to add some css property—s
 - Go to fucking Narnia
 - Come up with a name for a component
 - Write the desired style and don't make a typo
-- Find where you where originally
+- Return from Narnia and find your place
 - Replace the tag you had originally
 
 This is insane.
@@ -86,6 +99,69 @@ Bootstrap. So I have to learn all these classnames, and buy into their system? O
 
 MUI has an `sx` prop. It's pretty nice. It is inline, but also gives access to theme values.
 
+### MUI's `sx` Prop
+
+This is the best solution I've seen so far.
+
+It is similar to the inline `styles` prop on regular elements, and it accepts most CSS properties.
+
+```html
+<Box sx={{ display: "flex" }}/>
+```
+
+For spacing properties, numerical values are multiples of the spacing size defined in the theme.
+
+```html
+<Box
+  sx={{
+    margin: 1,
+    padding: 1,
+    gap: 1
+  }}>
+  …
+</Box>
+```
+
+The font related properties take strings that correspond to values defined in the theme, or numerical overrides.
+
+```html
+<Box sx={{}}>…</Box>
+
+<Box sx={{ fontWeight: 'light' }}>…</Box>
+
+<Box sx={{ fontWeight: 'regular' }}>…</Box>
+
+<Box sx={{ fontWeight: 'medium' }}>…</Box>
+
+<Box sx={{ fontWeight: 'bold' }}></Box>
+
+<Box sx={{ fontWeight: 500 }}>…</Box>
+```
+
+Color properties accept strings corresponding to values defined in the theme.
+
+```html
+<Box sx={{ color: 'primary.main' }} />
+```
+
+`boxShadow` accepts a number corresponding to shadows predefined in the theme.
+
+```html
+<Box sx={{ boxShadow: 1 }} />
+```
+
+And of course, there are shorthand property names to help avoid typing long property names.
+
+There is `m`, `mt`,`mr`, `mb`, `ml`, `mx`, `my` along with the padding variations and `background` can just be `bg`.
+
+There's also some specific properties and interactions, but I can't really list out the entire functionality of `mui`. Check out their [documentation](https://mui.com/system/getting-started/the-sx-prop/) for more information.
+
+This is very nearly close to perfect.
+
+We have access to all the CSS we already know, and it's a bit more ergonomic with the addition reasonble shorthands.
+
+Properties that should stay consistent use values defined in the theme, and we don't have to mess with actual values or units, unless we deliberately want to.
+
 ### Utility CSS Frameworks
 
 Tailwind. Its a utility CSS framework. So I have to learn a new name for every single css property I already know. At least the names are intuitive. This seems like inline styles with more steps. But these utilities are actually really nice? Using `sm:`, `hover:`, `before:` as prefixes is really nice. The sensible values for padding, margin, font size, and colors? That's amazing. Except every element now has a huge unsorted string attached to the classname. There is no syntax highlighting, autocomplete, and I still have to lookup a css property I already know to be able to use it (note: I realize there are tools/plugins to help with this, but I don't know of them and haven't used them). However, I will admit, Tailwind has been the closest to a decent solution out of everything I've worked with.
@@ -96,7 +172,7 @@ Tailwind. Its a utility CSS framework. So I have to learn a new name for every s
 
 Any solution that requires styling in a separate file is automatically wrong.
 
-Styles need to be defined with the content they style. This is not an argument. Wherever the notion that content and styling needed to be separate came from, it has been disproven collectively by generations of developers.
+Styles need to be defined with the content they style. This is not an argument. Wherever the notion that content and styling needed to be separate came from, it has been disproven..
 
 When I participated in hackathons, I didn't create `css` files, or separate out every component I styled. I just used inline styles.
 
