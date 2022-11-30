@@ -10,6 +10,36 @@ const getJoinSymbol = (index: number, length: number) => {
   return ", ";
 };
 
+const getMovieImpression = (fun_before, fun_during, fun_after) => {
+  if (fun_before && fun_during && fun_after) {
+    return "It lived up to the hype and more.";
+  }
+  if (!fun_before && fun_during && fun_after) {
+    return "It was an unexpected gem.";
+  }
+
+  if (fun_before && !fun_during && !fun_after) {
+    return "It fell short of expectations.";
+  }
+  if (!fun_before && !fun_during && !fun_after) {
+    return "It was the movie equivalent of lukewarm water.";
+  }
+
+  if (fun_before && fun_during && !fun_after) {
+    return "It was a fun movie.";
+  }
+  if (!fun_before && fun_during && !fun_after) {
+    return "It was an unexpectedly fun movie.";
+  }
+
+  if (fun_before && !fun_during && fun_after) {
+    return "As expected, it was a movie worth watching.";
+  }
+  if (!fun_before && !fun_during && fun_after) {
+    return "It was a movie worth watching.";
+  }
+};
+
 interface SongProps {
   song: {
     title: string;
@@ -49,38 +79,49 @@ interface MovieProps {
   movie: {
     title: string;
     link: string;
+    fun_before: boolean;
+    fun_during: boolean;
+    fun_after: boolean;
   };
   punctuation?: string;
 }
 const InlineMovie = ({ movie, punctuation }: MovieProps) => (
   <span className="inline-block">
-    <a className="hover:underline italic font-bold" href={movie.link}>
+    <a
+      className="hover:underline italic font-bold"
+      href={movie.link}
+      target="_blank"
+    >
       {movie.title}
     </a>
+    {". "}
+    {getMovieImpression(movie.fun_before, movie.fun_during, movie.fun_after)}
     {punctuation ?? ""}
   </span>
 );
 
-export const StatusBlurb = () => {
-  const { data: movieData } = useSWR("/api/lastWatched", fetcher);
+const StatusBlurb = ({ movieData }) => {
+  // const { data: movieData } = useSWR("/api/lastWatched", fetcher);
   const { data: songData } = useSWR("/api/lastPlayed", fetcher);
   const { data: likeData } = useSWR("/api/lastLiked", fetcher);
 
   const movie = movieData ?? {
-    imageUrl: "/images/zheng512.png",
+    // imageUrl: "/images/zheng512.png",
+    fun_before: false,
+    fun_during: false,
+    fun_after: false,
     link: "",
-    year: "2022",
     title: "nothing",
   };
   const song = songData ?? {
-    imageUrl: "/images/zheng512.png",
+    // imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
     playing: false,
   };
   const like = likeData ?? {
-    imageUrl: "/images/zheng512.png",
+    // imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
@@ -107,8 +148,7 @@ export const StatusBlurb = () => {
             <InlineSong song={like} punctuation="." />
           </p>
           <p className="snap-start snap-always">
-            recently watched <InlineMovie movie={movie} punctuation="." /> It
-            was pretty fun.
+            recently watched <InlineMovie movie={movie} />
           </p>
         </div>
       </div>
@@ -129,3 +169,5 @@ export const StatusBlurb = () => {
     </>
   );
 };
+
+export default StatusBlurb;
