@@ -22,7 +22,7 @@ const getMovieImpression = (fun_before, fun_during, fun_after) => {
     return "It fell short of expectations.";
   }
   if (!fun_before && !fun_during && !fun_after) {
-    return "It was the movie equivalent of lukewarm water.";
+    return "It was not a movie I would recommend.";
   }
 
   if (fun_before && fun_during && !fun_after) {
@@ -101,12 +101,10 @@ const InlineMovie = ({ movie, punctuation }: MovieProps) => (
 );
 
 const StatusBlurb = ({ movieData }) => {
-  // const { data: movieData } = useSWR("/api/lastWatched", fetcher);
   const { data: songData } = useSWR("/api/lastPlayed", fetcher);
   const { data: likeData } = useSWR("/api/lastLiked", fetcher);
 
   const movie = movieData ?? {
-    // imageUrl: "/images/zheng512.png",
     fun_before: false,
     fun_during: false,
     fun_after: false,
@@ -114,14 +112,12 @@ const StatusBlurb = ({ movieData }) => {
     title: "nothing",
   };
   const song = songData ?? {
-    // imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
     playing: false,
   };
   const like = likeData ?? {
-    // imageUrl: "/images/zheng512.png",
     link: "kylezhe.ng",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
