@@ -22,7 +22,7 @@ const getMovieImpression = (fun_before, fun_during, fun_after) => {
     return "It fell short of expectations.";
   }
   if (!fun_before && !fun_during && !fun_after) {
-    return "It was not a movie I would recommend.";
+    return "It was not a movie he would recommend.";
   }
 
   if (fun_before && fun_during && !fun_after) {
@@ -85,8 +85,8 @@ interface MovieProps {
   };
   punctuation?: string;
 }
-const InlineMovie = ({ movie, punctuation }: MovieProps) => (
-  <span className="inline-block">
+const InlineMovie = ({ movie }: MovieProps) => (
+  <span>
     <a
       className="hover:underline italic font-bold"
       href={movie.link}
@@ -95,8 +95,9 @@ const InlineMovie = ({ movie, punctuation }: MovieProps) => (
       {movie.title}
     </a>
     {". "}
-    {getMovieImpression(movie.fun_before, movie.fun_during, movie.fun_after)}
-    {punctuation ?? ""}
+    <span className="inline-block">
+      {getMovieImpression(movie.fun_before, movie.fun_during, movie.fun_after)}
+    </span>
   </span>
 );
 
@@ -143,7 +144,7 @@ const StatusBlurb = ({ movieData }) => {
             <InlineSong song={song} punctuation="," /> and he really likes{" "}
             <InlineSong song={like} punctuation="." />
           </p>
-          <p className="snap-start snap-always">
+          <p className="snap-start">
             recently watched <InlineMovie movie={movie} />
           </p>
         </div>
@@ -154,7 +155,7 @@ const StatusBlurb = ({ movieData }) => {
           Kyle Zheng
         </span>
         <div className="font-medium">
-          <p className="snap-start snap-always">
+          <p className="snap-start">
             develops web apps, because the web is{" "}
             <span className="font-bold">cross-platform,</span>{" "}
             <span className="font-bold">accessible,</span> and{" "}

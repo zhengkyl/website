@@ -36,7 +36,7 @@ export default function Home({ movieData }) {
         <h2 className="mt-32">Experience</h2>
         <hr />
 
-        <SplitAlign className="mt-16">
+        <SplitAlign className="mt-16 snap-start">
           <h3>Purdue University</h3>
           <span className="font-bold">May 2023</span>
         </SplitAlign>
@@ -84,7 +84,7 @@ export default function Home({ movieData }) {
           breakdowns.
         </p>
 
-        <h2 className="mt-32">Remember my name?</h2>
+        <h2 className="mt-32 snap-start">Remember my name?</h2>
         <hr />
         <Wordle words={["KYLE", "ZHENG"]} />
       </Container>
