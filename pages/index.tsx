@@ -14,6 +14,8 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ movieData }) {
+  return "success";
+
   return (
     <BaseLayout>
       <Container className="mt-32">
