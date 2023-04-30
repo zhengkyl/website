@@ -126,27 +126,22 @@ const StatusBlurb = ({ movieData }) => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-16 sm:gap-3 text-3xl leading-10">
-        <div
-          className="h-auto self-start sticky top-0 pt-32 -mt-32 mb-[-4rem] sm:mb-[-6.5rem] w-full sm:w-auto"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 95%, rgba(255,255,255,0) 100%)",
-          }}
-        >
+      <div className="flex flex-col sm:flex-row sm:gap-3 text-3xl leading-10">
+        <div>
           <h1 className="whitespace-nowrap font-bold highlight text-3xl leading-10">
             Kyle Zheng
           </h1>
         </div>
         <div className="flex flex-col gap-16 font-medium">
-          <p className="snap-start">
+          <p>
             {`${song.playing ? "is" : "was"}`} listening to{" "}
             <InlineSong song={song} punctuation="," /> and he really likes{" "}
             <InlineSong song={like} punctuation="." />
           </p>
-          <p className="snap-start">
+          <p>
             recently watched <InlineMovie movie={movie} />
           </p>
+          <p>needs to update this website but got distracted.</p>
         </div>
       </div>
       <div className="flex flex-col sm:flex-row mt-16 sm:gap-3 text-3xl leading-10">
@@ -154,14 +149,6 @@ const StatusBlurb = ({ movieData }) => {
         <span className="whitespace-nowrap hidden sm:block sm:invisible font-bold">
           Kyle Zheng
         </span>
-        <div className="font-medium">
-          <p className="snap-start">
-            develops web apps, because the web is{" "}
-            <span className="font-bold">cross-platform,</span>{" "}
-            <span className="font-bold">accessible,</span> and{" "}
-            <span className="font-bold">more performant than ever.</span>
-          </p>
-        </div>
       </div>
     </>
   );

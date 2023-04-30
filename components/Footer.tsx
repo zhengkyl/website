@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "./basic";
 
 export default function Footer() {
@@ -19,8 +20,18 @@ export default function Footer() {
           </a>
         </div>
         <p className="flex-grow text-right">
-          © 2022 made with <span className="font-bold highlight">{`<3`}</span>{" "}
-          by Kyle Zheng
+          made with{" "}
+          <Link href="./images/broccoli.jpg" target="_blank">
+            🥦
+          </Link>{" "}
+          •{" "}
+          <a href="https://github.com/zhengkyl/website" target="_blank">
+            open source
+          </a>{" "}
+          •{" "}
+          <Link href="./resume.pdf" target="_blank">
+            hire me
+          </Link>
         </p>
       </footer>
     </Container>

@@ -16,7 +16,7 @@
     @apply text-2xl font-bold;
   }
   html {
-    @apply text-gray-800 snap-y snap-proximity scroll-pt-[10.5rem] sm:scroll-pt-[8rem];
+    @apply text-gray-800;
   }
 }
 
@@ -31,7 +31,7 @@
     position: absolute;
     height: 70%;
     left: 0;
-    right:0;
+    right: 0;
     top: 50%;
     top: 55%;
     z-index: -1;
