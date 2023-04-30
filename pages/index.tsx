@@ -14,8 +14,6 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ movieData }) {
-  return "success";
-
   return (
     <BaseLayout>
       <Container className="mt-32">
@@ -23,15 +21,17 @@ export default function Home({ movieData }) {
       </Container>
       <Container>
         <div className="flex justify-evenly mt-32">
-          <Link href="/posts">
-            <a className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline">
-              /posts
-            </a>
+          <Link
+            href="/posts"
+            className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline"
+          >
+            /posts
           </Link>
-          <Link href="/projects">
-            <a className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline">
-              /projects
-            </a>
+          <Link
+            href="/projects"
+            className="text-2xl p-4 font-bold text-rose-200 highlight hover:underline"
+          >
+            /projects
           </Link>
         </div>
 
