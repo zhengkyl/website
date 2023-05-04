@@ -7,17 +7,23 @@ const getMovieDataUrl = (movieId) =>
   `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`;
 
 export const getLatestReviewAndMovie = async () => {
-  const reviewResp = await fetch(REVIEWS_ENDPOINT);
+  const reviewResp = await fetch(REVIEWS_ENDPOINT, {
+    next: { revalidate: 10 },
+  });
   const reviewData = await reviewResp.json();
 
   const review = reviewData.results[0];
 
   if (review == null) {
-    return null;
+    return defaultMovieData;
   }
 
   const dataResp = await fetch(getMovieDataUrl(review.tmdb_id));
   const movie = await dataResp.json();
+
+  if (movie == null) {
+    return defaultMovieData;
+  }
 
   return {
     title: movie.title,
@@ -26,4 +32,12 @@ export const getLatestReviewAndMovie = async () => {
     fun_during: review.fun_during,
     fun_after: review.fun_after,
   };
+};
+
+export const defaultMovieData = {
+  fun_before: false,
+  fun_during: false,
+  fun_after: false,
+  link: "",
+  title: "nothing",
 };

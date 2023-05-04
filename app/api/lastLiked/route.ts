@@ -1,11 +1,12 @@
-import { getLastLiked } from "../../lib/server/spotify";
+import { NextResponse } from "next/server";
+import { getLastLiked } from "../../../lib/server/spotify";
 
-export default async function (_, res) {
+export async function GET() {
   const response = await getLastLiked();
   const results = await response.json();
   const song = results.items[0];
 
-  return res.status(200).json({
+  return NextResponse.json({
     title: song.track.name,
     imageUrl: song.track.album.images[0].url,
     artists: song.track.artists.map((artist) => ({

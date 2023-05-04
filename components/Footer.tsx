@@ -25,13 +25,13 @@ export default function Footer() {
             🥦
           </Link>{" "}
           •{" "}
-          <a href="https://github.com/zhengkyl/website" target="_blank">
-            open source
-          </a>{" "}
-          •{" "}
           <Link href="./resume.pdf" target="_blank">
             hire me
-          </Link>
+          </Link>{" "}
+          •{" "}
+          <a href="https://github.com/zhengkyl/website" target="_blank">
+            source
+          </a>
         </p>
       </footer>
     </Container>

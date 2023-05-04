@@ -1,6 +1,7 @@
-import { getCurrentSong, getLastPlayed } from "../../lib/server/spotify";
+import { NextResponse } from "next/server";
+import { getCurrentSong, getLastPlayed } from "../../../../lib/server/spotify";
 
-export default async function (_, res) {
+export async function GET() {
   const response = await getCurrentSong();
 
   let song;
@@ -16,7 +17,7 @@ export default async function (_, res) {
     playing = false;
   }
 
-  return res.status(200).json({
+  return NextResponse.json({
     title: song.name,
     imageUrl: song.album.images[0].url,
     artists: song.artists.map((artist) => ({

@@ -1,3 +1,5 @@
+"use client";
+
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
@@ -10,34 +12,25 @@ const getJoinSymbol = (index: number, length: number) => {
   return ", ";
 };
 
+const impressions = [
+  [
+    [
+      "It was not a movie he would recommend.",
+      "It was a movie worth watching.",
+    ],
+    ["It was an unexpectedly fun movie.", "It was an unexpected gem."],
+  ],
+  [
+    [
+      "It fell short of expectations.",
+      "As expected, it was a movie worth watching.",
+    ],
+    ["It was a fun movie.", "It lived up to the hype and more."],
+  ],
+];
+
 const getMovieImpression = (fun_before, fun_during, fun_after) => {
-  if (fun_before && fun_during && fun_after) {
-    return "It lived up to the hype and more.";
-  }
-  if (!fun_before && fun_during && fun_after) {
-    return "It was an unexpected gem.";
-  }
-
-  if (fun_before && !fun_during && !fun_after) {
-    return "It fell short of expectations.";
-  }
-  if (!fun_before && !fun_during && !fun_after) {
-    return "It was not a movie he would recommend.";
-  }
-
-  if (fun_before && fun_during && !fun_after) {
-    return "It was a fun movie.";
-  }
-  if (!fun_before && fun_during && !fun_after) {
-    return "It was an unexpectedly fun movie.";
-  }
-
-  if (fun_before && !fun_during && fun_after) {
-    return "As expected, it was a movie worth watching.";
-  }
-  if (!fun_before && !fun_during && fun_after) {
-    return "It was a movie worth watching.";
-  }
+  return impressions[+fun_before][+fun_during][+fun_after];
 };
 
 interface SongProps {
@@ -105,13 +98,8 @@ const StatusBlurb = ({ movieData }) => {
   const { data: songData } = useSWR("/api/lastPlayed", fetcher);
   const { data: likeData } = useSWR("/api/lastLiked", fetcher);
 
-  const movie = movieData ?? {
-    fun_before: false,
-    fun_during: false,
-    fun_after: false,
-    link: "",
-    title: "nothing",
-  };
+  const movie = movieData;
+
   const song = songData ?? {
     link: "kylezhe.ng",
     title: "nothing",
