@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentSong, getLastPlayed } from "../../../../lib/server/spotify";
+import { getCurrentSong, getLastPlayed } from "../../../lib/server/spotify";
 
 export async function GET() {
   const response = await getCurrentSong();
