@@ -101,13 +101,13 @@ const StatusBlurb = ({ movieData }) => {
   const movie = movieData;
 
   const song = songData ?? {
-    link: "kylezhe.ng",
+    link: "",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
     playing: false,
   };
   const like = likeData ?? {
-    link: "kylezhe.ng",
+    link: "",
     title: "nothing",
     artists: [{ name: "no one", link: "" }],
   };
