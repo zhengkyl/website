@@ -34,6 +34,13 @@ export async function getLastPlayed() {
   });
 }
 
+export const defaultSongData = {
+  link: "",
+  title: "nothing",
+  artists: [{ name: "no one", link: "" }],
+  playing: false,
+};
+
 const CURRENT_SONG_ENDPOINT =
   "https://api.spotify.com/v1/me/player/currently-playing";
 

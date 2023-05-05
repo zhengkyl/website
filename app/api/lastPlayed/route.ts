@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getCurrentSong, getLastPlayed } from "../../../lib/server/spotify";
+import {
+  defaultSongData,
+  getCurrentSong,
+  getLastPlayed,
+} from "../../../lib/server/spotify";
 
 export async function GET() {
   const response = await getCurrentSong();
@@ -11,6 +15,9 @@ export async function GET() {
     playing = true;
   } else {
     const response = await getLastPlayed();
+    if (!response.ok) {
+      return defaultSongData;
+    }
     const results = await response.json();
     song = results.items[0].track;
     playing = false;

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
-import { getLastLiked } from "../../../lib/server/spotify";
+import { defaultSongData, getLastLiked } from "../../../lib/server/spotify";
 
 export async function GET() {
   const response = await getLastLiked();
+
+  if (!response.ok) {
+    return defaultSongData;
+  }
+
   const results = await response.json();
   const song = results.items[0];
 
