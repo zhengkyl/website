@@ -3,7 +3,6 @@ import { getCurrentSong, getLastPlayed } from "../../../lib/server/spotify";
 
 export async function GET() {
   const response = await getCurrentSong();
-
   let song;
   let playing;
   if (response.status === 200) {

@@ -13,6 +13,9 @@ async function getAccessToken() {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: `grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}`,
+    next: {
+      revalidate: 60 * 59, // 59 minutes
+    },
   });
 
   return response.json();
@@ -41,6 +44,9 @@ export async function getCurrentSong() {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
+    next: {
+      revalidate: 10,
+    },
   });
 }
 
@@ -52,6 +58,9 @@ export async function getLastLiked() {
   return fetch(LAST_LIKED_ENDPOINT, {
     headers: {
       Authorization: `Bearer ${access_token}`,
+    },
+    next: {
+      revalidate: 60,
     },
   });
 }

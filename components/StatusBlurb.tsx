@@ -46,7 +46,7 @@ const InlineSong = ({ song, punctuation }: SongProps) => (
   <span>
     <span className="inline-block">
       "
-      <a className="hover:underline font-bold" href={song.link}>
+      <a className="hover:underline font-bold" href={song.link} target="_blank">
         {song.title}
       </a>
       "
