@@ -25,5 +25,14 @@ export default async function Page({
   const Component = getMDXComponent(code);
   console.log("page function run");
 
-  return <Component />;
+  return (
+    <div>
+      <h1>{frontmatter.title}</h1>
+      <h2>{frontmatter.posted}</h2>
+      {frontmatter.posted !== frontmatter.edited && (
+        <h2>{frontmatter.edited}</h2>
+      )}
+      <Component />
+    </div>
+  );
 }
