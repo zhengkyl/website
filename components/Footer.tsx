@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Container } from "./basic";
 
 export default function Footer() {
   return (
@@ -18,7 +17,7 @@ export default function Footer() {
           linkedin
         </a>
       </div>
-      <p className="flex-grow text-right">
+      <div className="flex-grow text-right">
         made with{" "}
         <Link href="./images/broccoli.jpg" target="_blank">
           🥦
@@ -31,7 +30,7 @@ export default function Footer() {
         <a href="https://github.com/zhengkyl/website" target="_blank">
           source
         </a>
-      </p>
+      </div>
     </footer>
   );
 }

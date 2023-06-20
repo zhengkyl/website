@@ -2,16 +2,12 @@ import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import { getMDXComponent } from "mdx-bundler/client";
 import path from "path";
+import { makesDir, getSlugs } from "../page";
 
 export const dynamicParams = false;
 
-const filesDir = path.join(process.cwd(), "posts/makes");
-
 export async function generateStaticParams() {
-  const fileNames = fs.readdirSync(filesDir);
-  return fileNames.map((fileName) => ({
-    slug: fileName.replace(/\.mdx$/, ""),
-  }));
+  return getSlugs();
 }
 
 export default async function Page({
@@ -19,7 +15,7 @@ export default async function Page({
 }: {
   params: Awaited<ReturnType<typeof generateStaticParams>>[number];
 }) {
-  const filePath = path.join(filesDir, `${params.slug}.mdx`);
+  const filePath = path.join(makesDir, `${params.slug}.mdx`);
   const fileData = fs.readFileSync(filePath, "utf8");
   const { code, frontmatter } = await bundleMDX({ source: fileData });
   const Component = getMDXComponent(code);
