@@ -8,10 +8,10 @@ export const metadata = {
   title: "Kyle Zheng",
 };
 
-export default function BaseLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="p-8 max-w-screen-lg m-auto">
         {children}
         <Footer />
       </body>

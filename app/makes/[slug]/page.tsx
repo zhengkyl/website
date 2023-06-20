@@ -5,7 +5,7 @@ import path from "path";
 
 export const dynamicParams = false;
 
-const filesDir = path.join(process.cwd(), "posts");
+const filesDir = path.join(process.cwd(), "posts/makes");
 
 export async function generateStaticParams() {
   const fileNames = fs.readdirSync(filesDir);
@@ -29,6 +29,7 @@ export default async function Page({
     <div>
       <h1>{frontmatter.title}</h1>
       <h2>{frontmatter.posted}</h2>
+      <h2>{frontmatter.summary}</h2>
       {frontmatter.posted !== frontmatter.edited && (
         <h2>{frontmatter.edited}</h2>
       )}
