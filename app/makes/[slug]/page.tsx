@@ -25,7 +25,6 @@ export default async function Page({
     <div>
       <h1>{frontmatter.title}</h1>
       <h2>{frontmatter.posted}</h2>
-      <h2>{frontmatter.summary}</h2>
       {frontmatter.posted !== frontmatter.edited && (
         <h2>{frontmatter.edited}</h2>
       )}
