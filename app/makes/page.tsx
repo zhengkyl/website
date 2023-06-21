@@ -36,16 +36,15 @@ export default async function Page() {
 
   return (
     <div>
-      <h1>/makes</h1>
       <ul>
         {frontmatters.map((matter) => (
           <Link href={`/makes/${matter.slug}`}>
             <li className="my-4 hover:underline">
               <div className="flex justify-between items-center">
-                <h2 className="">{matter.title}</h2>
+                <h2 className="">{matter.slug}</h2>
                 <small className="">{matter.posted}</small>
               </div>
-              <p className="text-2xl">{matter.summary}</p>
+              <p className="text-2xl">{matter.title}</p>
             </li>
           </Link>
         ))}
