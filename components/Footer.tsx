@@ -6,30 +6,31 @@ export default function Footer() {
       <div className="flex gap-4">
         <a
           href="https://github.com/zhengkyl"
-          className="hover:underline font-bold text-rose-200 highlight p-3"
+          className="hover:underline"
+          target="_blank"
         >
           github
         </a>
         <a
           href="https://www.linkedin.com/in/zhengkyl/"
-          className="hover:underline font-bold text-rose-200 highlight p-3"
+          className="hover:underline"
+          target="_blank"
         >
           linkedin
         </a>
+        <Link href="./resume.pdf" className="hover:underline" target="_blank">
+          resume
+        </Link>{" "}
       </div>
       <div className="flex-grow text-right">
         made with{" "}
-        <Link href="./images/broccoli.jpg" target="_blank">
+        <Link
+          href="./images/broccoli.jpg"
+          className="hover:underline"
+          target="_blank"
+        >
           🥦
         </Link>{" "}
-        •{" "}
-        <Link href="./resume.pdf" target="_blank">
-          hire me
-        </Link>{" "}
-        •{" "}
-        <a href="https://github.com/zhengkyl/website" target="_blank">
-          source
-        </a>
       </div>
     </footer>
   );

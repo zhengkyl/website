@@ -16,7 +16,8 @@
     @apply text-2xl font-bold;
   }
   html {
-    @apply text-slate-800;
+    /* @apply text-slate-800 text-xl; */
+    @apply text-stone-800 text-xl;
   }
   small {
     font-size: 60%;
@@ -27,18 +28,18 @@
   .highlight {
     position: relative;
     display: inline-block;
+    color: white;
   }
   .highlight::before {
-    @apply bg-rose-200;
+    @apply bg-rose-500;
     content: "";
     position: absolute;
-    height: 70%;
-    left: 0;
-    right: 0;
+    height: 110%;
+    left: -10%;
+    right: -10%;
     top: 50%;
-    top: 55%;
     z-index: -1;
-    transform: translateY(-50%) rotate(-2deg);
+    transform: translateY(-50%) rotate(-2deg) skew(-10deg);
   }
   a.highlight::before {
     @apply bg-gray-800;
