@@ -10,6 +10,12 @@ export async function generateStaticParams() {
   return getSlugs();
 }
 
+const dateOptions = {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+} as const;
+
 export default async function Page({
   params,
 }: {
@@ -21,14 +27,18 @@ export default async function Page({
   const Component = getMDXComponent(code);
   console.log("page function run");
 
+  const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
+
   return (
-    <div>
-      <h1>{frontmatter.title}</h1>
-      <h2>{frontmatter.posted}</h2>
-      {frontmatter.posted !== frontmatter.edited && (
-        <h2>{frontmatter.edited}</h2>
-      )}
+    <>
+      <div className="mb-4">
+        Posted {dateFormat.format(Date.parse(frontmatter.posted))}
+        <br />
+        {frontmatter.posted !== frontmatter.edited && (
+          <>Posted {dateFormat.format(Date.parse(frontmatter.edited))}</>
+        )}
+      </div>
       <Component />
-    </div>
+    </>
   );
 }

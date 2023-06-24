@@ -8,48 +8,38 @@ export default function Nav() {
   const pathname = usePathname();
 
   const sections = pathname.split("/");
-  const current = sections.pop();
   sections.shift();
 
   let sectionPath = "";
 
-  const isRoot = current === "";
+  const isRoot = pathname === "/";
 
   return (
     <nav
-      className={"text-3xl font-semibold" + (isRoot ? "" : " text-slate-400")}
+      className={
+        "text-3xl font-bold flex flex-wrap gap-2" +
+        (isRoot ? "" : " text-slate-400")
+      }
     >
-      <Link
-        href="/"
-        className={"whitespace-pre transition hover:text-slate-600"}
-      >
-        kylezhe<small>.</small>ng
+      <Link href="/" className={"transition hover:text-slate-600"}>
+        kyle zheng
       </Link>
-      <span className="cursor-default text-slate-200 mx-3">/</span>
-      {sections.map((section) => {
+      {sections.map((section, i) => {
         sectionPath += "/" + section;
+        const isLast = i == sections.length - 1;
         return (
-          <span key={section} className="inline-block">
-            <Link
-              href={sectionPath}
-              className="whitespace-pre transition hover:text-slate-600"
-            >
-              {section}
-            </Link>
-            <span className="cursor-default text-slate-200 mx-3">/</span>
-          </span>
+          <Link
+            key={section}
+            href={sectionPath}
+            className={
+              "transition hover:text-slate-600" +
+              (isLast ? " text-slate-800" : "")
+            }
+          >
+            {section.replaceAll("_", " ")}
+          </Link>
         );
       })}
-      {!isRoot && (
-        <>
-          <Link
-            href={pathname}
-            className="whitespace-pre text-slate-800 transition hover:text-slate-600"
-          >
-            {current}
-          </Link>
-        </>
-      )}
     </nav>
   );
 }

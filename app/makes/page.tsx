@@ -1,17 +1,15 @@
 import path from "path";
 import fs from "fs";
 import graymatter from "gray-matter";
-import { generateStaticParams } from "./[slug]/page";
 import Link from "next/link";
 
 export const makesDir = path.join(process.cwd(), "posts/makes");
 
 type Frontmatter = {
   slug: string;
-  title: string;
-  summary: string;
-  posted: string;
-  edited: string;
+  subtitle: string;
+  posted: Date;
+  edited: Date;
 };
 
 export function getSlugs() {
@@ -28,23 +26,31 @@ export default async function Page() {
     const filePath = path.join(makesDir, `${slug}.mdx`);
     const fileData = fs.readFileSync(filePath, "utf8");
     const file = graymatter(fileData);
-    return { slug, ...file.data } as Frontmatter;
+
+    return {
+      slug,
+      subtitle: file.data.subtitle,
+      posted: new Date(file.data.posted),
+      edited: new Date(file.data.edited),
+    } as Frontmatter;
   });
 
   // sort reverse chronological
-  frontmatters.sort((a, b) => Date.parse(b.posted) - Date.parse(a.posted));
+  frontmatters.sort((a, b) => (b.posted < a.posted ? -1 : 1));
 
   return (
     <div>
       <ul>
         {frontmatters.map((matter) => (
-          <Link href={`/makes/${matter.slug}`}>
-            <li className="my-4 hover:underline">
+          <Link href={`/makes/${matter.slug}`} key={matter.slug}>
+            <li className="my-8 hover:underline">
               <div className="flex justify-between items-center">
-                <h2 className="">{matter.slug}</h2>
-                <small className="">{matter.posted}</small>
+                <h2 className="">{matter.slug.replaceAll("_", " ")}</h2>
+                {/* <div className="text-2xl text-right whitespace-pre">
+                  {dateFormat.format(matter.posted)}
+                </div> */}
               </div>
-              <p className="text-2xl">{matter.title}</p>
+              <p className="text-2xl">{matter.subtitle}</p>
             </li>
           </Link>
         ))}
