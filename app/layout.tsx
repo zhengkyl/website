@@ -2,16 +2,14 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import Footer from "../components/Footer";
 import Nav from "../components/Nav";
+import { Inter } from "next/font/google";
 
-import "../styles/globals.css";
-
-import localFont from "next/font/local";
-
-// Font files can be colocated inside of `app`
-const myFont = localFont({
-  src: "./SmileySans-Oblique.ttf.woff2",
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({
+  subsets: ["latin"],
   display: "swap",
 });
+import "../styles/globals.css";
 
 export const metadata = {
   title: "Kyle Zheng",
@@ -19,7 +17,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={myFont.className}>
+    <html lang="en">
       <body className="py-12 px-4 max-w-screen-md m-auto min-h-screen flex flex-col justify-between">
         <Nav />
         <main className="flex-1 my-12">{children}</main>

@@ -17,7 +17,7 @@ export default function Nav() {
   return (
     <nav
       className={
-        "text-3xl font-bold flex flex-wrap gap-2" +
+        "text-3xl font-bold flex flex-wrap gap-x-2" +
         (isRoot ? "" : " text-slate-400")
       }
     >
