@@ -1,3 +1,5 @@
+import { addParams } from "./util";
+
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REFRESH_TOKEN = process.env.SPOTIFY_REFRESH_TOKEN;
@@ -21,48 +23,52 @@ async function getAccessToken() {
   return response.json();
 }
 
-const LAST_PLAYED_ENDPOINT =
-  "https://api.spotify.com/v1/me/player/recently-played?limit=1";
+// const LAST_PLAYED_ENDPOINT =
+//   "https://api.spotify.com/v1/me/player/recently-played?limit=1";
 
-export async function getLastPlayed() {
+// export async function getLastPlayed() {
+//   const { access_token } = await getAccessToken();
+
+//   return fetch(LAST_PLAYED_ENDPOINT, {
+//     headers: {
+//       Authorization: `Bearer ${access_token}`,
+//     },
+//   });
+// }
+
+// export const defaultSongData = {
+//   link: "",
+//   title: "nothing",
+//   artists: [{ name: "no one", link: "" }],
+//   playing: false,
+// };
+
+// const CURRENT_SONG_ENDPOINT =
+//   "https://api.spotify.com/v1/me/player/currently-playing";
+
+// export async function getCurrentSong() {
+//   const { access_token } = await getAccessToken();
+
+//   return fetch(CURRENT_SONG_ENDPOINT, {
+//     headers: {
+//       Authorization: `Bearer ${access_token}`,
+//     },
+//     next: {
+//       revalidate: 10,
+//     },
+//   });
+// }
+
+const LAST_LIKED_ENDPOINT = "https://api.spotify.com/v1/me/tracks";
+
+export async function getLikedSongs(
+  params = {
+    limit: 1,
+  }
+) {
   const { access_token } = await getAccessToken();
 
-  return fetch(LAST_PLAYED_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-}
-
-export const defaultSongData = {
-  link: "",
-  title: "nothing",
-  artists: [{ name: "no one", link: "" }],
-  playing: false,
-};
-
-const CURRENT_SONG_ENDPOINT =
-  "https://api.spotify.com/v1/me/player/currently-playing";
-
-export async function getCurrentSong() {
-  const { access_token } = await getAccessToken();
-
-  return fetch(CURRENT_SONG_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    next: {
-      revalidate: 10,
-    },
-  });
-}
-
-const LAST_LIKED_ENDPOINT = "https://api.spotify.com/v1/me/tracks?limit=1";
-
-export async function getLastLiked() {
-  const { access_token } = await getAccessToken();
-
-  return fetch(LAST_LIKED_ENDPOINT, {
+  const response = await fetch(addParams(LAST_LIKED_ENDPOINT, params), {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
@@ -70,4 +76,20 @@ export async function getLastLiked() {
       revalidate: 60,
     },
   });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const result = await response.json();
+
+  return result.items.map((song) => ({
+    title: song.track.name,
+    imageUrl: song.track.album.images[0].url,
+    artists: song.track.artists.map((artist) => ({
+      name: artist.name,
+      link: artist.external_urls.spotify,
+    })),
+    link: song.track.external_urls.spotify,
+  }));
 }

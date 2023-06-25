@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getLatestReviewAndMovie } from "../lib/server/movielo";
+import { getLikedReviews } from "../lib/server/review";
 
 export default async function HomePage() {
   // const movieData = await getLatestReviewAndMovie();

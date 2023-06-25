@@ -25,7 +25,6 @@ export default async function Page({
   const fileData = fs.readFileSync(filePath, "utf8");
   const { code, frontmatter } = await bundleMDX({ source: fileData });
   const Component = getMDXComponent(code);
-  console.log("page function run");
 
   const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
