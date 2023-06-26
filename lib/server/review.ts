@@ -7,7 +7,7 @@ const REVIEWS_ENDPOINT = "https://review-api.fly.dev/reviews";
 const getMovieDataUrl = (movieId) =>
   `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`;
 
-export const getLikedReviews = async (
+export const getMovieReviews = async (
   params = {
     per_page: 3,
     category: "Film",
@@ -31,6 +31,8 @@ export const getLikedReviews = async (
 
       return {
         title: movie.title,
+        poster_path: movie.poster_path,
+        release_date: movie.release_date,
         link: `https://www.themoviedb.org/movie/${movie.id}`,
         fun_before: review.fun_before,
         fun_during: review.fun_during,
