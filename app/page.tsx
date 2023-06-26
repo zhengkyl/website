@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getLikedReviews } from "../lib/server/review";
+import { getMovieReviews } from "../lib/server/review";
 
 export default async function HomePage() {
   // const movieData = await getLatestReviewAndMovie();
@@ -32,14 +32,11 @@ export default async function HomePage() {
       <Link href="/makes" className="text-3xl block mt-8">
         <span className="font-bold">/makes</span> has some things I've made
       </Link>
-      <p className="my-4">Maybe checkout ssh Conway's game of life.</p>
+      <p className="my-4">Some something</p>
       <Link href="/likes" className="text-3xl block mt-8">
         <span className="font-bold">/likes</span> has some things I like
       </Link>
-      <p className="my-4">
-        I am selective about what I care about, but I have objectively good
-        taste where it counts.
-      </p>
+      <p className="my-4">Movies and songs.</p>
     </>
   );
 }
