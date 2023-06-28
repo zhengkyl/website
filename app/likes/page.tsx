@@ -1,4 +1,3 @@
-import Link from "next/link";
 import MovieReview from "../../components/Review";
 import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
@@ -35,13 +34,10 @@ export default async function Page() {
     <>
       <div>
         <h2 className="inline mr-2">movies</h2>
-        <Link href="/likes/movies" className="hover:underline">
-          <small>see more</small>
-        </Link>
       </div>
       <p className="pt-2">just watched</p>
       <MovieReview {...lastReview} />
-      <p className="pt-2">worth watching</p>
+      <p className="pt-2">good movies</p>
       <ul>
         {positiveReviews.map((movie) => (
           <MovieReview {...movie} />
@@ -49,9 +45,6 @@ export default async function Page() {
       </ul>
       <div className="mt-8">
         <h2 className="inline mr-2">songs</h2>
-        <Link href="/likes/songs" className="hover:underline">
-          <small>see more</small>
-        </Link>
       </div>
       {currentSong ? (
         <>
@@ -64,7 +57,7 @@ export default async function Page() {
           <Song {...lastSong} />
         </>
       )}
-      <p className="mt-2">ear drugs</p>
+      <p className="mt-2">good songs</p>
       <ul>
         {songs.map((song) => (
           <li>
