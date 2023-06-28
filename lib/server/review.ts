@@ -7,16 +7,20 @@ const REVIEWS_ENDPOINT = "https://review-api.fly.dev/reviews";
 const getMovieDataUrl = (movieId) =>
   `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`;
 
-export const getMovieReviews = async (
-  params = {
-    per_page: 3,
-    category: "Film",
-    status: "Completed",
-    sort_by: "created_at.desc",
-    fun_during: true,
-    fun_after: true,
-  }
-) => {
+type SortField = "tmdb_id" | "created_at" | "updated_at";
+type SortType = "asc" | "desc";
+
+type ReviewParams = {
+  per_page?: number;
+  category?: "Film" | "Show";
+  status?: "Completed" | "PlanToWatch" | "Watching" | "Dropped";
+  sort_by?: `${SortField}.${SortType}`;
+  fun_before?: boolean;
+  fun_during?: boolean;
+  fun_after?: boolean;
+};
+
+export const getMovieReviews = async (params: ReviewParams) => {
   const reviewResp = await fetch(addParams(REVIEWS_ENDPOINT, params), {
     next: { revalidate: 10 },
   });

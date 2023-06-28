@@ -2,10 +2,32 @@ import Link from "next/link";
 import MovieReview from "../../components/Review";
 import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
-import { getLikedSongs } from "../../lib/server/spotify";
+import {
+  getCurrentSong,
+  getLastPlayed,
+  getLikedSongs,
+} from "../../lib/server/spotify";
 
 export default async function Page() {
-  const reviews = await getMovieReviews();
+  const positiveReviews = await getMovieReviews({
+    per_page: 3,
+    category: "Film",
+    status: "Completed",
+    sort_by: "created_at.desc",
+    fun_during: true,
+    fun_after: true,
+  });
+  const lastReview = (
+    await getMovieReviews({
+      per_page: 1,
+      category: "Film",
+      status: "Completed",
+      sort_by: "created_at.desc",
+    })
+  )[0];
+
+  const currentSong = await getCurrentSong();
+  const lastSong = (await getLastPlayed({ limit: 1 }))[0];
 
   const songs = await getLikedSongs({ limit: 3 });
 
@@ -17,9 +39,11 @@ export default async function Page() {
           <small>see more</small>
         </Link>
       </div>
-      <p>my recommendations</p>
+      <p className="pt-2">just watched</p>
+      <MovieReview {...lastReview} />
+      <p className="pt-2">worth watching</p>
       <ul>
-        {reviews.map((movie) => (
+        {positiveReviews.map((movie) => (
           <MovieReview {...movie} />
         ))}
       </ul>
@@ -29,7 +53,18 @@ export default async function Page() {
           <small>see more</small>
         </Link>
       </div>
-      <p>recent bops</p>
+      {currentSong ? (
+        <>
+          <p className="mt-2">listening to</p>
+          <Song {...currentSong} />
+        </>
+      ) : (
+        <>
+          <p className="mt-2">was listening to</p>
+          <Song {...lastSong} />
+        </>
+      )}
+      <p className="mt-2">ear drugs</p>
       <ul>
         {songs.map((song) => (
           <li>
