@@ -43,7 +43,7 @@ export default function MovieReview(review: MovieProps) {
         href={review.link}
         target="_blank"
       >
-        {`${review.title} (${review.release_date.slice(0, 4)})`}
+        {`${review.title} (${review.release_date?.slice(0, 4)})`}
       </a>
       <span className="float-right">{ratings[index]}</span>
     </div>
