@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { getMovieReviews } from "../lib/server/review";
 
 export default async function HomePage() {
-  // const movieData = await getLatestReviewAndMovie();
-  //
   return (
     <>
       <p className="absolute " style={{ clip: "rect(1px, 1px, 1px, 1px)" }}>
@@ -32,11 +29,9 @@ export default async function HomePage() {
       <Link href="/makes" className="text-3xl block mt-8">
         <span className="font-bold">/makes</span> has some things I've made
       </Link>
-      <p className="my-4">Some something</p>
       <Link href="/likes" className="text-3xl block mt-8">
         <span className="font-bold">/likes</span> has some things I like
       </Link>
-      <p className="my-4">Movies and songs.</p>
     </>
   );
 }

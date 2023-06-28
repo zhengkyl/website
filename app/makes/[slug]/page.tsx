@@ -34,7 +34,7 @@ export default async function Page({
         Posted {dateFormat.format(Date.parse(frontmatter.posted))}
         <br />
         {frontmatter.posted !== frontmatter.edited && (
-          <>Posted {dateFormat.format(Date.parse(frontmatter.edited))}</>
+          <>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</>
         )}
       </div>
       <Component />
