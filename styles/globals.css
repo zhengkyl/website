@@ -41,7 +41,7 @@
     z-index: -1;
     transform: translateY(-50%) rotate(-2deg) skew(-10deg);
   }
-  a.highlight::before {
+  /* a.highlight::before {
     @apply bg-gray-800;
-  }
+  } */
 }

@@ -4,6 +4,28 @@ posted: 2023-3-4
 edited: 2023-3-4
 ---
 
-sorry wip here is github
-
 [https://github.com/PCLLAB/edith](https://github.com/PCLLAB/edith)
+
+WIP
+
+The Purdue Cognition and Learning Lab (PCLLAB) conducts psychology experiments. These experiments are browser based, and the resulting data (a giant json blob containing the victim's responses) gets saved to a database.
+
+Here is the gap. Researchers need to
+
+- easily see and/or download the collected data
+- test experiments while developing and keep test data separate
+- assign different experiment parameters to a certain number of victims
+
+Here's the problem. This already existed in the form of a Angular web app created by the graduating programmers. It's called `Jarvis`.
+
+First off, I don't blame them for what they did. But the code was in bad shape. The dependencies were several major version out of date. The code was written for ES5 which resulted in serious callback hell. They used 4 space wide indents. I didn't know Angular, jquery?, , and in the year 2019, I knew that no future undergraduate CS student would either. This code was rotten and would eventually be replaced. The question was, should I be the one to do it?
+
+I chickened out. I learned enough Angular to get by, adding grotesque extensions to the staggering corpse. I added features, refactored and formatted, and even shoved Angular through 4 major versions until it refused to go further.
+
+Only then did I resign to rewrite this app from scratch. Out with Angular, in with Nextjs. From bootstrap and SASS to Material UI. From ES5 to Typescript. Add in testcases that run after every push.
+
+I learned about how padding in scroll containers just isn't consistent between browsers, and that Firefox doesn't implement the `drag` event properly.
+
+Now, as I sit there, I see what I could not before. Nextjs 13 was released, tempting a massive refactor, for little gain (especially as buggy as Nextjs 13 is). The testcases only cover half of the API, because they just take so much time to write. The dockerized build process is long, annoying, and adds _insane_ disk usage. MUI is bloated, tailwind is fine but needs to be replaced, React just isn't performant.
+
+That's my contribution to PCLLAB. I named it `Edith`. May it be mercilessly destroyed in due time.

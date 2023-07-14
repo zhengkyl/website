@@ -18,10 +18,10 @@ export default function Nav() {
     <nav
       className={
         "text-3xl font-bold flex flex-wrap gap-x-2" +
-        (isRoot ? "" : " text-slate-400")
+        (isRoot ? "" : " text-stone-400")
       }
     >
-      <Link href="/" className={"transition hover:text-slate-600"}>
+      <Link href="/" className={"transition hover:text-stone-600"}>
         kyle zheng
       </Link>
       {sections.map((section, i) => {
@@ -32,8 +32,8 @@ export default function Nav() {
             key={section}
             href={sectionPath}
             className={
-              "transition hover:text-slate-600" +
-              (isLast ? " text-slate-800" : "")
+              "transition hover:text-stone-600" +
+              (isLast ? " text-stone-800" : "")
             }
           >
             {section.replaceAll("_", " ")}

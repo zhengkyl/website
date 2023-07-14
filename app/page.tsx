@@ -26,11 +26,11 @@ export default async function HomePage() {
         during internships, but I've also really enjoyed my time with <b>Go</b>,{" "}
         <span>Rust</span>, and <span>Elixir</span> on dumb side projects.
       </p>
-      <Link href="/makes" className="text-3xl block mt-8">
-        <span className="font-bold">/makes</span> has some things I've made
+      <Link href="/makes" className="text-3xl font-bold block mt-8">
+        /makes
       </Link>
-      <Link href="/likes" className="text-3xl block mt-8">
-        <span className="font-bold">/likes</span> has some things I like
+      <Link href="/likes" className="text-3xl font-bold block mt-8">
+        /likes
       </Link>
     </>
   );
