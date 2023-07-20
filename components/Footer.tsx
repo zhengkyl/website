@@ -23,14 +23,13 @@ export default function Footer() {
         </Link>{" "}
       </div>
       <div className="flex-grow text-right">
-        made with{" "}
         <Link
           href="./images/broccoli.jpg"
           className="hover:underline"
           target="_blank"
         >
-          🥦
-        </Link>{" "}
+          made with 🥦
+        </Link>
       </div>
     </footer>
   );

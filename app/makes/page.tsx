@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import graymatter from "gray-matter";
 import Link from "next/link";
+import Image from "next/image";
 
 export const makesDir = path.join(process.cwd(), "posts/makes");
 
@@ -10,6 +11,7 @@ type Frontmatter = {
   subtitle: string;
   posted: Date;
   edited: Date;
+  image?: string;
 };
 
 export function getSlugs() {
@@ -32,6 +34,7 @@ export default async function Page() {
       subtitle: file.data.subtitle,
       posted: new Date(file.data.posted),
       edited: new Date(file.data.edited),
+      image: file.data.image,
     } as Frontmatter;
   });
 
@@ -50,7 +53,7 @@ export default async function Page() {
                   {dateFormat.format(matter.posted)}
                 </div> */}
               </div>
-              <p className="text-2xl">{matter.subtitle}</p>
+              <p className="text-l">{matter.subtitle}</p>
             </li>
           </Link>
         ))}
