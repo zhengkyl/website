@@ -2,6 +2,7 @@ import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import { getMDXComponent } from "mdx-bundler/client";
 import path from "path";
+import { A, Img, P, BlockLink } from "../../../components/mdx";
 import { makesDir, getSlugs } from "../page";
 
 export const dynamicParams = false;
@@ -23,7 +24,9 @@ export default async function Page({
 }) {
   const filePath = path.join(makesDir, `${params.slug}.mdx`);
   const fileData = fs.readFileSync(filePath, "utf8");
-  const { code, frontmatter } = await bundleMDX({ source: fileData });
+  const { code, frontmatter } = await bundleMDX({
+    source: fileData,
+  });
   const Component = getMDXComponent(code);
 
   const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
@@ -37,7 +40,7 @@ export default async function Page({
           <>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</>
         )}
       </div>
-      <Component />
+      <Component components={{ p: P, a: A, img: Img, BlockLink }} />
     </>
   );
 }

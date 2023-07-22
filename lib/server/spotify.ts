@@ -38,7 +38,7 @@ const mapToSong = (item) => toSong(item.track);
 const LAST_PLAYED_ENDPOINT =
   "https://api.spotify.com/v1/me/player/recently-played";
 
-export async function getLastPlayed(
+export async function getPreviousSongs(
   params = {
     limit: 1,
   }

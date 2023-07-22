@@ -2,7 +2,6 @@ import path from "path";
 import fs from "fs";
 import graymatter from "gray-matter";
 import Link from "next/link";
-import Image from "next/image";
 
 export const makesDir = path.join(process.cwd(), "posts/makes");
 

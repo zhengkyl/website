@@ -2,9 +2,10 @@ import MovieReview from "../../components/Review";
 import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
 import {
+  defaultSongData,
   getCurrentSong,
-  getLastPlayed,
   getLikedSongs,
+  getPreviousSongs,
 } from "../../lib/server/spotify";
 
 export default async function Page() {
@@ -26,9 +27,9 @@ export default async function Page() {
   )[0];
 
   const currentSong = await getCurrentSong();
-  const lastSong = (await getLastPlayed({ limit: 1 }))[0];
+  const previousSong = (await getPreviousSongs({ limit: 1 }))[0];
 
-  const songs = await getLikedSongs({ limit: 3 });
+  const likedSongs = await getLikedSongs({ limit: 3 });
 
   return (
     <>
@@ -52,14 +53,16 @@ export default async function Page() {
           <Song {...currentSong} />
         </>
       ) : (
-        <>
-          <p className="mt-2">was listening to</p>
-          <Song {...lastSong} />
-        </>
+        previousSong && (
+          <>
+            <p className="mt-2">was listening to</p>
+            <Song {...previousSong} />
+          </>
+        )
       )}
       <p className="mt-2">good songs</p>
       <ul>
-        {songs.map((song) => (
+        {likedSongs.map((song) => (
           <li>
             <Song {...song} />
           </li>

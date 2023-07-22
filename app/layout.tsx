@@ -1,15 +1,14 @@
-import Head from "next/head";
 import { ReactNode } from "react";
 import Footer from "../components/Footer";
 import Nav from "../components/Nav";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 
 // If loading a variable font, you don't need to specify the font weight
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
-import "../styles/globals.css";
+// const inter = Inter({
+//   subsets: ["latin"],
+//   display: "swap",
+// });
+import "../styles/global.css";
 
 export const metadata = {
   title: "Kyle Zheng",

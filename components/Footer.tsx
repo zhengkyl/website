@@ -24,7 +24,7 @@ export default function Footer() {
       </div>
       <div className="flex-grow text-right">
         <Link
-          href="./images/broccoli.jpg"
+          href="/images/broccoli.jpg"
           className="hover:underline"
           target="_blank"
         >

@@ -1,0 +1,13 @@
+@import "@unocss/reset/tailwind.css";
+@unocss;
+
+h1,
+h2,
+h3,
+h4 {
+  @apply text-2xl font-bold;
+}
+
+html {
+  @apply text-stone-800 text-xl;
+}
