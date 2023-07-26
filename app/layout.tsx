@@ -8,6 +8,7 @@ import Nav from "../components/Nav";
 //   subsets: ["latin"],
 //   display: "swap",
 // });
+import "@code-hike/mdx/dist/index.css";
 import "../styles/global.css";
 
 export const metadata = {

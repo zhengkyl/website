@@ -1,9 +1,9 @@
+import { remarkCodeHike } from "@code-hike/mdx";
 import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
-import { getMDXComponent } from "mdx-bundler/client";
 import path from "path";
-import { A, Img, P, BlockLink } from "../../../components/mdx";
-import { makesDir, getSlugs } from "../page";
+import { getSlugs, makesDir } from "../page";
+import { InteractiveArticle } from "./client";
 
 export const dynamicParams = false;
 
@@ -26,8 +26,15 @@ export default async function Page({
   const fileData = fs.readFileSync(filePath, "utf8");
   const { code, frontmatter } = await bundleMDX({
     source: fileData,
+    mdxOptions(options, frontmatter) {
+      options.remarkPlugins = [
+        ...(options.remarkPlugins ?? []),
+        [remarkCodeHike, { theme: "one-dark-pro" }],
+      ];
+
+      return options;
+    },
   });
-  const Component = getMDXComponent(code);
 
   const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
@@ -40,7 +47,7 @@ export default async function Page({
           <>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</>
         )}
       </div>
-      <Component components={{ p: P, a: A, img: Img, BlockLink }} />
+      <InteractiveArticle code={code} />
     </>
   );
 }
