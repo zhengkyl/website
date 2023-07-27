@@ -4,13 +4,15 @@ posted: 2023-4-28
 edited: 2023-4-28
 ---
 
-# Test
+# Try it out
 
 ```sh
 ssh gol.kylezhe.ng
 ```
 
-<BlockLink title="Github">https://github.com/zhengkyl/gol</BlockLink>
+<BlockLink title="Github">
+  {"https://github.com/zhengkyl/gol/tree/workshop"}
+</BlockLink>
 
 <BlockLink title="Event Post">
   {"https://events.purduehackers.com/go-game-of-life-workshop"}
@@ -20,24 +22,228 @@ ssh gol.kylezhe.ng
 
 ![wide shot](/terminal_game_of_life/workshop2.jpg)
 
-Workshops are hard.
+### Interested in the workshop?
 
-I learned a lot from how bad mine was.
+Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
-Thankfully, I gave a dry run, which ended up being a much better experience than the real deal.
+<CH.Spotlight>
 
-Go is a very simple language, which is good, but it certainly isn't very sexy.
+```go
+func NewBoard(width, height int) [][]bool {
+  board := make([][]bool, height)
+	for i := range board {
+		board[i] = make([]bool, width)
+	}
+	return board
+}
+```
 
-Conway's Game of Life is interesting for about 2 minutes.
+---
 
-It's hard to learn anything in the duration of a workshop and impossible to make anything substantial.
+Create a new board
 
-Live coding is both too slow to watch and too fast to follow along with.
+```go
+func NewBoard(width, height int) [][]bool {
+  board := make([][]bool, height)
+	for i := range board {
+		board[i] = make([]bool, width)
+	}
+	return board
+}
+```
 
-Talking to an unfamiliar audience is mostly talking to yourself.
+---
 
-Practice is good, but being interesting is better.
+Create next board state
+
+```go focus=9:17
+func NewBoard(width, height int) [][]bool {
+  board := make([][]bool, height)
+	for i := range board {
+		board[i] = make([]bool, width)
+	}
+	return board
+}
+
+func NextBoard(board [][]bool) [][]bool {
+	boardHeight := len(board)
+	boardWidth := len(board[0])
+
+	newBoard := NewBoard(boardWidth, boardHeight)
+
+
+	return newBoard
+}
+```
+
+---
+
+Loop over every cell
+
+```go focus=7:11
+func NextBoard(board [][]bool) [][]bool {
+	boardHeight := len(board)
+	boardWidth := len(board[0])
+
+	newBoard := NewBoard(boardWidth, boardHeight)
+
+	for y := range board {
+		for x, alive := range board[y] {
+
+		}
+	}
+
+	return newBoard
+}
+```
+
+---
+
+Check neighbors
+
+```go focus=10:25
+func NextBoard(board [][]bool) [][]bool {
+	boardHeight := len(board)
+	boardWidth := len(board[0])
+
+	newBoard := NewBoard(boardWidth, boardHeight)
+
+	for y := range board {
+		for x, alive := range board[y] {
+
+			neighbors := 0
+
+			for dy := -1; dy <= 1; dy++ {
+				for dx := -1; dx <= 1; dx++ {
+					if dy == 0 && dx == 0 {
+						continue
+					}
+
+					ny := (y + dy + boardHeight) % boardHeight
+					nx := (x + dx + boardWidth) % boardWidth
+
+					if board[ny][nx] {
+						neighbors++
+					}
+				}
+			}
+		}
+	}
+
+	return newBoard
+}
+```
+
+---
+
+Add state transition rules
+
+```go focus=27:31
+func NextBoard(board [][]bool) [][]bool {
+	boardHeight := len(board)
+	boardWidth := len(board[0])
+
+	newBoard := NewBoard(boardWidth, boardHeight)
+
+	for y := range board {
+		for x, alive := range board[y] {
+
+			neighbors := 0
+
+			for dy := -1; dy <= 1; dy++ {
+				for dx := -1; dx <= 1; dx++ {
+					if dy == 0 && dx == 0 {
+						continue
+					}
+
+					ny := (y + dy + boardHeight) % boardHeight
+					nx := (x + dx + boardWidth) % boardWidth
+
+					if board[ny][nx] {
+						neighbors++
+					}
+				}
+			}
+
+			if alive && (neighbors == 2 || neighbors == 3) {
+				newBoard[y][x] = true
+			} else if !alive && neighbors == 3 {
+				newBoard[y][x] = true
+			}
+
+		}
+	}
+
+	return newBoard
+}
+```
+
+---
+
+Full code
+
+```go
+package life
+
+func NewBoard(width, height int) [][]bool {
+	board := make([][]bool, height)
+	for i := range board {
+		board[i] = make([]bool, width)
+	}
+	return board
+}
+
+func NextBoard(board [][]bool) [][]bool {
+	boardHeight := len(board)
+	boardWidth := len(board[0])
+
+	newBoard := NewBoard(boardWidth, boardHeight)
+
+	for y := range board {
+		for x, alive := range board[y] {
+
+			neighbors := 0
+
+			for dy := -1; dy <= 1; dy++ {
+				for dx := -1; dx <= 1; dx++ {
+					if dy == 0 && dx == 0 {
+						continue
+					}
+
+					ny := (y + dy + boardHeight) % boardHeight
+					nx := (x + dx + boardWidth) % boardWidth
+
+					if board[ny][nx] {
+						neighbors++
+					}
+				}
+			}
+
+			if alive && (neighbors == 2 || neighbors == 3) {
+				newBoard[y][x] = true
+			} else if !alive && neighbors == 3 {
+				newBoard[y][x] = true
+			}
+
+		}
+	}
+
+	return newBoard
+}
+```
+
+</CH.Spotlight>
+
+You might be thinking, gee, that code sure could be more optimized. I though so too, and after reading a few articles about truly mind-bending implementations of the Game of Life, I was prepared to wrangle some code. But then I let my better judgement prevail and ran a benchmark. Oh no.
+
+The code ran too fast.
+
+Like several orders of magnitude faster than I could have imagined, not to mention the bottleneck of rendering strings to a terminal and/or through ssh. I guess the real premature optimization was the hardware advances made since the 1970s.
 
 **Lessons learned**
 
 - hold events in easily findable locations
+
+- benchmarking code is a good way to avoid a fun time
+
+- go isn't sexy, which is good for making functional and performant programs, bad for having sex with code
