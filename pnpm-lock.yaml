@@ -43,9 +43,6 @@ devDependencies:
   '@iconify-json/ph':
     specifier: ^1.1.5
     version: 1.1.5
-  '@iconify-json/pixelarticons':
-    specifier: ^1.1.6
-    version: 1.1.6
   '@types/node':
     specifier: ^18.16.16
     version: 18.16.16
@@ -55,6 +52,9 @@ devDependencies:
   '@unocss/postcss':
     specifier: ^0.53.6
     version: 0.53.6(postcss@8.4.27)
+  '@unocss/preset-attributify':
+    specifier: ^0.54.0
+    version: 0.54.0
   '@unocss/transformer-directives':
     specifier: ^0.53.6
     version: 0.53.6
@@ -580,12 +580,6 @@ packages:
       '@iconify/types': 2.0.0
     dev: true
 
-  /@iconify-json/pixelarticons@1.1.6:
-    resolution: {integrity: sha512-lnTyP0K1EbPmaOXo507ulD4W0wvNRrlXNRaU9NKICA8f0hccMfXjnM5V/ss8h4tnzC21R1h8A270mKxbuEe7fw==}
-    dependencies:
-      '@iconify/types': 2.0.0
-    dev: true
-
   /@iconify/types@2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: true
@@ -1027,6 +1021,10 @@ packages:
     resolution: {integrity: sha512-wuaLjWCzKUisHUxo4pjIdzcimdSmVa2hMHA3V7wVFBiSFX96/s7l0bvhHGFF/gMjbOnvJ+y+lBl3VKqcj9kwbA==}
     dev: true
 
+  /@unocss/core@0.54.0:
+    resolution: {integrity: sha512-iHfJJ8U+pVhMrbVpzMb0GImZUJu3Xmp165Q5Qr44hGOEzcMdvdBxbMSSl2VBKjRsEuNudNVhh7XJAyUcKxnSWg==}
+    dev: true
+
   /@unocss/extractor-arbitrary-variants@0.53.6:
     resolution: {integrity: sha512-5MQD/9pIflZT5LXFx6qFUgPuVszFj+Pyq97UPI1YH4Lf4prDpfUtR4vKrXeMQv0XFvXqKluIWovgG9c6nrpg9w==}
     dependencies:
@@ -1058,6 +1056,12 @@ packages:
     resolution: {integrity: sha512-mjYQTFMbT9d/bghxh+O02u06YiOxZUSI+XsepwRt28LUSRtM/MjQm1v/7uvCfyNgA3cfIFUB3MxkIprWIShDZQ==}
     dependencies:
       '@unocss/core': 0.53.6
+    dev: true
+
+  /@unocss/preset-attributify@0.54.0:
+    resolution: {integrity: sha512-5Ar1n7LHKF6z1BF9N5CR8jjl9TXrVktTDd+Ldyia69jDLi+stVhM9AOGEDE8wbDkLKwv9CK5XhvyPCazGHrG+A==}
+    dependencies:
+      '@unocss/core': 0.54.0
     dev: true
 
   /@unocss/preset-icons@0.53.6:

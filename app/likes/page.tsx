@@ -2,7 +2,6 @@ import MovieReview from "../../components/Review";
 import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
 import {
-  defaultSongData,
   getCurrentSong,
   getLikedSongs,
   getPreviousSongs,
@@ -41,7 +40,9 @@ export default async function Page() {
       <p className="pt-2">good movies</p>
       <ul>
         {positiveReviews.map((movie) => (
-          <MovieReview {...movie} />
+          <li key={movie.poster_path}>
+            <MovieReview {...movie} />
+          </li>
         ))}
       </ul>
       <div className="mt-8">
@@ -63,7 +64,7 @@ export default async function Page() {
       <p className="mt-2">good songs</p>
       <ul>
         {likedSongs.map((song) => (
-          <li>
+          <li key={song.link}>
             <Song {...song} />
           </li>
         ))}

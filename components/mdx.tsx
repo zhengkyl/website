@@ -1,4 +1,3 @@
-import { time } from "console";
 import { useEffect, useRef, useState } from "react";
 
 export function P({ children }) {
@@ -29,7 +28,7 @@ export function BlockLink(props) {
 }
 
 export function Img(props) {
-  return <img {...props} className="rounded border" />;
+  return <img alt="" {...props} border="~ rounded" />;
 }
 
 function newBoard(width, height) {
@@ -82,37 +81,46 @@ export function Gol({ width, height }) {
   const canvasRef = useRef<HTMLCanvasElement>();
   const requestFrame = useRef<number>();
   const prevTime = useRef(0);
-  const isDrawing = useRef(false);
+  const spawning = useRef(false);
+  const color = useRef("#fda4af22");
+
+  const [playing, setPlaying] = useState(true);
 
   const cells = useRef(nextBoard(randomize(newBoard(width, height))));
 
-  const transition = (time) => {
+  const iterate = () => {
+    const ctx = canvasRef.current.getContext("2d");
+
+    ctx.fillStyle = color.current;
+    for (let i = 0; i < cells.current.length; i++) {
+      for (let j = 0; j < cells.current[0].length; j++) {
+        if (cells.current[i][j]) {
+          ctx.fillRect(i, j, 1, 1);
+        } else {
+          ctx.clearRect(i, j, 1, 1);
+        }
+      }
+    }
+    cells.current = nextBoard(cells.current);
+  };
+
+  const frame = (time) => {
     const elapsed = time - prevTime.current;
     if (elapsed >= 200) {
       prevTime.current = time;
-
-      const ctx = canvasRef.current.getContext("2d");
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-      ctx.fillStyle = "rgb(244, 63, 94, 0.1)";
-      for (let i = 0; i < cells.current.length; i++) {
-        for (let j = 0; j < cells.current[0].length; j++) {
-          if (cells.current[i][j]) ctx.fillRect(i, j, 1, 1);
-        }
-      }
-
-      cells.current = nextBoard(cells.current);
+      iterate();
     }
-    requestFrame.current = requestAnimationFrame(transition);
+    requestFrame.current = requestAnimationFrame(frame);
   };
 
   useEffect(() => {
-    requestFrame.current = requestAnimationFrame(transition);
+    requestFrame.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(requestFrame.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const draw = (e) => {
-    if (!isDrawing.current) return;
+  const spawn = (e) => {
+    if (!spawning.current) return;
 
     const rect = canvasRef.current.getBoundingClientRect();
 
@@ -128,28 +136,68 @@ export function Gol({ width, height }) {
     cells.current[x][y] = true;
 
     const ctx = canvasRef.current.getContext("2d");
-    ctx.fillStyle = "rgb(255, 29, 72, 0.3)";
+    ctx.fillStyle = color.current;
     ctx.fillRect(x, y, 1, 1);
   };
 
   return (
     <>
-      <div className="my-4 bg-stone-50 rounded border px-4 py-2">
-        <p className="font-bold">Background Controls</p>
-        <div className="leading-4 flex gap-2">
-          <button border="~" p="2" className="rounded">
-            <div className="i-ph:pause-fill"></div>
-            {/* <div className="i-ph:play-fill"></div> */}
+      <div bg="stone-50" m="y-4" p="x-4 y-2" border="~ rounded">
+        <p font="bold">Background Controls</p>
+        <div className="leading-4 flex flex-wrap gap-2">
+          <button
+            className="btn-outline"
+            border="~ rounded"
+            p="2"
+            hover
+            onClick={() => {
+              if (playing) {
+                cancelAnimationFrame(requestFrame.current);
+              } else {
+                requestFrame.current = requestAnimationFrame(frame);
+              }
+              setPlaying(!playing);
+            }}
+          >
+            <div
+              className={playing ? "i-ph:pause-fill" : "i-ph:play-fill"}
+            ></div>
           </button>
-          <button border="~" p="2" className="rounded">
+          <input
+            type="color"
+            defaultValue="#fda4af"
+            onChange={(e) => {
+              color.current = `${e.target.value}22`;
+            }}
+            border="~ rounded"
+            p="2"
+            h="45px"
+            w="45px"
+          />
+          <button
+            border="~ rounded"
+            p="2"
+            disabled={playing}
+            onClick={() => {
+              iterate();
+            }}
+          >
             <div className="i-ph:arrow-arc-right-bold" mr="1"></div>
             <span>Step</span>
           </button>
-          <button border="~" p="2" className="rounded">
+          <button
+            border="~ rounded"
+            p="2"
+            onClick={() => (cells.current = newBoard(width, height))}
+          >
             <div className="i-ph:trash-bold" mr="1"></div>
             <span>Clear</span>
           </button>
-          <button border="~" p="2" className="rounded">
+          <button
+            border="~ rounded"
+            p="2"
+            onClick={() => (cells.current = randomize(newBoard(width, height)))}
+          >
             <div className="i-ph:shuffle-angular-bold" mr="1"></div>
             Random
           </button>
@@ -162,12 +210,12 @@ export function Gol({ width, height }) {
         className="absolute w-screen top-0 left-0 -z-50"
         style={{ imageRendering: "crisp-edges" }}
         onMouseDown={(e) => {
-          isDrawing.current = true;
-          draw(e);
+          spawning.current = true;
+          spawn(e);
         }}
-        onMouseUp={() => (isDrawing.current = false)}
-        onMouseLeave={() => (isDrawing.current = false)}
-        onMouseMove={draw}
+        onMouseUp={() => (spawning.current = false)}
+        onMouseLeave={() => (spawning.current = false)}
+        onMouseMove={spawn}
       ></canvas>
     </>
   );

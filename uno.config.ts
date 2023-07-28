@@ -1,9 +1,5 @@
-import {
-  defineConfig,
-  presetWind,
-  presetAttributify,
-  presetIcons,
-} from "unocss";
+import { defineConfig, presetWind, presetIcons } from "unocss";
+import presetAttributify from "@unocss/preset-attributify";
 
 export default defineConfig({
   content: {

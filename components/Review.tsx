@@ -28,6 +28,7 @@ const ratings = [
   <>
     ▁╱<span className="text-lime-500">▔▔▔</span>
   </>,
+  // eslint-disable-next-line react/jsx-key
   <span className="text-lime-400">▔▔▔▔▔</span>,
 ];
 

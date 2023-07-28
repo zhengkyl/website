@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "lint": "next lint",
     "build": "next build",
     "start": "next start"
   },
@@ -25,6 +26,7 @@
     "@types/node": "^18.16.16",
     "@types/react": "^18.2.8",
     "@unocss/postcss": "^0.53.6",
+    "@unocss/preset-attributify": "^0.54.0",
     "@unocss/transformer-directives": "^0.53.6",
     "@unocss/webpack": "^0.53.6",
     "babel-plugin-inline-react-svg": "^2.0.2",
