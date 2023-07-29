@@ -6,6 +6,7 @@ export default defineConfig({
   content: {
     filesystem: ["**/*.{ts,tsx}"],
   },
+  // @ts-expect-error presetAttributify has bad type
   presets: [presetWind(), presetAttributify(), presetShadcn()],
   // shortcuts: [
   //   {
