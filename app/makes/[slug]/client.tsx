@@ -1,7 +1,8 @@
 "use client";
 
+import { Gol } from "@/components/Gol";
 import { getMDXComponent } from "mdx-bundler/client";
-import { P, A, Img, BlockLink, Gol } from "../../../components/mdx";
+import { P, A, Img, BlockLink } from "@/components/mdx";
 
 export function InteractiveArticle({ code }) {
   const Component = getMDXComponent(code);
