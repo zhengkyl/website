@@ -11,7 +11,7 @@ export function A(props) {
   const url = props.href ?? props.children;
   return (
     <a className="hover:underline" href={url} target="_blank">
-      {text.replace("https://", "")}
+      {typeof text === "string" ? text.replace("https://", "") : text}
     </a>
   );
 }

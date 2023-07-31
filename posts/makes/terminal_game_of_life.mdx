@@ -6,25 +6,45 @@ edited: 2023-4-28
 
 <Gol width={30} height={60} />
 
-# Try it out
+Somehow I got hoodwinked into holding a workshop to teach Go. This is good, because it justified the time I spent learning about the various Go libraries made by [@charm](https://charm.sh/), including [`bubbletea`](https://github.com/charmbracelet/bubbletea), a framework for making terminal user interfaces.
+
+Conway's Game of Life seemed like a simple, interactive, and simple program that someone could reasonable code in an hour without having any prior experience in Go.
+
+## Try it out
+
+A few enhancements have been made, but the single player option is exactly the same as in the workshop.
 
 ```sh
 ssh gol.kylezhe.ng
 ```
 
-<BlockLink title="Github">
-  {"https://github.com/zhengkyl/gol/tree/workshop"}
-</BlockLink>
+## How it went down
 
-<BlockLink title="Event Post">
-  {"https://events.purduehackers.com/go-game-of-life-workshop"}
-</BlockLink>
+After spending a few hours to code the project myself and practicing live coding from scratch. I thought I had a reasonable workshop in my grasp. There was less than 200 lines of code and very little syntax to teach.
+
+I even did a dry run at a Purdue Hacker's Hack Night, where I realized several friction points and potential misunderstandings.
+
+The booked room ended up being very difficult to find. It was on the third floor of a building where you had to go down to reach the stairs that went up.
+
+After struggling to find the room, eventually 6 people showed up. Only 1 person actually had a finished program by the end.
+
+I realized that I couldn't explain things very well while live coding, and what seemed obvious to me, was only familiar because I had already coded the project multiple times. People just ended up copying what I typed, or gave up after they got lost.
+
+The final result was simple and interactive, but when someone asked what Go could actually be used for, I struggled to give a direction outside of "make a web server". Ultimately I think this was a pretty major downside, as I myself only learned Go by making terminal apps, and it's really hard to recommend it over other languages with more hype communities and better job prospects. It's also so simple, that there isn't much to learn at all.
+
+I'm not exactly sure what an ideal workshop looks like. I think the best that can happen is someone gets a push to do something they otherwise would not have done. For that reason, targeting beginners is good, but it seriously limits the "coolness" of a workshop, or the workshop risks becoming more of a typing exercise than a learning opportunity.
 
 ![me talking](/terminal_game_of_life/workshop1.jpg)
 
 ![wide shot](/terminal_game_of_life/workshop2.jpg)
 
-### Interested in the workshop?
+Here's the event post made by Purdue Hackers.
+
+<BlockLink title="Event Post">
+  {"https://events.purduehackers.com/go-game-of-life-workshop"}
+</BlockLink>
+
+## Interested in the workshop?
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
@@ -236,6 +256,10 @@ func NextBoard(board [][]bool) [][]bool {
 
 </CH.Spotlight>
 
+<BlockLink title="Github">
+  {"https://github.com/zhengkyl/gol/tree/workshop"}
+</BlockLink>
+
 You might be thinking, gee, that code sure could be more optimized. I though so too, and after reading a few articles about truly mind-bending implementations of the Game of Life, I was prepared to wrangle some code. But then I let my better judgement prevail and ran a benchmark. Oh no.
 
 The code ran too fast.
@@ -246,6 +270,8 @@ Like several orders of magnitude faster than I could have imagined, not to menti
 
 - hold events in easily findable locations
 
-- benchmarking code is a good way to avoid a fun time
+- benchmarking is cool
 
-- go isn't sexy, which is good for making functional and performant programs, bad for having sex with code
+- go isn't sexy
+
+- i no talk good
