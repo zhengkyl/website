@@ -53,7 +53,7 @@ export function Gol({ width, height }) {
   const requestFrame = useRef<number>();
   const prevTime = useRef(0);
   const spawning = useRef(false);
-  const color = useRef("#fda4af22");
+  const color = useRef("#fda4af80");
 
   const [playing, setPlaying] = useState(true);
 
@@ -112,7 +112,15 @@ export function Gol({ width, height }) {
 
   return (
     <>
-      <div bg="stone-50" m="y-4" p="x-4 y-2" border="~ rounded">
+      <div
+        fixed=""
+        bottom="4"
+        left="4"
+        bg="stone-50"
+        p="x-4 y-2"
+        border="~ rounded"
+        shadow="2xl"
+      >
         <p font="bold">Background Controls</p>
         <div className="leading-4 flex flex-wrap gap-2">
           <Button
@@ -134,20 +142,9 @@ export function Gol({ width, height }) {
               type="color"
               defaultValue="#fda4af"
               onChange={(e) => {
-                color.current = `${e.target.value}22`;
+                color.current = `${e.target.value}80`;
               }}
             />
-          </Button>
-          <Button
-            variant="outline"
-            disabled={playing}
-            onClick={() => {
-              iterate();
-            }}
-            p="x-2"
-          >
-            <ArrowRightToLine className="mr-1" />
-            Step
           </Button>
 
           <Button
@@ -158,8 +155,7 @@ export function Gol({ width, height }) {
               if (!playing) iterate();
             }}
           >
-            <Trash2 className="mr-1" />
-            Clear
+            <Trash2 />
           </Button>
           <Button
             variant="outline"
@@ -169,8 +165,7 @@ export function Gol({ width, height }) {
               if (!playing) iterate();
             }}
           >
-            <Shuffle className="mr-1" />
-            Random
+            <Shuffle />
           </Button>
         </div>
       </div>
@@ -178,7 +173,7 @@ export function Gol({ width, height }) {
         ref={canvasRef}
         width={width}
         height={height}
-        className="absolute w-screen top-0 left-0 -z-50"
+        className="absolute w-screen top-0 left-0 -z-50 opacity-25"
         style={{ imageRendering: "crisp-edges" }}
         onMouseDown={(e) => {
           spawning.current = true;

@@ -6,17 +6,25 @@ edited: 2023-4-28
 
 <Gol width={30} height={60} />
 
-Somehow I got hoodwinked into holding a workshop to teach Go. This is good, because it justified the time I spent learning about the various Go libraries made by [@charm](https://charm.sh/), including [`bubbletea`](https://github.com/charmbracelet/bubbletea), a framework for making terminal user interfaces.
+##
 
-Conway's Game of Life seemed like a simple, interactive, and simple program that someone could reasonable code in an hour without having any prior experience in Go.
-
-## Try it out
-
-A few enhancements have been made, but the single player option is exactly the same as in the workshop.
+I made Conway's Game of Life multiplayer. It runs in the terminal and it's accessible via ssh.
 
 ```sh
 ssh gol.kylezhe.ng
 ```
+
+![multiplayer game of life](/ssh_game_of_life/multiplayer.gif)
+
+<BlockLink title="Github">{"https://github.com/zhengkyl/gol"}</BlockLink>
+
+##
+
+![game of life menu](/ssh_game_of_life/menu.png)
+
+Somehow I got hoodwinked into holding a workshop to teach Go. This was good, because it justified the week I spent learning Go and the months I spent working on [`review-ssh`](./movie_review_app) using the colorful libraries made by [@charm](https://charm.sh/).
+
+Conway's Game of Life seemed like a simple, interactive, and simple program that someone could reasonably code in a new programming language.
 
 ## How it went down
 
@@ -34,9 +42,9 @@ The final result was simple and interactive, but when someone asked what Go coul
 
 I'm not exactly sure what an ideal workshop looks like. I think the best that can happen is someone gets a push to do something they otherwise would not have done. For that reason, targeting beginners is good, but it seriously limits the "coolness" of a workshop, or the workshop risks becoming more of a typing exercise than a learning opportunity.
 
-![me talking](/terminal_game_of_life/workshop1.jpg)
+![me talking](/ssh_game_of_life/workshop1.jpg)
 
-![wide shot](/terminal_game_of_life/workshop2.jpg)
+![wide shot](/ssh_game_of_life/workshop2.jpg)
 
 Here's the event post made by Purdue Hackers.
 

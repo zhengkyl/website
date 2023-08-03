@@ -41,7 +41,7 @@ export default async function Page({
   return (
     <>
       <div className="mb-4">
-        Posted {dateFormat.format(Date.parse(frontmatter.posted))}
+        {dateFormat.format(Date.parse(frontmatter.posted))}
         <br />
         {frontmatter.posted !== frontmatter.edited && (
           <>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</>
