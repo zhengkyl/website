@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect } from "react";
-import { Play, Pause, Trash2, Shuffle, ArrowRightToLine } from "lucide-react";
+import { Play, Pause, Trash2, Shuffle } from "lucide-react";
 
 function newBoard(width, height) {
   return Array.from(Array(width), () => Array(height).fill(false));
@@ -114,8 +114,7 @@ export function Gol({ width, height }) {
     <>
       <div
         fixed=""
-        bottom="4"
-        left="4"
+        className="bottom-4 left-4"
         bg="stone-50"
         p="x-4 y-2"
         border="~ rounded"
