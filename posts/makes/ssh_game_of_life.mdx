@@ -1,14 +1,12 @@
 ---
 subtitle: cellular automata and how not to hold a workshop
-posted: 2023-4-28
-edited: 2023-4-28
+posted: 2023-8-4
+edited: 2023-8-4
 ---
 
 <Gol width={30} height={60} />
 
-##
-
-I made Conway's Game of Life multiplayer. It runs in the terminal and it's accessible via ssh.
+I made Conway's Game of Life, except it's **multiplayer**, runs in the **terminal**, and accessible via **ssh**.
 
 ```sh
 ssh gol.kylezhe.ng
@@ -16,43 +14,43 @@ ssh gol.kylezhe.ng
 
 ![multiplayer game of life](/ssh_game_of_life/multiplayer.gif)
 
-<BlockLink title="Github">{"https://github.com/zhengkyl/gol"}</BlockLink>
+<Card>
+  <Link title="Code">{"https://github.com/zhengkyl/gol"}</Link>
+</Card>
 
-##
+## The Idea
 
 ![game of life menu](/ssh_game_of_life/menu.png)
 
-Somehow I got hoodwinked into holding a workshop to teach Go. This was good, because it justified the week I spent learning Go and the months I spent working on [`review-ssh`](./movie_review_app) using the colorful libraries made by [@charm](https://charm.sh/).
+Somehow I got hoodwinked by [@purduehackers](https://www.purduehackers.com) into holding a workshop to teach Go. This was good, because it justified the week I spent learning Go.
 
-Conway's Game of Life seemed like a simple, interactive, and simple program that someone could reasonably code in a new programming language.
+Conway's Game of Life seemed like a simple interactive program that someone could reasonably code in a new programming language.
 
-## How it went down
+After a little work, I ended up with a small (less than 200 line) terminal application, written in Go using the [`bubbletea`](https://github.com/charmbracelet/bubbletea) library made by [@charm](https://charm.sh/), and a slideshow using [`slides`](https://github.com/maaslalani/slides), a terminal slideshow app.
 
-After spending a few hours to code the project myself and practicing live coding from scratch. I thought I had a reasonable workshop in my grasp. There was less than 200 lines of code and very little syntax to teach.
+## The Workshop
 
-I even did a dry run at a Purdue Hacker's Hack Night, where I realized several friction points and potential misunderstandings.
+![me talking](/ssh_game_of_life/workshop.jpg)
 
-The booked room ended up being very difficult to find. It was on the third floor of a building where you had to go down to reach the stairs that went up.
+Not many people showed up, and I think only 1 person actually coded the program from start to finish. Having the finished project available on Github beforehand was a good idea, but the live coding was not very successful.
 
-After struggling to find the room, eventually 6 people showed up. Only 1 person actually had a finished program by the end.
+Talking while typing was hard even though I was very familiar with the code, and the whole experience just wasn't very engaging. People typed along or watched without absorbing much, and I just ended up talking to myself.
 
-I realized that I couldn't explain things very well while live coding, and what seemed obvious to me, was only familiar because I had already coded the project multiple times. People just ended up copying what I typed, or gave up after they got lost.
+At the end, when someone asked what they could actually use Go for, I struggled to give a suggestion outside of "make a web server". Turns out, I'm not an expert in Go (or actual usecases).
 
-The final result was simple and interactive, but when someone asked what Go could actually be used for, I struggled to give a direction outside of "make a web server". Ultimately I think this was a pretty major downside, as I myself only learned Go by making terminal apps, and it's really hard to recommend it over other languages with more hype communities and better job prospects. It's also so simple, that there isn't much to learn at all.
+Ultimately, I think the code was still too complicated for the given time and the end result was too niche.
 
-I'm not exactly sure what an ideal workshop looks like. I think the best that can happen is someone gets a push to do something they otherwise would not have done. For that reason, targeting beginners is good, but it seriously limits the "coolness" of a workshop, or the workshop risks becoming more of a typing exercise than a learning opportunity.
+This was a ~~canon event~~ learning experience.
 
-![me talking](/ssh_game_of_life/workshop1.jpg)
+<details>
+<summary className="font-bold">Learn more about the workshop</summary>
 
-![wide shot](/ssh_game_of_life/workshop2.jpg)
-
-Here's the event post made by Purdue Hackers.
-
-<BlockLink title="Event Post">
-  {"https://events.purduehackers.com/go-game-of-life-workshop"}
-</BlockLink>
-
-## Interested in the workshop?
+<Card>
+  <Link title="Event Post">
+    {"https://events.purduehackers.com/go-game-of-life-workshop"}
+  </Link>
+  <Link title="Code">{"https://github.com/zhengkyl/gol/tree/workshop"}</Link>
+</Card>
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
@@ -264,22 +262,63 @@ func NextBoard(board [][]bool) [][]bool {
 
 </CH.Spotlight>
 
-<BlockLink title="Github">
-  {"https://github.com/zhengkyl/gol/tree/workshop"}
-</BlockLink>
+You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending implementations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
 
-You might be thinking, gee, that code sure could be more optimized. I though so too, and after reading a few articles about truly mind-bending implementations of the Game of Life, I was prepared to wrangle some code. But then I let my better judgement prevail and ran a benchmark. Oh no.
+The code was **waaaaaaaay** more than fast enough. I guess the real premature optimization was the advancements in hardware made along the way.
 
-The code ran too fast.
+</details>
 
-Like several orders of magnitude faster than I could have imagined, not to mention the bottleneck of rendering strings to a terminal and/or through ssh. I guess the real premature optimization was the hardware advances made since the 1970s.
+## SSH & Multiplayer
 
-**Lessons learned**
+Inspired by [SSHTron](https://github.com/zachlatta/sshtron), I decided that I had to add multiplayer. The workshop was over, so there was no point, but I wasn't quite ready to let go... of my gol...
 
-- hold events in easily findable locations
+This is where the [`wish`](https://github.com/charmbracelet/wish) library, also made by @charm, came in handy. It handles ssh connections and even comes with built in middleware for [`bubbletea`](https://github.com/charmbracelet/bubbletea) applications.
 
-- benchmarking is cool
+With a few lines of code, the workshop project became an SSH app.
 
-- go isn't sexy
+```go
+s, err := wish.NewServer(
+		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
+		wish.WithMiddleware(
+			MiddlewareWithProgramHandler(teaHandler(gm), termenv.ANSI256, gm),
+		),
+	)
+```
 
-- i no talk good
+Of course, the true challenge was the multiplayer experience and debugging countless race conditions caused by my poor decision making.
+
+Here is a diagram of the [complexity demon](https://grugbrain.dev/) I summoned. For simplicity, only one player is shown. In reality, one lobby exists for each game, which has up to 10 players, each with their own `playerState`. <span text="sm">(In actual reality, there are zero players, but you get the point)</span>.
+
+![complexity demon data flow](/ssh_game_of_life/chart.png)
+
+<Card className="flex flex-col gap-2">
+
+`manager` controls the creation and joining and leaving of game lobbies.
+
+`player` represents one connected user, which their own goroutine handling input and displaying the board. They send commands to a `lobby` and update their `playerState`.
+
+`lobby` runs one Game of Life board and sends updates to all players.
+
+</Card>
+
+I'm not proud of it, so I'll save you any further details, but I'm 100% sure I solved 90% of the possible game breaking bugs with careful usage of a few mutexes.
+
+## Everything Else
+
+Although the game board has a fixed size, I decided to make it tile infinitely to fill terminals of any size and allow player movement. This was hard, but only in the way math is.
+
+![testing tiling and movement](/ssh_game_of_life/dev_tiling.gif)
+
+I contemplated summoning more complexity demons for the sake of rendering optimization, but thankfully I gave up and just added more colors.
+
+![testing many player colors](/ssh_game_of_life/dev_multi.gif)
+
+And months later, I wrote gave it some polish and wrote this post.
+
+![thanks](/ssh_game_of_life/thanks.gif)
+
+There is no moral to this story. I made a multiplayer ssh Game of Life terminal app, because I was sick of Javascript, but now it's time to let it... Go.
+
+Thanks to [@purduehackers](https://www.purduehackers.com) and [@matthiewstanciu](https://www.matthewstanciu.com) for the idea and motivation and fun times!
+
+![original workshop idea dm](/ssh_game_of_life/msg.png)

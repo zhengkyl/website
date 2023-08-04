@@ -2,6 +2,7 @@ import { remarkCodeHike } from "@code-hike/mdx";
 import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
+import remarkGfm from "remark-gfm";
 import { getSlugs, makesDir } from "../page";
 import { InteractiveArticle } from "./client";
 
@@ -30,6 +31,7 @@ export default async function Page({
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
         [remarkCodeHike, { theme: "one-dark-pro" }],
+        remarkGfm,
       ];
 
       return options;

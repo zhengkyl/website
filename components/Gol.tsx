@@ -114,7 +114,7 @@ export function Gol({ width, height }) {
     <>
       <div
         fixed=""
-        className="bottom-4 left-4"
+        className="bottom-4 left-4 !m-0"
         bg="stone-50"
         p="x-4 y-2"
         border="~ rounded"
@@ -172,7 +172,7 @@ export function Gol({ width, height }) {
         ref={canvasRef}
         width={width}
         height={height}
-        className="absolute w-screen top-0 left-0 -z-50 opacity-25"
+        className="absolute w-screen top-0 left-0 -z-50 opacity-25 !m-0"
         style={{ imageRendering: "crisp-edges" }}
         onMouseDown={(e) => {
           spawning.current = true;

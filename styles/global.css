@@ -69,3 +69,23 @@ html {
     flex-direction: row;
   }
 }
+
+details summary {
+  cursor: pointer;
+}
+
+details summary > * {
+  display: inline;
+}
+
+.ch-spotlight-tab {
+  @apply py-4;
+}
+
+article > * {
+  @apply my-4;
+}
+
+article > details > * {
+  @apply my-4;
+}

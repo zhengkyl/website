@@ -13,9 +13,16 @@ type Frontmatter = {
   image?: string;
 };
 
+const published = ["ssh_game_of_life.mdx"];
+
 export function getSlugs() {
   const filesDir = path.join(process.cwd(), "posts/makes");
-  const fileNames = fs.readdirSync(filesDir);
+  let fileNames = fs.readdirSync(filesDir);
+
+  if (process.env.NODE_ENV === "production") {
+    fileNames = fileNames.filter((name) => published.includes(name));
+  }
+
   return fileNames.map((fileName) => {
     const [_, slug] = fileName.match(/(.+)\.mdx$/);
     return { slug };
