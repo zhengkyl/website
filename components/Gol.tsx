@@ -119,7 +119,7 @@ export function Gol({ width, height }) {
     ctx.fillRect(x, y, 1, 1);
   };
 
-  if (!bigScreen) return "";
+  if (!bigScreen) return <></>;
 
   return (
     <>
