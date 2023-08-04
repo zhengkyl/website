@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect } from "react";
 import { Play, Pause, Trash2, Shuffle } from "lucide-react";
+import { useMediaQuery } from "usehooks-ts";
 
 function newBoard(width, height) {
   return Array.from(Array(width), () => Array(height).fill(false));
@@ -49,6 +50,8 @@ function nextBoard(prevBoard) {
 }
 
 export function Gol({ width, height }) {
+  const bigScreen = useMediaQuery("(min-width: 1024px)");
+
   const canvasRef = useRef<HTMLCanvasElement>();
   const requestFrame = useRef<number>();
   const prevTime = useRef(0);
@@ -85,9 +88,15 @@ export function Gol({ width, height }) {
   };
 
   useEffect(() => {
+    if (!bigScreen) {
+      if (requestFrame.current) {
+        cancelAnimationFrame(requestFrame.current);
+      }
+      return;
+    }
     requestFrame.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(requestFrame.current);
-  }, []);
+  }, [bigScreen]);
 
   const spawn = (e) => {
     if (!spawning.current) return;
@@ -110,63 +119,66 @@ export function Gol({ width, height }) {
     ctx.fillRect(x, y, 1, 1);
   };
 
+  if (!bigScreen) return "";
+
   return (
     <>
       <div
         fixed=""
-        className="bottom-4 left-4 !m-0"
+        className="top-4 left-4 !m-0 flex flex-col gap-2"
         bg="stone-50"
-        p="x-4 y-2"
+        p="2"
         border="~ rounded"
         shadow="2xl"
       >
-        <p font="bold">Background Controls</p>
-        <div className="leading-4 flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            p="x-2"
-            onClick={() => {
-              if (playing) {
-                cancelAnimationFrame(requestFrame.current);
-              } else {
-                requestFrame.current = requestAnimationFrame(frame);
-              }
-              setPlaying(!playing);
+        <Button
+          title={playing ? "Pause background" : "Unpause background"}
+          variant="outline"
+          p="x-2"
+          onClick={() => {
+            if (playing) {
+              cancelAnimationFrame(requestFrame.current);
+            } else {
+              requestFrame.current = requestAnimationFrame(frame);
+            }
+            setPlaying(!playing);
+          }}
+        >
+          {playing ? <Pause /> : <Play viewBox="0 0 22 24" />}
+        </Button>
+        <Button asChild variant="outline" p="x-2" w="10">
+          <input
+            title="Change cell color"
+            type="color"
+            defaultValue="#fda4af"
+            onChange={(e) => {
+              color.current = `${e.target.value}80`;
             }}
-          >
-            {playing ? <Pause /> : <Play viewBox="0 0 22 24" />}
-          </Button>
-          <Button asChild variant="outline" p="x-2" w="10">
-            <input
-              type="color"
-              defaultValue="#fda4af"
-              onChange={(e) => {
-                color.current = `${e.target.value}80`;
-              }}
-            />
-          </Button>
+          />
+        </Button>
 
-          <Button
-            variant="outline"
-            p="x-2"
-            onClick={() => {
-              cells.current = newBoard(width, height);
-              if (!playing) iterate();
-            }}
-          >
-            <Trash2 />
-          </Button>
-          <Button
-            variant="outline"
-            p="x-2"
-            onClick={() => {
-              cells.current = randomize(newBoard(width, height));
-              if (!playing) iterate();
-            }}
-          >
-            <Shuffle />
-          </Button>
-        </div>
+        <Button
+          title="Clear cells"
+          variant="outline"
+          p="x-2"
+          onClick={() => {
+            cells.current = newBoard(width, height);
+            if (!playing) iterate();
+          }}
+        >
+          <Trash2 />
+        </Button>
+        <Button
+          title="Randomize cells"
+          variant="outline"
+          p="x-2"
+          onClick={() => {
+            cells.current = randomize(newBoard(width, height));
+            if (!playing) iterate();
+          }}
+        >
+          <Shuffle />
+        </Button>
       </div>
       <canvas
         ref={canvasRef}
