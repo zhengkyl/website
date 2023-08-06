@@ -13,7 +13,7 @@ export function A(props) {
   const url = props.href ?? props.children;
   return (
     <a
-      className="hover:underline font-semibold text-rose-6"
+      className="hover:underline font-semibold text-rose-600"
       href={url}
       target="_blank"
     >
@@ -45,7 +45,7 @@ export function Img(props) {
 
 export function Code(props) {
   return (
-    <code color="black" bg="stone-200" border="rounded" p="y-0.5 x-1" text="sm">
+    <code bg="stone-200" border="rounded" p="y-0.5 x-1" text="sm">
       {props.children}
     </code>
   );

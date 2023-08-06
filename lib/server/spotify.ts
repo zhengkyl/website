@@ -41,7 +41,7 @@ const LAST_PLAYED_ENDPOINT =
 
 export async function getPreviousSongs(
   params = {
-    limit: 1,
+    limit: 5,
   }
 ) {
   try {

@@ -42,12 +42,11 @@ export default async function Page({
 
   return (
     <>
-      <div className="mb-4">
+      <div className="text-sm text-stone-400 font-semibold">
         {dateFormat.format(Date.parse(frontmatter.posted))}
-        <br />
-        {frontmatter.posted !== frontmatter.edited && (
-          <>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</>
-        )}
+        {/* {frontmatter.posted !== frontmatter.edited && (
+          <div>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</div>
+        )} */}
       </div>
       <InteractiveArticle code={code} />
     </>

@@ -1,7 +1,7 @@
 ---
 subtitle: cellular automata and how not to hold a workshop
 posted: 2023-8-4
-edited: 2023-8-4
+edited: 2023-8-6
 ---
 
 <Gol width={30} height={60} />
@@ -26,7 +26,7 @@ Somehow I got hoodwinked by [@purduehackers](https://www.purduehackers.com) into
 
 Conway's Game of Life seemed like a simple interactive program that someone could reasonably code in a new programming language.
 
-After a little work, I ended up with a small (less than 200 line) terminal application, written in Go using the [`bubbletea`](https://github.com/charmbracelet/bubbletea) library made by [@charm](https://charm.sh/), and a slideshow using [`slides`](https://github.com/maaslalani/slides), a terminal slideshow app.
+After a little work, I ended up with a small (less than 200 line) terminal application, written in Go using the [bubbletea](https://github.com/charmbracelet/bubbletea) library made by [@charm](https://charm.sh/), and a slideshow using [slides](https://github.com/maaslalani/slides), a terminal slideshow app.
 
 ## The Workshop
 
@@ -272,7 +272,7 @@ The code was **waaaaaaaay** more than fast enough. I guess the real premature op
 
 Inspired by [SSHTron](https://github.com/zachlatta/sshtron), I decided that I had to add multiplayer. The workshop was over, so there was no point, but I wasn't quite ready to let go... of my gol...
 
-This is where the [`wish`](https://github.com/charmbracelet/wish) library, also made by @charm, came in handy. It handles ssh connections and even comes with built in middleware for [`bubbletea`](https://github.com/charmbracelet/bubbletea) applications.
+This is where the [wish](https://github.com/charmbracelet/wish) library, also made by [@charm](https://charm.sh/), came in handy. It handles ssh connections and even comes with built in middleware for [bubbletea](https://github.com/charmbracelet/bubbletea) applications.
 
 With a few lines of code, the workshop project became an SSH app.
 

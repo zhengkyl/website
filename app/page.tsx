@@ -14,11 +14,17 @@ export default async function HomePage() {
       <p className="my-4">
         I've worked extensively with <b>Typescript</b> and <span>React</span>{" "}
         frontends at{" "}
-        <a href="https://lifeomic.com/" className="italic hover:underline">
+        <a
+          href="https://lifeomic.com/"
+          className="hover:underline font-semibold text-rose-600"
+        >
           LifeOmic
         </a>{" "}
         and{" "}
-        <a href="https://tulip.co/" className="italic hover:underline">
+        <a
+          href="https://tulip.co/"
+          className="hover:underline font-semibold text-rose-600"
+        >
           Tulip
         </a>{" "}
         during internships, but I've also really enjoyed my time with <b>Go</b>{" "}
