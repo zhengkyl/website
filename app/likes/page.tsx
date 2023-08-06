@@ -1,74 +1,50 @@
-import MovieReview from "../../components/Review";
+import Review from "../../components/Review";
 import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
-import {
-  getCurrentSong,
-  getLikedSongs,
-  getPreviousSongs,
-} from "../../lib/server/spotify";
+import { getPreviousSongs } from "../../lib/server/spotify";
 
 export default async function Page() {
-  const positiveReviews = await getMovieReviews({
-    per_page: 3,
+  const previousReviews = await getMovieReviews({
+    per_page: 5,
     category: "Film",
     status: "Completed",
     sort_by: "created_at.desc",
-    fun_during: true,
-    fun_after: true,
   });
-  const lastReview = (
-    await getMovieReviews({
-      per_page: 1,
-      category: "Film",
-      status: "Completed",
-      sort_by: "created_at.desc",
-    })
-  )[0];
 
-  const currentSong = await getCurrentSong();
-  const previousSong = (await getPreviousSongs({ limit: 1 }))[0];
-
-  const likedSongs = await getLikedSongs({ limit: 3 });
+  const previousSongs = await getPreviousSongs({ limit: 1 });
 
   return (
     <>
       <div>
         <h2 className="inline mr-2">movies</h2>
       </div>
-      <p className="pt-2">just watched</p>
-      <MovieReview {...lastReview} />
-      <p className="pt-2">good movies</p>
-      <ul>
-        {positiveReviews.map((movie) => (
-          <li key={movie.poster_path}>
-            <MovieReview {...movie} />
-          </li>
-        ))}
-      </ul>
+      <p className="pt-2">recently watched</p>
+      {previousReviews.length ? (
+        <ul>
+          {previousReviews.map((movie) => (
+            <li key={movie.poster_path}>
+              <Review {...movie} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-rose-600">error loading movies...</div>
+      )}
       <div className="mt-8">
         <h2 className="inline mr-2">songs</h2>
       </div>
-      {currentSong ? (
-        <>
-          <p className="mt-2">listening to</p>
-          <Song {...currentSong} />
-        </>
+      <p className="mt-2">recently listened to</p>
+      {previousSongs.length ? (
+        <ul>
+          {previousSongs.map((song) => (
+            <li key={song.link}>
+              <Song {...song} />
+            </li>
+          ))}
+        </ul>
       ) : (
-        previousSong && (
-          <>
-            <p className="mt-2">was listening to</p>
-            <Song {...previousSong} />
-          </>
-        )
+        <div className="text-rose-600">error loading songs...</div>
       )}
-      <p className="mt-2">good songs</p>
-      <ul>
-        {likedSongs.map((song) => (
-          <li key={song.link}>
-            <Song {...song} />
-          </li>
-        ))}
-      </ul>
     </>
   );
 }

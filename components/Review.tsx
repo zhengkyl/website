@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 interface MovieProps {
   title: string;
   release_date: string;
@@ -7,38 +9,9 @@ interface MovieProps {
   fun_after: boolean;
 }
 
-const ratings = [
-  "▁▁▁▁▁",
-  <>
-    <span className="text-lime-500">▔</span>╲▁▁▁
-  </>,
-  <>
-    ▁╱<span className="text-lime-500">▔</span>╲▁
-  </>,
-  <>
-    <span className="text-lime-500">▔▔▔</span>╲▁
-  </>,
-  <>
-    ▁▁▁╱<span className="text-lime-500">▔</span>
-  </>,
-  <>
-    <span className="text-lime-500">▔</span>╲▁╱
-    <span className="text-lime-500">▔</span>
-  </>,
-  <>
-    ▁╱<span className="text-lime-500">▔▔▔</span>
-  </>,
-  // eslint-disable-next-line react/jsx-key
-  <span className="text-lime-400">▔▔▔▔▔</span>,
-];
-
-export default function MovieReview(review: MovieProps) {
-  let index = 0;
-  index += review.fun_before ? 1 : 0;
-  index += review.fun_during ? 2 : 0;
-  index += review.fun_after ? 4 : 0;
+export default function Review(review: MovieProps) {
   return (
-    <div>
+    <div flex="" justify="between">
       <a
         className="hover:underline italic font-bold"
         href={review.link}
@@ -46,7 +19,26 @@ export default function MovieReview(review: MovieProps) {
       >
         {`${review.title} (${review.release_date?.slice(0, 4)})`}
       </a>
-      <span className="float-right">{ratings[index]}</span>
+      <span className="float-right text-xl whitespace-pre">
+        <span
+          title="hype"
+          className={clsx(!review.fun_before && "grayscale opacity-50", "ml-1")}
+        >
+          🔥
+        </span>
+        <span
+          title="like"
+          className={clsx(!review.fun_during && "grayscale opacity-50", "ml-1")}
+        >
+          ❤️
+        </span>
+        <span
+          title="nice"
+          className={clsx(!review.fun_after && "grayscale opacity-50", "ml-1")}
+        >
+          ⭐
+        </span>
+      </span>
     </div>
   );
 }

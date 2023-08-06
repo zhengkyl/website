@@ -21,17 +21,25 @@ type ReviewParams = {
 };
 
 export const getMovieReviews = async (params: ReviewParams) => {
-  const reviewResp = await fetch(addParams(REVIEWS_ENDPOINT, params), {
-    next: { revalidate: 10 },
-  });
-  const reviewData = await reviewResp.json();
+  let reviewData;
+  try {
+    const reviewResp = await fetch(addParams(REVIEWS_ENDPOINT, params), {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(2000),
+    });
+    reviewData = await reviewResp.json();
+  } catch (e) {
+    return [];
+  }
 
   const reviews = reviewData.results;
-
-  return Promise.all(
+  const results = await Promise.allSettled(
     reviews.map(async (review) => {
-      const dataResp = await fetch(getMovieDataUrl(review.tmdb_id));
-      const movie = (await dataResp.json()) ?? defaultMovieData;
+      const dataResp = await fetch(getMovieDataUrl(review.tmdb_id), {
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(1000),
+      });
+      const movie = await dataResp.json();
 
       return {
         title: movie.title,
@@ -43,6 +51,12 @@ export const getMovieReviews = async (params: ReviewParams) => {
         fun_after: review.fun_after,
       };
     })
+  );
+  return (
+    results
+      .filter((result) => result.status === "fulfilled")
+      // @ts-ignore literally checked in line above
+      .map((result) => result.value)
   );
 };
 

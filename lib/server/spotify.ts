@@ -18,6 +18,7 @@ async function getAccessToken() {
     next: {
       revalidate: 60 * 59, // 59 minutes
     },
+    signal: AbortSignal.timeout(1000),
   });
 
   return response.json();
@@ -43,85 +44,83 @@ export async function getPreviousSongs(
     limit: 1,
   }
 ) {
-  const { access_token } = await getAccessToken();
+  try {
+    const { access_token } = await getAccessToken();
 
-  const response = await fetch(addParams(LAST_PLAYED_ENDPOINT, params), {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    next: {
-      revalidate: 60,
-    },
-  });
+    const response = await fetch(addParams(LAST_PLAYED_ENDPOINT, params), {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      next: {
+        revalidate: 60,
+      },
+      signal: AbortSignal.timeout(1000),
+    });
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return [];
+    }
+
+    const result = await response.json();
+
+    return result.items.map(mapToSong);
+  } catch (e) {
     return [];
   }
-
-  const result = await response.json();
-
-  return result.items.map(mapToSong);
 }
 
-export const defaultSongData = {
-  link: "",
-  title: "nothing",
-  artists: [{ name: "no one", link: "" }],
-  playing: false,
-};
+// const CURRENT_SONG_ENDPOINT =
+//   "https://api.spotify.com/v1/me/player/currently-playing";
 
-const CURRENT_SONG_ENDPOINT =
-  "https://api.spotify.com/v1/me/player/currently-playing";
+// export async function getCurrentSong() {
+//   const { access_token } = await getAccessToken();
 
-export async function getCurrentSong() {
-  const { access_token } = await getAccessToken();
+//   const response = await fetch(CURRENT_SONG_ENDPOINT, {
+//     headers: {
+//       Authorization: `Bearer ${access_token}`,
+//     },
+//     next: {
+//       revalidate: 10,
+//     },
+//   });
 
-  const response = await fetch(CURRENT_SONG_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    next: {
-      revalidate: 10,
-    },
-  });
+//   // 204 if not currently playing
+//   if (response.status !== 200) {
+//     return null;
+//   }
 
-  // 204 if not currently playing
-  if (response.status !== 200) {
-    return null;
-  }
+//   const result = await response.json();
 
-  const result = await response.json();
-  console.log(result);
-  if (!result.item) {
-    return null;
-  }
+//   if (!result.item) {
+//     return null;
+//   }
 
-  return toSong(result.item);
-}
+//   return toSong(result.item);
+// }
 
-const LAST_LIKED_ENDPOINT = "https://api.spotify.com/v1/me/tracks";
+// const LAST_LIKED_ENDPOINT = "https://api.spotify.com/v1/me/tracks";
 
-export async function getLikedSongs(
-  params = {
-    limit: 1,
-  }
-) {
-  const { access_token } = await getAccessToken();
+// export async function getLikedSongs(
+//   params = {
+//     limit: 1,
+//   }
+// ) {
+//   const { access_token } = await getAccessToken();
 
-  const response = await fetch(addParams(LAST_LIKED_ENDPOINT, params), {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    next: {
-      revalidate: 60,
-    },
-  });
+//   const response = await fetch(addParams(LAST_LIKED_ENDPOINT, params), {
+//     headers: {
+//       Authorization: `Bearer ${access_token}`,
+//     },
+//     next: {
+//       revalidate: 60,
+//     },
+//   });
 
-  if (!response.ok) {
-    return [];
-  }
+//   if (!response.ok) {
+//     return [];
+//   }
 
-  const result = await response.json();
+//   const result = await response.json();
 
-  return result.items.map(mapToSong);
-}
+//   return result.items.map(mapToSong);
+// }
