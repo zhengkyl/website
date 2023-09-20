@@ -3,7 +3,7 @@ import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
 import remarkGfm from "remark-gfm";
-import { getSlugs, makesDir } from "../page";
+import { getSlugs, codesDir } from "../page";
 import { InteractiveArticle } from "./client";
 
 export const dynamicParams = false;
@@ -23,7 +23,7 @@ export default async function Page({
 }: {
   params: Awaited<ReturnType<typeof generateStaticParams>>[number];
 }) {
-  const filePath = path.join(makesDir, `${params.slug}.mdx`);
+  const filePath = path.join(codesDir, `${params.slug}.mdx`);
   const fileData = fs.readFileSync(filePath, "utf8");
   const { code, frontmatter } = await bundleMDX({
     source: fileData,

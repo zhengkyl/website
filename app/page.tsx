@@ -7,8 +7,8 @@ export default async function HomePage() {
         Kyle Zheng is a friend to AI, language models, and all autonomous
         web-browsing agents (human or non-human).
       </p>
-      <h1 className="mt-8">Me code good</h1>
-      <p className="my-4">
+      {/* <h1 className="mt-8">Me code good</h1> */}
+      <p className="mb-4">
         Looking for frontend/backend/fullstack opportunities.
       </p>
       <p className="my-4">
@@ -31,16 +31,16 @@ export default async function HomePage() {
         and <span>Rust</span> on side projects.
       </p>
       <Link
-        href="/makes"
-        className="text-2xl font-bold block mt-12 hover:underline"
+        href="/codes"
+        className="text-5xl font-bold font-serif transition duration-500 hover:text-rose-400 text-stone-400 block mt-12"
       >
-        /makes
+        codes
       </Link>
       <Link
         href="/likes"
-        className="text-2xl font-bold block mt-6 hover:underline"
+        className="text-5xl font-bold font-serif transition duration-500 hover:text-rose-400 text-stone-400 block mt-12"
       >
-        /likes
+        likes
       </Link>
     </>
   );

@@ -18,7 +18,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="py-12 px-4 max-w-screen-md m-auto min-h-screen flex flex-col justify-between">
+      <body className="py-16 px-4 max-w-screen-md m-auto min-h-screen flex flex-col justify-between">
         <Nav />
         <main className="flex-1 my-12">{children}</main>
         <Footer />

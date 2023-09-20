@@ -7,33 +7,31 @@ import React from "react";
 export default function Nav() {
   const pathname = usePathname();
 
+  const isRoot = pathname === "/";
+
   const sections = pathname.split("/");
-  sections.shift();
+  if (isRoot) sections.pop();
+
+  sections[0] = "kyle zheng";
 
   let sectionPath = "";
-
-  const isRoot = pathname === "/";
 
   return (
     <nav
       className={
-        "text-2xl font-bold flex flex-wrap gap-x-2" +
-        (isRoot ? "" : " text-stone-400")
+        "text-5xl font-bold flex flex-wrap gap-x-4 font-serif text-stone-400"
       }
     >
-      <Link href="/" className={"transition hover:text-stone-600"}>
-        kyle zheng
-      </Link>
       {sections.map((section, i) => {
-        sectionPath += "/" + section;
+        if (i) sectionPath += "/" + section;
         const isLast = i == sections.length - 1;
         return (
           <Link
             key={section}
-            href={sectionPath}
+            href={i ? sectionPath : "/"}
             className={
-              "transition hover:text-stone-600" +
-              (isLast ? " text-stone-800" : "")
+              "transition duration-500 hover:text-rose-400" +
+              (isLast ? " text-rose-600" : "")
             }
           >
             {section.replaceAll("_", " ")}

@@ -3,7 +3,7 @@ import fs from "fs";
 import graymatter from "gray-matter";
 import Link from "next/link";
 
-export const makesDir = path.join(process.cwd(), "posts/makes");
+export const codesDir = path.join(process.cwd(), "posts/codes");
 
 type Frontmatter = {
   slug: string;
@@ -16,8 +16,7 @@ type Frontmatter = {
 const published = ["ssh_game_of_life.mdx"];
 
 export function getSlugs() {
-  const filesDir = path.join(process.cwd(), "posts/makes");
-  let fileNames = fs.readdirSync(filesDir);
+  let fileNames = fs.readdirSync(codesDir);
 
   if (process.env.NODE_ENV === "production") {
     fileNames = fileNames.filter((name) => published.includes(name));
@@ -31,7 +30,7 @@ export function getSlugs() {
 
 export default async function Page() {
   const frontmatters = getSlugs().map(({ slug }) => {
-    const filePath = path.join(makesDir, `${slug}.mdx`);
+    const filePath = path.join(codesDir, `${slug}.mdx`);
     const fileData = fs.readFileSync(filePath, "utf8");
     const file = graymatter(fileData);
 
@@ -51,14 +50,11 @@ export default async function Page() {
     <div>
       <ul>
         {frontmatters.map((matter) => (
-          <Link href={`/makes/${matter.slug}`} key={matter.slug}>
-            <li className="my-8 hover:underline">
-              <div className="flex justify-between items-center">
-                <h2 className="">{matter.slug.replaceAll("_", " ")}</h2>
-                {/* <div className="text-2xl text-right whitespace-pre">
-                  {dateFormat.format(matter.posted)}
-                </div> */}
-              </div>
+          <Link href={`/codes/${matter.slug}`} key={matter.slug}>
+            <li className="my-8 hover:text-rose-400 transition duration-500">
+              <h2 className="font-serif text-3xl">
+                {matter.slug.replaceAll("_", " ")}
+              </h2>
               <p className="text-l">{matter.subtitle}</p>
             </li>
           </Link>
