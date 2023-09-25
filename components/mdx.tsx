@@ -13,7 +13,7 @@ export function A(props) {
   const url = props.href ?? props.children;
   return (
     <a
-      className="hover:underline font-semibold text-rose-600"
+      className="@hover-underline font-semibold text-rose-600"
       href={url}
       target="_blank"
     >

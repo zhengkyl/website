@@ -16,14 +16,14 @@ export default async function HomePage() {
         frontends at{" "}
         <a
           href="https://lifeomic.com/"
-          className="hover:underline font-semibold text-rose-600"
+          className="@hover-underline font-semibold text-rose-600"
         >
           LifeOmic
         </a>{" "}
         and{" "}
         <a
           href="https://tulip.co/"
-          className="hover:underline font-semibold text-rose-600"
+          className="@hover-underline font-semibold text-rose-600"
         >
           Tulip
         </a>{" "}
@@ -32,13 +32,13 @@ export default async function HomePage() {
       </p>
       <Link
         href="/codes"
-        className="text-5xl font-bold font-serif transition duration-500 hover:text-rose-400 text-stone-400 block mt-12"
+        className={`font-playfair text-5xl font-black transition duration-500 @hover-text-rose-400 text-stone-500 block mt-12`}
       >
         codes
       </Link>
       <Link
         href="/likes"
-        className="text-5xl font-bold font-serif transition duration-500 hover:text-rose-400 text-stone-400 block mt-12"
+        className={`font-playfair text-5xl font-black transition duration-500 @hover-text-rose-400 text-stone-500 block mt-12`}
       >
         likes
       </Link>

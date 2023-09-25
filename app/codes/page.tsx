@@ -51,11 +51,11 @@ export default async function Page() {
       <ul>
         {frontmatters.map((matter) => (
           <Link href={`/codes/${matter.slug}`} key={matter.slug}>
-            <li className="my-8 hover:text-rose-400 transition duration-500">
-              <h2 className="font-serif text-3xl">
+            <li className="my-8">
+              <h2 className="font-playfair font-black text-3xl text-stone-500 @hover-text-rose-400 transition duration-500">
                 {matter.slug.replaceAll("_", " ")}
               </h2>
-              <p className="text-l">{matter.subtitle}</p>
+              <p>{matter.subtitle}</p>
             </li>
           </Link>
         ))}

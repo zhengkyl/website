@@ -18,7 +18,7 @@ export default function Song(song: SongProps) {
       <span className="inline-block">
         "
         <a
-          className="hover:underline font-bold"
+          className="@hover-underline font-bold"
           href={song.link}
           target="_blank"
         >
@@ -30,7 +30,7 @@ export default function Song(song: SongProps) {
       {song.artists.map((artist, i) => (
         <span className="inline-block whitespace-pre-wrap" key={artist.link}>
           <a
-            className="hover:underline font-bold"
+            className="@hover-underline font-bold"
             href={artist.link}
             target="_blank"
           >

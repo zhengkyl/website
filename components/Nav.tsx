@@ -18,9 +18,7 @@ export default function Nav() {
 
   return (
     <nav
-      className={
-        "text-5xl font-bold flex flex-wrap gap-x-4 font-serif text-stone-400"
-      }
+      className={`font-playfair text-5xl leading-tight font-black text-stone-500`}
     >
       {sections.map((section, i) => {
         if (i) sectionPath += "/" + section;
@@ -30,7 +28,7 @@ export default function Nav() {
             key={section}
             href={i ? sectionPath : "/"}
             className={
-              "transition duration-500 hover:text-rose-400" +
+              "block transition duration-500 @hover-text-rose-400" +
               (isLast ? " text-rose-600" : "")
             }
           >
