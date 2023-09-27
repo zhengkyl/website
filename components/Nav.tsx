@@ -20,22 +20,24 @@ export default function Nav() {
     <nav
       className={`font-playfair text-5xl leading-tight font-black text-stone-500`}
     >
-      {sections.map((section, i) => {
-        if (i) sectionPath += "/" + section;
-        const isLast = i == sections.length - 1;
-        return (
-          <Link
-            key={section}
-            href={i ? sectionPath : "/"}
-            className={
-              "block transition duration-500 @hover-text-rose-400" +
-              (isLast ? " text-rose-600" : "")
-            }
-          >
-            {section.replaceAll("_", " ")}
-          </Link>
-        );
-      })}
+      <h1>
+        {sections.map((section, i) => {
+          if (i) sectionPath += "/" + section;
+          const isLast = i == sections.length - 1;
+          return (
+            <Link
+              key={section}
+              href={i ? sectionPath : "/"}
+              className={
+                "block transition duration-500 @hover-text-rose-400" +
+                (isLast ? " text-rose-600" : "")
+              }
+            >
+              {section.replaceAll("_", " ")}
+            </Link>
+          );
+        })}
+      </h1>
     </nav>
   );
 }

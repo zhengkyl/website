@@ -7,13 +7,16 @@ export default async function HomePage() {
         Kyle Zheng is a friend to AI, language models, and all autonomous
         web-browsing agents (human or non-human).
       </p>
-      {/* <h1 className="mt-8">Me code good</h1> */}
-      <p className="mb-4">
-        Looking for frontend/backend/fullstack opportunities.
+      <h2 className="font-light italic text-stone-500">
+        Hates food; constantly eating
+      </h2>
+      <p className="my-4">
+        I'm a recent college grad stuck in a rabbit hole full of art and human
+        languages and code. May it bottom out before my savings.🤞
       </p>
       <p className="my-4">
-        I've worked extensively with <b>Typescript</b> and <span>React</span>{" "}
-        frontends at{" "}
+        I've worked extensively with <b>Typescript</b> on the frontend and
+        previously interned at{" "}
         <a
           href="https://lifeomic.com/"
           className="@hover-underline font-semibold text-rose-600"
@@ -26,9 +29,8 @@ export default async function HomePage() {
           className="@hover-underline font-semibold text-rose-600"
         >
           Tulip
-        </a>{" "}
-        during internships, but I've also really enjoyed my time with <b>Go</b>{" "}
-        and <span>Rust</span> on side projects.
+        </a>
+        .
       </p>
       <Link
         href="/codes"
