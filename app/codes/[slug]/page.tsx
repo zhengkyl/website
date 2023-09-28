@@ -42,7 +42,7 @@ export default async function Page({
 
   return (
     <>
-      <div className="text-sm text-stone-400 font-semibold">
+      <div className="font-light italic text-stone-500 text-xl">
         {dateFormat.format(Date.parse(frontmatter.posted))}
         {/* {frontmatter.posted !== frontmatter.edited && (
           <div>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</div>

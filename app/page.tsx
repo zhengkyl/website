@@ -7,7 +7,7 @@ export default async function HomePage() {
         Kyle Zheng is a friend to AI, language models, and all autonomous
         web-browsing agents (human or non-human).
       </p>
-      <h2 className="font-light italic text-stone-500">
+      <h2 className="font-light italic text-stone-500 text-xl">
         Hates food; constantly eating
       </h2>
       <p className="my-4">
@@ -34,16 +34,22 @@ export default async function HomePage() {
       </p>
       <Link
         href="/codes"
-        className={`font-playfair text-5xl font-black transition duration-500 @hover-text-rose-400 text-stone-500 block mt-12`}
+        className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
       >
         codes
       </Link>
+      <h2 className="font-light italic text-stone-500 text-xl">
+        Hates food; constantly eating
+      </h2>
       <Link
         href="/likes"
-        className={`font-playfair text-5xl font-black transition duration-500 @hover-text-rose-400 text-stone-500 block mt-12`}
+        className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
       >
         likes
       </Link>
+      <h2 className="font-light italic text-stone-500 text-xl">
+        Hates food; constantly eating
+      </h2>
     </>
   );
 }

@@ -47,14 +47,8 @@
   --radius: 0.5rem;
 }
 
-h2,
-h3,
-h4 {
-  @apply text-2xl font-bold;
-}
-
 html {
-  @apply text-stone-800 text-xl;
+  @apply text-stone-800 text-lg;
   tab-size: 2;
 }
 

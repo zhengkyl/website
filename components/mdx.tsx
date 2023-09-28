@@ -50,3 +50,7 @@ export function Code(props) {
     </code>
   );
 }
+
+export function H2(props) {
+  return <h2 {...props} class="font-playfair text-3xl font-black" />;
+}
