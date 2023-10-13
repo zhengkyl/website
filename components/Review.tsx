@@ -13,7 +13,7 @@ export default function Review(review: MovieProps) {
   return (
     <div flex="" justify="between">
       <a
-        className="@hover-underline italic font-bold"
+        className="@hover-underline font-semibold"
         href={review.link}
         target="_blank"
       >

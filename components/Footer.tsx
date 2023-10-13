@@ -5,25 +5,25 @@ export default function Footer() {
     <footer className="flex justify-end gap-4 flex-wrap">
       <a
         href="https://github.com/zhengkyl"
-        className="font-playfair font-black text-rose-600 @hover-text-rose-400 transition"
+        className="@hover-underline font-semibold text-rose-600"
         target="_blank"
       >
         github
       </a>
       <a
         href="https://www.linkedin.com/in/zhengkyl/"
-        className="font-playfair font-black text-rose-600 @hover-text-rose-400 transition"
+        className="@hover-underline font-semibold text-rose-600"
         target="_blank"
       >
         linkedin
       </a>
-      <Link
+      <a
         href="./resume.pdf"
-        className="font-playfair font-black text-rose-600 @hover-text-rose-400 transition"
+        className="@hover-underline font-semibold text-rose-600"
         target="_blank"
       >
         resume
-      </Link>{" "}
+      </a>{" "}
     </footer>
   );
 }

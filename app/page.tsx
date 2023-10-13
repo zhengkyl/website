@@ -8,27 +8,22 @@ export default async function HomePage() {
         web-browsing agents (human or non-human).
       </p>
       <h2 className="font-light italic text-stone-500 text-xl">
-        Hates food; constantly eating
+        Placeholder subtitle
       </h2>
-      <p className="my-4">
-        I'm a recent college grad stuck in a rabbit hole full of art and human
-        languages and code. May it bottom out before my savings.🤞
-      </p>
-      <p className="my-4">
-        I've worked extensively with <b>Typescript</b> on the frontend and
-        previously interned at{" "}
-        <a
-          href="https://lifeomic.com/"
-          className="@hover-underline font-semibold text-rose-600"
-        >
-          LifeOmic
-        </a>{" "}
-        and{" "}
+      <p className="my-2">
+        I work with Typescript on the frontend and previously interned at{" "}
         <a
           href="https://tulip.co/"
           className="@hover-underline font-semibold text-rose-600"
         >
           Tulip
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://lifeomic.com/"
+          className="@hover-underline font-semibold text-rose-600"
+        >
+          LifeOmic
         </a>
         .
       </p>
@@ -38,8 +33,8 @@ export default async function HomePage() {
       >
         codes
       </Link>
-      <h2 className="font-light italic text-stone-500 text-xl">
-        Hates food; constantly eating
+      <h2 className="font-light italic text-stone-500 text-xl mt-2">
+        Check out what I've made
       </h2>
       <Link
         href="/likes"
@@ -47,8 +42,8 @@ export default async function HomePage() {
       >
         likes
       </Link>
-      <h2 className="font-light italic text-stone-500 text-xl">
-        Hates food; constantly eating
+      <h2 className="font-light italic text-stone-500 text-xl mt-2">
+        Check out what I like
       </h2>
     </>
   );

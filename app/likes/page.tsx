@@ -15,14 +15,14 @@ export default async function Page() {
 
   return (
     <>
-      <div>
-        <h2 className="inline mr-2">movies</h2>
-      </div>
-      <p className="pt-2">recently watched</p>
+      <h2 className="font-playfair font-black text-3xl">movies</h2>
+      <h3 className="font-light italic text-stone-500 text-xl my-2">
+        recently watched
+      </h3>
       {previousReviews.length ? (
         <ul>
           {previousReviews.map((movie) => (
-            <li key={movie.poster_path}>
+            <li key={movie.poster_path} className="mb-1">
               <Review {...movie} />
             </li>
           ))}
@@ -30,10 +30,10 @@ export default async function Page() {
       ) : (
         <div className="text-rose-600">error loading movies...</div>
       )}
-      <div className="mt-8">
-        <h2 className="inline mr-2">songs</h2>
-      </div>
-      <p className="mt-2">recently listened to</p>
+      <h2 className="font-playfair font-black text-3xl mt-12">songs</h2>
+      <h3 className="font-light italic text-stone-500 text-xl my-2">
+        recently played
+      </h3>
       {previousSongs.length ? (
         <ul>
           {previousSongs.map((song) => (
