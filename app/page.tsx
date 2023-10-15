@@ -8,7 +8,7 @@ export default async function HomePage() {
         web-browsing agents (human or non-human).
       </p>
       <h2 className="font-light italic text-stone-500 text-xl">
-        Placeholder subtitle
+        "This quote intentionally left blank" —Kyle Zheng
       </h2>
       <p className="my-2">
         I work with Typescript on the frontend and previously interned at{" "}
@@ -31,7 +31,7 @@ export default async function HomePage() {
         href="/codes"
         className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
       >
-        codes
+        /codes
       </Link>
       <h2 className="font-light italic text-stone-500 text-xl mt-2">
         Check out what I've made
@@ -40,7 +40,7 @@ export default async function HomePage() {
         href="/likes"
         className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
       >
-        likes
+        /likes
       </Link>
       <h2 className="font-light italic text-stone-500 text-xl mt-2">
         Check out what I like
