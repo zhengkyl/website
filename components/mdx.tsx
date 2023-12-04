@@ -52,5 +52,5 @@ export function Code(props) {
 }
 
 export function H2(props) {
-  return <h2 {...props} class="font-playfair text-3xl font-black" />;
+  return <h2 {...props} className="font-playfair text-3xl font-black" />;
 }

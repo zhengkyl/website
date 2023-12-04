@@ -7,11 +7,11 @@ export default async function HomePage() {
         Kyle Zheng is a friend to AI, language models, and all autonomous
         web-browsing agents (human or non-human).
       </p>
-      <h2 className="font-light italic text-stone-500 text-xl">
-        "This quote intentionally left blank" —Kyle Zheng
+      <h2 className="font-light italic text-stone-800 text-xl">
+        "Never start with a quote"
       </h2>
       <p className="my-2">
-        I work with Typescript on the frontend and previously interned at{" "}
+        I work with Typescript on the frontend. Previously interned at{" "}
         <a
           href="https://tulip.co/"
           className="@hover-underline font-semibold text-rose-600"
@@ -28,22 +28,22 @@ export default async function HomePage() {
         .
       </p>
       <Link
-        href="/codes"
-        className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
+        href="/makes"
+        className={`font-playfair text-3xl font-black transition @hover-text-rose-600 block mt-12`}
       >
-        /codes
+        /makes
       </Link>
-      <h2 className="font-light italic text-stone-500 text-xl mt-2">
-        Check out what I've made
+      <h2 className="font-light italic text-xl mt-2">
+        See what projects I've been working on
       </h2>
       <Link
         href="/likes"
-        className={`font-playfair text-3xl font-black transition @hover-text-rose-400 text-stone-500 block mt-12`}
+        className={`font-playfair text-3xl font-black transition @hover-text-rose-600 block mt-12`}
       >
         /likes
       </Link>
-      <h2 className="font-light italic text-stone-500 text-xl mt-2">
-        Check out what I like
+      <h2 className="font-light italic text-xl mt-2">
+        Songs and movies I enjoy
       </h2>
     </>
   );

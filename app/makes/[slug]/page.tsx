@@ -14,9 +14,11 @@ export async function generateStaticParams() {
 
 const dateOptions = {
   month: "short",
-  day: "numeric",
+  // day: "numeric",
   year: "numeric",
 } as const;
+
+const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
 export default async function Page({
   params,
@@ -30,7 +32,7 @@ export default async function Page({
     mdxOptions(options, frontmatter) {
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
-        [remarkCodeHike, { theme: "one-dark-pro" }],
+        // [remarkCodeHike, { theme: "one-dark-pro" }],
         remarkGfm,
       ];
 
@@ -38,15 +40,10 @@ export default async function Page({
     },
   });
 
-  const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
-
   return (
     <>
       <div className="font-light italic text-stone-500 text-xl">
         {dateFormat.format(Date.parse(frontmatter.posted))}
-        {/* {frontmatter.posted !== frontmatter.edited && (
-          <div>Edited {dateFormat.format(Date.parse(frontmatter.edited))}</div>
-        )} */}
       </div>
       <InteractiveArticle code={code} />
     </>

@@ -1,7 +1,6 @@
 ---
 subtitle: cellular automata and how not to hold a workshop
 posted: 2023-8-4
-edited: 2023-8-6
 ---
 
 <Gol width={30} height={60} />
@@ -54,7 +53,7 @@ This was a ~~canon event~~ learning experience.
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
-<CH.Spotlight>
+{/* <CH.Spotlight> */}
 
 ```go
 func NewBoard(width, height int) [][]bool {
@@ -260,7 +259,7 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
-</CH.Spotlight>
+{/* </CH.Spotlight> */}
 
 You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending implementations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
 

@@ -3,7 +3,7 @@ import fs from "fs";
 import graymatter from "gray-matter";
 import Link from "next/link";
 
-export const codesDir = path.join(process.cwd(), "posts/codes");
+export const codesDir = path.join(process.cwd(), "posts/makes");
 
 type Frontmatter = {
   slug: string;
@@ -38,7 +38,6 @@ export default async function Page() {
       slug,
       subtitle: file.data.subtitle,
       posted: new Date(file.data.posted),
-      edited: new Date(file.data.edited),
       image: file.data.image,
     } as Frontmatter;
   });
@@ -50,7 +49,7 @@ export default async function Page() {
     <div>
       <ul>
         {frontmatters.map((matter) => (
-          <Link href={`/codes/${matter.slug}`} key={matter.slug}>
+          <Link href={`/makes/${matter.slug}`} key={matter.slug}>
             <li className="mb-8">
               <h2 className="font-playfair font-black text-3xl text-stone-500 @hover-text-rose-400 transition duration-500">
                 /{matter.slug.replaceAll("_", " ")}
