@@ -3,8 +3,6 @@ import fs from "fs";
 import graymatter from "gray-matter";
 import Link from "next/link";
 
-export const codesDir = path.join(process.cwd(), "posts/makes");
-
 type Frontmatter = {
   slug: string;
   subtitle: string;
@@ -14,8 +12,8 @@ type Frontmatter = {
 };
 
 const published = ["ssh_game_of_life.mdx"];
-
-export function getSlugs() {
+const codesDir = path.join(process.cwd(), "posts/makes");
+function getSlugs() {
   let fileNames = fs.readdirSync(codesDir);
 
   if (process.env.NODE_ENV === "production") {
