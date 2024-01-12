@@ -1,9 +1,11 @@
 # kylezhe.ng
 
-This is my personal website made with Next.js
+My personal website made with Next.js
+
+I use this to experiment with new stuff too, so the code is pretty jank.
 
 ## TODO
 
-- project pages
-- post pages
-- change logo
+- [ ] write more
+- [ ] fix code hike
+- [ ] resume

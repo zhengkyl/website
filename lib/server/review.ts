@@ -18,6 +18,7 @@ type ReviewParams = {
   fun_before?: boolean;
   fun_during?: boolean;
   fun_after?: boolean;
+  user_id?: number;
 };
 
 export const getMovieReviews = async (params: ReviewParams) => {

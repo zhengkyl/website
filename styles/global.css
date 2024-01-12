@@ -1,5 +1,5 @@
 @import "@unocss/reset/tailwind.css";
-@unocss;
+@unocss all;
 
 :root {
   --background: 0, 0%, 100%;
@@ -48,7 +48,7 @@
 }
 
 html {
-  @apply text-stone-800 text-lg;
+  @apply text-stone-800 font-mono;
   tab-size: 2;
 }
 
@@ -82,3 +82,20 @@ article > * {
 article > details > * {
   @apply my-4;
 }
+
+/* h1,
+h2,
+h3 {
+  @apply text-zinc-900/20;
+}
+
+h1 {
+  @apply top-12 font-playfair text-5xl font-black sticky bg-white z-3;
+}
+
+h2 {
+  @apply top-24 font-playfair text-5xl font-black sticky bg-white z-2;
+}
+h3 {
+  @apply top-36 font-playfair text-5xl font-black sticky bg-white z-1;
+} */

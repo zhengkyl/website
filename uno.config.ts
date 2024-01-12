@@ -15,9 +15,6 @@ export default defineConfig({
   //   },
   // ],
   theme: {
-    fontFamily: {
-      playfair: "var(--font-playfair)",
-    },
     colors: {
       border: "hsl(var(--border))",
       input: "hsl(var(--input))",

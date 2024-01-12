@@ -9,6 +9,7 @@ export default async function Page() {
     category: "Film",
     status: "Completed",
     sort_by: "created_at.desc",
+    user_id: 1,
   });
 
   const previousSongs = await getPreviousSongs({ limit: 1 });

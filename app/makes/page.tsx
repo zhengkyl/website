@@ -51,7 +51,7 @@ export default async function Page() {
         {frontmatters.map((matter) => (
           <Link href={`/makes/${matter.slug}`} key={matter.slug}>
             <li className="mb-8">
-              <h2 className="font-playfair font-black text-3xl text-stone-500 @hover-text-rose-400 transition duration-500">
+              <h2 className="font-black text-3xl text-stone-500 @hover-text-rose-400 transition duration-500">
                 /{matter.slug.replaceAll("_", " ")}
               </h2>
               <h3 className="font-light italic text-stone-500 text-xl mt-2">
