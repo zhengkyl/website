@@ -45,10 +45,14 @@ export function Img(props) {
 
 export function Code(props) {
   return (
-    <code bg="stone-200" border="rounded" p="y-0.5 x-1" text="sm">
+    <code className="bg-stone-200 rounded py-0.4 px-1 text-sm">
       {props.children}
     </code>
   );
+}
+
+export function Pre(props) {
+  return <pre className="">{props.children}</pre>;
 }
 
 export function H2(props) {

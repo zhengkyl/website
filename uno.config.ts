@@ -1,19 +1,11 @@
 import { defineConfig, presetWind } from "unocss";
-import presetAttributify from "@unocss/preset-attributify";
 import presetShadcn from "./lib/preset.shadcn";
 
 export default defineConfig({
   content: {
     filesystem: ["**/*.{ts,tsx}"],
   },
-  // @ts-expect-error presetAttributify has bad type
-  presets: [presetWind(), presetAttributify(), presetShadcn()],
-  // shortcuts: [
-  //   {
-  //     "flex-center": "flex justify-center items-center",
-  //     "flex-col-center": "flex flex-col justify-center items-center",
-  //   },
-  // ],
+  presets: [presetWind(), presetShadcn()],
   theme: {
     colors: {
       border: "hsl(var(--border))",

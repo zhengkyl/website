@@ -11,10 +11,10 @@ type Frontmatter = {
   image?: string;
 };
 
-const published = ["ssh_game_of_life.mdx"];
-const codesDir = path.join(process.cwd(), "posts/makes");
+const published = ["workshops_are_hard.mdx"];
+const postsDir = path.join(process.cwd(), "posts");
 function getSlugs() {
-  let fileNames = fs.readdirSync(codesDir);
+  let fileNames = fs.readdirSync(postsDir);
 
   if (process.env.NODE_ENV === "production") {
     fileNames = fileNames.filter((name) => published.includes(name));
@@ -28,7 +28,7 @@ function getSlugs() {
 
 export default async function Page() {
   const frontmatters = getSlugs().map(({ slug }) => {
-    const filePath = path.join(codesDir, `${slug}.mdx`);
+    const filePath = path.join(postsDir, `${slug}.mdx`);
     const fileData = fs.readFileSync(filePath, "utf8");
     const file = graymatter(fileData);
 
@@ -47,7 +47,7 @@ export default async function Page() {
     <div>
       <ul>
         {frontmatters.map((matter) => (
-          <Link href={`/makes/${matter.slug}`} key={matter.slug}>
+          <Link href={`/says/${matter.slug}`} key={matter.slug}>
             <li className="mb-8">
               <h2 className="font-black text-3xl text-stone-500 @hover-text-rose-400 transition duration-500">
                 /{matter.slug.replaceAll("_", " ")}

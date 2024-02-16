@@ -53,7 +53,6 @@ This was a ~~canon event~~ learning experience.
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
-{/* <CH.Spotlight> */}
 
 ```go
 func NewBoard(width, height int) [][]bool {
@@ -64,8 +63,6 @@ func NewBoard(width, height int) [][]bool {
 	return board
 }
 ```
-
----
 
 Create a new board
 
@@ -79,11 +76,7 @@ func NewBoard(width, height int) [][]bool {
 }
 ```
 
----
-
-Create next board state
-
-```go focus=9:17
+```go
 func NewBoard(width, height int) [][]bool {
   board := make([][]bool, height)
 	for i := range board {
@@ -103,11 +96,7 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
----
-
-Loop over every cell
-
-```go focus=7:11
+```go 
 func NextBoard(board [][]bool) [][]bool {
 	boardHeight := len(board)
 	boardWidth := len(board[0])
@@ -124,11 +113,7 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
----
-
-Check neighbors
-
-```go focus=10:25
+```go
 func NextBoard(board [][]bool) [][]bool {
 	boardHeight := len(board)
 	boardWidth := len(board[0])
@@ -161,11 +146,8 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
----
 
-Add state transition rules
-
-```go focus=27:31
+```go
 func NextBoard(board [][]bool) [][]bool {
 	boardHeight := len(board)
 	boardWidth := len(board[0])
@@ -205,9 +187,6 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
----
-
-Full code
 
 ```go
 package life
@@ -258,8 +237,6 @@ func NextBoard(board [][]bool) [][]bool {
 	return newBoard
 }
 ```
-
-{/* </CH.Spotlight> */}
 
 You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending implementations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
 

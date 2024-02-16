@@ -11,7 +11,7 @@ interface MovieProps {
 
 export default function Review(review: MovieProps) {
   return (
-    <div flex="" justify="between">
+    <div className="flex justify-between">
       <a
         className="@hover-underline font-semibold"
         href={review.link}

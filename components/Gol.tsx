@@ -123,18 +123,11 @@ export function Gol({ width, height }) {
 
   return (
     <>
-      <div
-        fixed=""
-        className="top-4 left-4 !m-0 flex flex-col gap-2"
-        bg="stone-50"
-        p="2"
-        border="~ rounded"
-        shadow="2xl"
-      >
+      <div className="fixed top-4 left-4 !m-0 flex flex-col gap-2 bg-stone-50 p-2 border rounded shadow-2xl">
         <Button
           title={playing ? "Pause background" : "Unpause background"}
           variant="outline"
-          p="x-2"
+          className="px-2"
           onClick={() => {
             if (playing) {
               cancelAnimationFrame(requestFrame.current);
@@ -146,7 +139,7 @@ export function Gol({ width, height }) {
         >
           {playing ? <Pause /> : <Play viewBox="0 0 22 24" />}
         </Button>
-        <Button asChild variant="outline" p="x-2" w="10">
+        <Button asChild variant="outline" className="px-2 w-10">
           <input
             title="Change cell color"
             type="color"
@@ -160,7 +153,7 @@ export function Gol({ width, height }) {
         <Button
           title="Clear cells"
           variant="outline"
-          p="x-2"
+          className="px-2"
           onClick={() => {
             cells.current = newBoard(width, height);
             if (!playing) iterate();
@@ -171,7 +164,7 @@ export function Gol({ width, height }) {
         <Button
           title="Randomize cells"
           variant="outline"
-          p="x-2"
+          className="px-2"
           onClick={() => {
             cells.current = randomize(newBoard(width, height));
             if (!playing) iterate();

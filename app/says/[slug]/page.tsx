@@ -1,14 +1,16 @@
-import { remarkCodeHike } from "@code-hike/mdx";
 import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import { InteractiveArticle } from "./client";
+import go from "highlight.js/lib/languages/go";
+import { common } from "lowlight";
 
 export const dynamicParams = false;
 
 const published = ["ssh_game_of_life.mdx"];
-const codesDir = path.join(process.cwd(), "posts/makes");
+const codesDir = path.join(process.cwd(), "posts");
 function getSlugs() {
   let fileNames = fs.readdirSync(codesDir);
 
@@ -44,11 +46,11 @@ export default async function Page({
   const { code, frontmatter } = await bundleMDX({
     source: fileData,
     mdxOptions(options, frontmatter) {
-      options.remarkPlugins = [
-        ...(options.remarkPlugins ?? []),
-        // [remarkCodeHike, { theme: "one-dark-pro" }],
-        remarkGfm,
-      ];
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      // options.rehypePlugins = [
+      //   ...(options.rehypePlugins ?? []),
+      //   rehypeHighlight(),
+      // ];
 
       return options;
     },
