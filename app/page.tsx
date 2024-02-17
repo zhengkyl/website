@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React from "react";
 
@@ -15,6 +16,29 @@ export default async function HomePage() {
           finally started reading again. I'm improving my Chinese and learning
           Japanese because I want to.
         </p>
+        <div className="flex gap-4 font-mono my-2">
+          <a
+            href="https://github.com/zhengkyl"
+            className="@hover-underline font-semibold text-rose-600"
+            target="_blank"
+          >
+            github
+          </a>
+          <a
+            href="https://www.linkedin.com/in/zhengkyl/"
+            className="@hover-underline font-semibold text-rose-600"
+            target="_blank"
+          >
+            linkedin
+          </a>
+          <a
+            href="./resume.pdf"
+            className="@hover-underline font-semibold text-rose-600"
+            target="_blank"
+          >
+            resume
+          </a>
+        </div>
         <h2 className="text-2xl font-black mt-4 mb-2 font-mono">work</h2>
         <div className="font-mono">
           <h3>

@@ -5,8 +5,8 @@ import React from "react";
 
 export default function Header() {
   return (
-    <nav className="text-xl flex justify-between">
-      <h1 className="text-2xl font-black mt-4 mb-2 font-mono">
+    <nav className="flex justify-between items-center mt-4 mb-2">
+      <h1 className="text-2xl font-black font-mono">
         <Link
           href="/"
           className="hover:text-zinc-400 transition-colors cursor-pointer"
