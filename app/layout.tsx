@@ -17,10 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css"
         />
       </head>
-      <body className="py-16 px-4 max-w-screen-sm m-auto">
-        <Header />
-        <main>{children}</main>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
