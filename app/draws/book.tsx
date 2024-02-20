@@ -61,12 +61,20 @@ export function Book(props) {
                 style={{
                   transition: "inherit",
                   transformOrigin: "inherit",
+                  transformStyle: "inherit",
                   transform:
                     page > i + 1
                       ? `${getTranslate(i + 1)} rotate3d(0, 1, 0, -180deg)`
                       : getTranslate(i + 1),
                 }}
               >
+                {/* <div className="bg-red-500 h-full w-full absolute backface-hidden"></div>
+                <div
+                  className="bg-blue-500 h-full w-full absolute backface-hidden"
+                  style={{
+                    transform: "rotateY(180deg)",
+                  }}
+                ></div> */}
                 <img src={front} className="absolute backface-hidden" />
                 <img
                   src={back}
