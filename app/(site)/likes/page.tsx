@@ -1,7 +1,7 @@
-import Review from "../../components/Review";
-import Song from "../../components/Song";
-import { getMovieReviews } from "../../lib/server/review";
-import { getPreviousSongs } from "../../lib/server/spotify";
+import Review from "../../../components/Review";
+import Song from "../../../components/Song";
+import { getMovieReviews } from "../../../lib/server/review";
+import { getPreviousSongs } from "../../../lib/server/spotify";
 
 export default async function Page() {
   const previousReviews = await getMovieReviews({

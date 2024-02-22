@@ -1,18 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import { usePathname } from "next/navigation";
 
-export default function Header() {
+export default function Header(props) {
+  const pathname = usePathname();
+
+  const section = pathname.slice(1);
+
   return (
-    <nav className="flex justify-between items-center mt-4 mb-2">
-      <h1 className="text-2xl font-black font-mono">
+    <nav {...props}>
+      <h1 className="text-2xl font-bold font-mono">
         <Link
           href="/"
           className="hover:text-zinc-400 transition-colors cursor-pointer"
         >
           kyle zheng
-        </Link>
+        </Link>{" "}
+        {section}
       </h1>
     </nav>
   );

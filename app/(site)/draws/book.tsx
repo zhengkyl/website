@@ -6,6 +6,14 @@ import { useState } from "react";
 // use css sprites for initial page content
 // only load high quality for current page
 
+// TODO
+// scan images
+// clamp/scale/ breakpoint
+// figure out ui
+// texture covers
+// write text
+// link from home
+
 export function Book(props) {
   const [page, setPage] = useState(0);
 
@@ -42,21 +50,10 @@ export function Book(props) {
     return `translate3d(${xOffset}, 0, ${-Math.abs(index - page) / 5}svh)`;
   };
 
+  const getRotation = (index) => {};
+
   return (
     <>
-      <div className="mb-32">
-        <button onClick={() => setPage((page) => (page > 0 ? page - 1 : page))}>
-          Prev
-        </button>
-        {page}
-        <button
-          onClick={() =>
-            setPage((page) => (page < pages.length + 2 ? page + 1 : page))
-          }
-        >
-          Next
-        </button>
-      </div>
       <div
         {...props}
         style={{
@@ -65,16 +62,18 @@ export function Book(props) {
           transformStyle: "preserve-3d",
           transition: "transform 1s",
           width: 0,
-          height: 0,
         }}
       >
         <div
-          className="h-[50svh] aspect-[2/3] relative"
+          className="h-full aspect-[2/3] relative"
           style={{
             transformOrigin: "inherit",
             transition: "inherit",
             transformStyle: "inherit",
-            transform: "rotateX(60deg)",
+            transform:
+              page > 0 && page < pages.length + 2
+                ? "rotateX(15deg)"
+                : "rotateX(60deg)",
           }}
         >
           <div
