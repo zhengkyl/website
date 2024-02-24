@@ -13,125 +13,188 @@ import { useState } from "react";
 // texture covers
 // write text
 // link from home
+const toDeg = (d) => (d * 180) / Math.PI;
 
-export function Book(props) {
-  const [page, setPage] = useState(0);
+type Props = {
+  pagesDir: string;
+  numSheets?: number;
+  insetPages?: boolean;
+  className?: string;
+};
 
-  const [pages, setPages] = useState([
-    ["/images/1.jpg", "/images/2.jpg"],
-    ["/images/3.jpg", "/images/4.jpg"],
-    ["/images/5.jpg", "/images/5.jpg"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
-    ["/images/4floss.gif", "/images/4floss.gif"],
+export function Book(props: Props) {
+  const { numSheets = 5, insetPages = false, pagesDir } = props;
+
+  const [flips, setFlips] = useState(0);
+
+  const insideFront = `${pagesDir}/0.jpg`;
+  const insideBack = `${pagesDir}/${numSheets}.jpg`;
+  const sheets = Array.from({ length: numSheets }, (_, i) => [
+    `${pagesDir}/${i * 2 + 1}.jpg`,
+    `${pagesDir}/${i * 2 + 2}.jpg`,
   ]);
 
-  const getTranslate = (index) => {
-    // index == page && index == page - 1 are same
-    if (index < page) index++;
+  const bookOpen = flips > 0 && flips < sheets.length + 2;
 
-    let xOffset;
-    if (page === 0) {
-      xOffset = `-50%`;
-    } else if (page === pages.length + 2) {
-      xOffset = `50%`;
-    } else {
-      const pageDiff = Math.max(-2, Math.min(2, index - page));
-      xOffset = `${(Math.sign(pageDiff) * pageDiff * pageDiff) / 5}svh`;
+  const getSheetTransform = (index) => {
+    let rotate = "";
+    if (flips > index) {
+      rotate = "rotate3d(0, 1, 0, -180deg) ";
+
+      index++; // prev flipped page has same x and z offset
     }
 
-    // return `translate3d(0, 0, ${-Math.abs(index - page) * 10}px)`;
-    return `translate3d(${xOffset}, 0, ${-Math.abs(index - page) / 5}svh)`;
+    const xOffset = `${getSheetXOffset(index) / 5}svh`;
+
+    return `translate3d(${xOffset}, 0, ${
+      -Math.abs(index - flips) / 5
+    }svh) ${rotate}`;
   };
 
-  const getRotation = (index) => {};
+  // return unitless offset
+  const getSheetXOffset = (index) => {
+    if (!bookOpen) return 0;
+    const pageDiff = Math.max(-2, Math.min(2, index - flips));
+    return Math.sign(pageDiff) * pageDiff * pageDiff; // just a nice parabola
+  };
+
+  // units = 1/5 svh
+  const getSpineHalfAngle = (back = false) => {
+    const xStart = getSheetXOffset(1); // add 1 to match offset in getSheetTransform
+    const xEnd = getSheetXOffset(sheets.length + 1);
+    const xDist = xEnd - xStart;
+    if (xDist === 0) {
+      const halfHeight = (sheets.length + 1) / 2;
+      const halfSpine = sheets.length + 1; // arbitrary value that matches width
+      return (back ? 1 : -1) * toDeg(Math.asin(halfHeight / halfSpine));
+    }
+
+    const zStart = flips - 1;
+    const zEnd = sheets.length + 1 - flips;
+    const zDist = zEnd - zStart;
+    if (zDist === 0) return 0;
+
+    const spine = (sheets.length + 1) * 2;
+    const dist = Math.sqrt(zDist * zDist + xDist * xDist);
+
+    // angle of isoscoles triangle between spine halves
+    // equal to (dist / 2) / (spine / 2)
+    const t = Math.acos(dist / spine);
+
+    // angle of right triangle between front/back cover
+    // when zDist is negative, this works correctly b/c gives negative complementary angle
+    const tt = Math.atan(zDist / xDist);
+
+    return toDeg((back ? -1 : 1) * t + tt);
+  };
+
+  const [range, setRange] = useState(0);
+  const [rangeZ, setRangeZ] = useState(0);
 
   return (
     <>
+      <button onClick={() => setFlips((page) => page - 1)}>prev</button>
+      <button onClick={() => setFlips((page) => page + 1)}>next</button>
+      <input
+        className="w-full"
+        type="range"
+        min={-360}
+        max={360}
+        value={range}
+        onChange={(e) => setRange(e.target.value)}
+      />
+      <input
+        className="w-full"
+        type="range"
+        min={-360}
+        max={360}
+        value={rangeZ}
+        onChange={(e) => setRangeZ(e.target.value)}
+      />
       <div
-        {...props}
+        className={props.className}
         style={{
           perspective: "100svh",
           transformOrigin: "left center",
           transformStyle: "preserve-3d",
           transition: "transform 1s",
           width: 0,
+          marginInline: "auto",
         }}
       >
         <div
-          className="h-full aspect-[2/3] relative"
+          className="h-full aspect-[7/11] relative"
           style={{
             transformOrigin: "inherit",
             transition: "inherit",
             transformStyle: "inherit",
-            transform:
-              page > 0 && page < pages.length + 2
-                ? "rotateX(15deg)"
-                : "rotateX(60deg)",
+            transform: bookOpen
+              ? `rotateX(${range}deg) rotateZ(${rangeZ}deg)`
+              : `rotateX(${range}deg) rotateZ(${rangeZ}deg) translateX(${
+                  flips > 0 ? 50 : -50
+                }%)`,
           }}
         >
           <div
-            className="bg-red-700 rounded-r-lg h-full w-full absolute"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
               transition: "inherit",
-              transform:
-                page > 0
-                  ? `${getTranslate(0)} rotate3d(0, 1, 0, -180deg)`
-                  : getTranslate(0),
+              transform: getSheetTransform(0),
             }}
           >
-            <div
-              className="bg-blue-700 rounded-l-lg absolute top-0 bottom-0 my-auto h-[98%] aspect-[2/3] backface-hidden"
+            <img
+              className="rounded-l-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden"
               style={{
                 transform: "rotateY(180deg)",
+              }}
+              src={insideFront}
+            ></img>
+            <div
+              className="bg-red-700 absolute h-full"
+              style={{
+                width: `${(sheets.length + 1) / 5}svh`,
+
+                transformOrigin: "inherit",
+                // transformStyle: "inherit",
+                transition: "inherit",
+                transform: `rotate3d(0, 1, 0, ${
+                  180 + getSpineHalfAngle(false)
+                }deg)`,
+                //   sheet > 0
+                //     ? `${getTranslate(0)} rotate3d(0, 1, 0, -180deg)`
+                //     : getTranslate(0),
               }}
             ></div>
           </div>
           <div
-            className="absolute top-0 bottom-0 my-auto h-[98%] aspect-[2/3]"
+            className="absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109]"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
               transition: "inherit",
             }}
           >
-            {pages.map(([front, back], i) => {
+            {sheets.map(([front, back], i) => {
               return (
                 <div
                   key={i}
-                  className="rounded-r-lg w-full h-full absolute shadow-2xl"
+                  className="w-full h-full absolute shadow-2xl"
                   style={{
                     transition: "inherit",
                     transformOrigin: "inherit",
                     transformStyle: "inherit",
-                    transform:
-                      page > i + 1
-                        ? `${getTranslate(i + 1)} rotate3d(0, 1, 0, -180deg)`
-                        : getTranslate(i + 1),
+                    transform: getSheetTransform(i + 1),
                   }}
                 >
-                  {/* <div className="bg-red-500 h-full w-full absolute backface-hidden"></div>
-                <div
-                  className="bg-blue-500 h-full w-full absolute backface-hidden"
-                  style={{
-                    transform: "rotateY(180deg)",
-                  }}
-                ></div> */}
                   <img
                     src={front}
-                    className="absolute backface-hidden h-full"
+                    className="absolute backface-hidden h-full rounded-r-[5.45%_3.45%]"
                   />
                   <img
                     src={back}
-                    className="absolute backface-hidden h-full"
+                    className="absolute backface-hidden h-full rounded-l-[5.45%_3.45%]"
                     style={{
                       transform: "rotateY(180deg)",
                     }}
@@ -141,22 +204,33 @@ export function Book(props) {
             })}
           </div>
           <div
-            className="bg-red-600 rounded-r-lg h-full w-full"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
               transition: "inherit",
-              transform:
-                page > pages.length + 1
-                  ? `${getTranslate(
-                      pages.length + 1
-                    )} rotate3d(0, 1, 0, -180deg)`
-                  : getTranslate(pages.length + 1),
+              transform: getSheetTransform(sheets.length + 1),
             }}
           >
+            <img
+              className="rounded-r-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden"
+              src={insideBack}
+            ></img>
             <div
-              className="bg-blue-700 rounded-r-lg absolute top-0 bottom-0 my-auto h-[98%] aspect-[2/3] backface-hidden"
-              style={{}}
+              className="bg-red-700 absolute h-full"
+              style={{
+                width: `${(sheets.length + 1) / 5}svh`,
+
+                transformOrigin: "inherit",
+                // transformStyle: "inherit",
+                transition: "inherit",
+                transform: `rotate3d(0, 1, 0, ${
+                  180 + getSpineHalfAngle(true)
+                }deg)`,
+                //   sheet > 0
+                //     ? `${getTranslate(0)} rotate3d(0, 1, 0, -180deg)`
+                //     : getTranslate(0),
+              }}
             ></div>
           </div>
         </div>

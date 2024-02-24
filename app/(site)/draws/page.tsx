@@ -4,14 +4,14 @@ export default function Page() {
   return (
     <>
       <div>
-        <p>I started drawing in December 2021.</p>
         <p>
-          I was (and still am) awed by speed sketch artists on TikTok, street
-          portrait hustlers in New York, and of course, Kim Jung Gi. Drawing
-          fast with ink— that's what I like.
+          I am inspired by speed sketch artists on TikTok, street portrait
+          hustlers in New York, and of course, Kim Jung Gi. Drawing fast with
+          ink— that's what I like.
         </p>
         <p className="my-8 mb-16">
-          Below are my sketchbooks. I wouldn't stare too long, it's nasty stuff.
+          Below are digital recreations of my sketchbooks, with some sample
+          pages.
         </p>
       </div>
       <div className="flex flex-col gap-8">
@@ -21,10 +21,13 @@ export default function Page() {
           pages="104 pages 5x8.25in"
         >
           <p>
-            I bought this from an art supply store while in New York. That was
-            dumb.
+            I bought this from an art supply store while in New York. That's a
+            zero interest rate phenomenon.
           </p>
-          <Book className="mx-auto h-[calc(min(50svh,70vw))] mb-16" />
+          <Book
+            className="h-[calc(min(50svh,70vw))] mb-16"
+            pagesDir="/images/moleskine"
+          />
         </Section>
         <Section
           title="muji pocketnote"
@@ -75,8 +78,8 @@ export default function Page() {
           pages="? pages 5.5x8.5in"
         >
           <p>
-            I ripped out nearly every page to destroy flies infesting our
-            apartment.
+            I used this notebook to swat flies infesting our apartment. Here's
+            to disposable art!
           </p>
           <p className="text-center font-mono font-light my-2 text-stone-500">
             TO BE SCANNED
