@@ -8,33 +8,45 @@ import { useState } from "react";
 
 // TODO
 // scan images
-// clamp/scale/ breakpoint
 // figure out ui
 // texture covers
-// write text
-// link from home
 const toDeg = (d) => (d * 180) / Math.PI;
 
 type Props = {
   pagesDir: string;
   numSheets?: number;
-  insetPages?: boolean;
+  insetSheets?: boolean;
   className?: string;
+  sheetOffsetK?: number;
+  spineCurveK?: number;
 };
 
 export function Book(props: Props) {
-  const { numSheets = 5, insetPages = false, pagesDir } = props;
+  const {
+    numSheets = 5,
+    insetSheets = false,
+    pagesDir,
+    sheetOffsetK = 1 / 150,
+    spineCurveK = 0.6,
+  } = props;
+
+  // spineCurveK = width of spine half section as ratio of book depth
+  // lower bound depends on sheetOffetK, numSheets, offsetX function
+  // just try values so that spine halves always meet
 
   const [flips, setFlips] = useState(0);
 
   const insideFront = `${pagesDir}/0.jpg`;
-  const insideBack = `${pagesDir}/${numSheets}.jpg`;
+  const insideBack = `${pagesDir}/${numSheets * 2 + 1}.jpg`;
   const sheets = Array.from({ length: numSheets }, (_, i) => [
     `${pagesDir}/${i * 2 + 1}.jpg`,
     `${pagesDir}/${i * 2 + 2}.jpg`,
   ]);
 
   const bookOpen = flips > 0 && flips < sheets.length + 2;
+
+  const applyOffsetUnits = (v) =>
+    `calc(${v * sheetOffsetK} * var(--book-height))`;
 
   const getSheetTransform = (index) => {
     let rotate = "";
@@ -44,28 +56,26 @@ export function Book(props: Props) {
       index++; // prev flipped page has same x and z offset
     }
 
-    const xOffset = `${getSheetXOffset(index) / 5}svh`;
+    const xOffset = applyOffsetUnits(getSheetXOffset(index));
+    const zOffset = applyOffsetUnits(-Math.abs(index - flips));
 
-    return `translate3d(${xOffset}, 0, ${
-      -Math.abs(index - flips) / 5
-    }svh) ${rotate}`;
+    return `translate3d(${xOffset}, 0, ${zOffset}) ${rotate}`;
   };
 
   // return unitless offset
   const getSheetXOffset = (index) => {
     if (!bookOpen) return 0;
-    const pageDiff = Math.max(-2, Math.min(2, index - flips));
-    return Math.sign(pageDiff) * pageDiff * pageDiff; // just a nice parabola
+    const pageDiff = Math.max(-3, Math.min(3, index - flips));
+    return (Math.sign(pageDiff) * pageDiff * pageDiff) / 5; // just a nice parabola
   };
 
-  // units = 1/5 svh
   const getSpineHalfAngle = (back = false) => {
     const xStart = getSheetXOffset(1); // add 1 to match offset in getSheetTransform
     const xEnd = getSheetXOffset(sheets.length + 1);
     const xDist = xEnd - xStart;
     if (xDist === 0) {
       const halfHeight = (sheets.length + 1) / 2;
-      const halfSpine = sheets.length + 1; // arbitrary value that matches width
+      const halfSpine = (sheets.length + 1) * spineCurveK;
       return (back ? 1 : -1) * toDeg(Math.asin(halfHeight / halfSpine));
     }
 
@@ -74,7 +84,7 @@ export function Book(props: Props) {
     const zDist = zEnd - zStart;
     if (zDist === 0) return 0;
 
-    const spine = (sheets.length + 1) * 2;
+    const spine = (sheets.length + 1) * spineCurveK * 2;
     const dist = Math.sqrt(zDist * zDist + xDist * xDist);
 
     // angle of isoscoles triangle between spine halves
@@ -88,33 +98,18 @@ export function Book(props: Props) {
     return toDeg((back ? -1 : 1) * t + tt);
   };
 
-  const [range, setRange] = useState(0);
-  const [rangeZ, setRangeZ] = useState(0);
+  const onNext = () => setFlips((page) => page + 1);
+  const onPrev = () => setFlips((page) => page - 1);
 
+  console.log(flips);
   return (
     <>
-      <button onClick={() => setFlips((page) => page - 1)}>prev</button>
-      <button onClick={() => setFlips((page) => page + 1)}>next</button>
-      <input
-        className="w-full"
-        type="range"
-        min={-360}
-        max={360}
-        value={range}
-        onChange={(e) => setRange(e.target.value)}
-      />
-      <input
-        className="w-full"
-        type="range"
-        min={-360}
-        max={360}
-        value={rangeZ}
-        onChange={(e) => setRangeZ(e.target.value)}
-      />
+      <button onClick={onPrev}>prev</button>
+      <button onClick={onNext}>next</button>
       <div
         className={props.className}
         style={{
-          perspective: "100svh",
+          perspective: "2000px",
           transformOrigin: "left center",
           transformStyle: "preserve-3d",
           transition: "transform 1s",
@@ -129,14 +124,12 @@ export function Book(props: Props) {
             transition: "inherit",
             transformStyle: "inherit",
             transform: bookOpen
-              ? `rotateX(${range}deg) rotateZ(${rangeZ}deg)`
-              : `rotateX(${range}deg) rotateZ(${rangeZ}deg) translateX(${
-                  flips > 0 ? 50 : -50
-                }%)`,
+              ? `rotateX(15deg)`
+              : `rotateX(60deg) translateX(${flips > 0 ? 50 : -50}%)`,
           }}
         >
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute cursor-pointer"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
@@ -144,27 +137,23 @@ export function Book(props: Props) {
               transform: getSheetTransform(0),
             }}
           >
-            <img
-              className="rounded-l-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden"
+            <div className="absolute bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full backface-hidden"></div>
+            <div
+              className="rounded-l-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden bg-cover"
               style={{
                 transform: "rotateY(180deg)",
+                backgroundImage: `url(${insideFront})`,
               }}
-              src={insideFront}
-            ></img>
+            ></div>
             <div
               className="bg-red-700 absolute h-full"
               style={{
-                width: `${(sheets.length + 1) / 5}svh`,
-
+                width: applyOffsetUnits((sheets.length + 1) * spineCurveK),
                 transformOrigin: "inherit",
-                // transformStyle: "inherit",
                 transition: "inherit",
                 transform: `rotate3d(0, 1, 0, ${
                   180 + getSpineHalfAngle(false)
                 }deg)`,
-                //   sheet > 0
-                //     ? `${getTranslate(0)} rotate3d(0, 1, 0, -180deg)`
-                //     : getTranslate(0),
               }}
             ></div>
           </div>
@@ -177,59 +166,59 @@ export function Book(props: Props) {
             }}
           >
             {sheets.map(([front, back], i) => {
+              const sheetIndex = i + 1;
               return (
                 <div
                   key={i}
-                  className="w-full h-full absolute shadow-2xl"
+                  className="w-full h-full absolute shadow-2xl cursor-pointer"
                   style={{
                     transition: "inherit",
                     transformOrigin: "inherit",
                     transformStyle: "inherit",
-                    transform: getSheetTransform(i + 1),
+                    transform: getSheetTransform(sheetIndex),
                   }}
                 >
-                  <img
-                    src={front}
-                    className="absolute backface-hidden h-full rounded-r-[5.45%_3.45%]"
-                  />
-                  <img
-                    src={back}
-                    className="absolute backface-hidden h-full rounded-l-[5.45%_3.45%]"
+                  <div
+                    className="absolute backface-hidden h-full w-full rounded-r-[5.45%_3.45%] bg-cover"
+                    style={{ backgroundImage: `url(${front})` }}
+                  ></div>
+                  <div
+                    className="absolute backface-hidden h-full w-full rounded-l-[5.45%_3.45%] bg-cover"
                     style={{
                       transform: "rotateY(180deg)",
+                      backgroundImage: `url(${back})`,
                     }}
-                  />
+                  ></div>
                 </div>
               );
             })}
           </div>
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full cursor-pointer"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
               transition: "inherit",
-              transform: getSheetTransform(sheets.length + 1),
+              transform: `${getSheetTransform(sheets.length + 1)}`,
             }}
           >
-            <img
-              className="rounded-r-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden"
-              src={insideBack}
-            ></img>
+            <div
+              className="rounded-r-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden bg-cover"
+              style={{ backgroundImage: `url(${insideBack})` }}
+            ></div>
+            <div
+              className="absolute bg-red-700 rounded-l-[5.5%_3.5%] h-full w-full backface-hidden"
+              style={{ transform: "rotateY(180deg)" }}
+            ></div>
             <div
               className="bg-red-700 absolute h-full"
               style={{
-                width: `${(sheets.length + 1) / 5}svh`,
-
+                width: applyOffsetUnits((sheets.length + 1) * spineCurveK),
                 transformOrigin: "inherit",
-                // transformStyle: "inherit",
                 transition: "inherit",
                 transform: `rotate3d(0, 1, 0, ${
                   180 + getSpineHalfAngle(true)
                 }deg)`,
-                //   sheet > 0
-                //     ? `${getTranslate(0)} rotate3d(0, 1, 0, -180deg)`
-                //     : getTranslate(0),
               }}
             ></div>
           </div>

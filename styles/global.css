@@ -5,6 +5,10 @@ html {
   @apply text-stone-800;
   tab-size: 2;
 }
+body {
+  /* stop books overflowing */
+  overflow-x: hidden;
+}
 
 /* Quick fix for code hike component on mobile */
 /* .ch-spotlight {
