@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.23.5",
+    "@mapbox/rehype-prism": "^0.9.0",
     "@upstash/redis": "^1.28.4",
     "esbuild": "^0.14.54",
     "eslint": "^8.55.0",
@@ -23,6 +24,7 @@
     "react-dom": "^18.2.0",
     "rehype-highlight": "^7.0.0",
     "remark-gfm": "^3.0.1",
+    "sharp": "^0.33.2",
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {

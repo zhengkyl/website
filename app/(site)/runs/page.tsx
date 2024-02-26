@@ -1,7 +1,19 @@
+import Image from "next/image";
+import runsImg from "../../../public/images/runs.jpg";
+
 export default function Page() {
   return (
-    <div>
-      <p>I read books and I cannot lie.</p>
-    </div>
+    <>
+      <p className="my-4">
+        This is me after finishing the 2022 Purdue Boilermaker Half Marathon.
+      </p>
+      <Image
+        src={runsImg}
+        alt="Me after finishing the 2022 Purdue Boilermaker Half Marathon"
+      />
+      <p className="my-4">
+        I was really slow back then, but now I'm much slower.
+      </p>
+    </>
   );
 }

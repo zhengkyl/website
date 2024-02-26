@@ -2,10 +2,7 @@ import fs from "fs";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import { InteractiveArticle } from "./client";
-import go from "highlight.js/lib/languages/go";
-import { common } from "lowlight";
 
 export const dynamicParams = false;
 
@@ -47,10 +44,6 @@ export default async function Page({
     source: fileData,
     mdxOptions(options, frontmatter) {
       options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
-      // options.rehypePlugins = [
-      //   ...(options.rehypePlugins ?? []),
-      //   rehypeHighlight(),
-      // ];
 
       return options;
     },

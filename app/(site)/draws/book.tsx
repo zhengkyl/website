@@ -104,32 +104,37 @@ export function Book(props: Props) {
   console.log(flips);
   return (
     <>
-      <button onClick={onPrev}>prev</button>
-      <button onClick={onNext}>next</button>
       <div
         className={props.className}
         style={{
           perspective: "2000px",
           transformOrigin: "left center",
-          transformStyle: "preserve-3d",
           transition: "transform 1s",
-          width: 0,
           marginInline: "auto",
         }}
       >
+        <div className="h-full w-full absolute flex justify-center z-10">
+          <div
+            className="h-full w-1/2 cursor-pointer"
+            onClick={flips ? onPrev : onNext}
+          ></div>
+          {bookOpen && (
+            <div className="h-full w-1/2 cursor-pointer" onClick={onNext}></div>
+          )}
+        </div>
         <div
-          className="h-full aspect-[7/11] relative"
+          className="h-full aspect-[7/11] relative mx-auto"
           style={{
             transformOrigin: "inherit",
             transition: "inherit",
-            transformStyle: "inherit",
+            transformStyle: "preserve-3d",
             transform: bookOpen
-              ? `rotateX(15deg)`
-              : `rotateX(60deg) translateX(${flips > 0 ? 50 : -50}%)`,
+              ? `rotateX(15deg) translateX(50%)`
+              : `rotateX(60deg) translateX(${flips > 0 ? 100 : 0}%)`,
           }}
         >
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute cursor-pointer"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
@@ -170,7 +175,7 @@ export function Book(props: Props) {
               return (
                 <div
                   key={i}
-                  className="w-full h-full absolute shadow-2xl cursor-pointer"
+                  className="w-full h-full absolute shadow-2xl"
                   style={{
                     transition: "inherit",
                     transformOrigin: "inherit",
@@ -194,7 +199,7 @@ export function Book(props: Props) {
             })}
           </div>
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full cursor-pointer"
+            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",

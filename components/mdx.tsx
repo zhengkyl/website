@@ -1,5 +1,3 @@
-import clsx from "clsx";
-
 export function P(props) {
   if (typeof props.children !== "string" && props.children.type === "img") {
     return <>{props.children}</>;
@@ -24,7 +22,7 @@ export function A(props) {
 
 export function Card(props) {
   return (
-    <div className={clsx("rounded border p-4 my-4", props.className)}>
+    <div className={`rounded border p-4 my-4 ${props.className}`}>
       {props.children}
     </div>
   );
