@@ -18,8 +18,8 @@ export default async function HomePage() {
         <Link href="/runs" className=" underline text-rose-600">
           running (slowly)
         </Link>{" "}
-        and finally started reading again. I'm improving my Chinese and learning
-        Japanese because I want to.
+        and finally started reading again. I'm still studying Chinese, and I'm
+        also learning Japanese so I can read anime subtitles.
       </p>
       <div className="flex gap-4 font-mono my-2">
         <a
@@ -104,8 +104,8 @@ export default async function HomePage() {
         >
           <p>
             Here's the tool I wished for while learning Japanese hiragana and
-            katakana. It comes with sound, animated stroke diagrams, and a
-            practice quiz.
+            katakana. It comes with pronunciations, animated stroke diagrams,
+            and a practice quiz.
           </p>
         </Project>
         <Project
@@ -126,13 +126,8 @@ export default async function HomePage() {
           ]}
         >
           <p>
-            This is tic-tac-toe but overcomplicated in my quest to learn why{" "}
-            <a
-              href="https://survey.stackoverflow.co/2023/#section-admired-and-desired-web-frameworks-and-technologies"
-              target="_blank"
-            >
-              Elixir and Phoenix are so loved by developers.
-            </a>
+            This is tic-tac-toe but I overcomplicated it in my quest to learn
+            why developers love Elixir and Phoenix.
           </p>
         </Project>
         <Project

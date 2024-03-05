@@ -6,10 +6,8 @@ import { useState } from "react";
 // use css sprites for initial page content
 // only load high quality for current page
 
-// TODO
-// scan images
-// figure out ui
-// texture covers
+// texture
+
 const toDeg = (d) => (d * 180) / Math.PI;
 
 type Props = {

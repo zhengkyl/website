@@ -25,6 +25,7 @@ export default function Page() {
             zero interest rate phenomenon.
           </p>
           <Book
+            numSheets={6}
             className="h-[--book-height] mb-16 [--book-height:calc(min(480px,70vw))]"
             pagesDir="/images/moleskine"
           />
