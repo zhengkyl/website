@@ -18,7 +18,7 @@ export default async function HomePage() {
         <Link href="/runs" className=" underline text-rose-600">
           running (slowly)
         </Link>{" "}
-        and finally started reading again. I'm still studying Chinese, and I'm
+        and finally started reading again. I'm still studying Chinese, but I'm
         also learning Japanese so I can read anime subtitles.
       </p>
       <div className="flex gap-4 font-mono my-2">

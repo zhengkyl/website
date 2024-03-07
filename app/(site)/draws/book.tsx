@@ -34,6 +34,8 @@ export function Book(props: Props) {
 
   const [flips, setFlips] = useState(0);
 
+  const front = `${pagesDir}/front.jpg`;
+  const back = `${pagesDir}/back.jpg`;
   const insideFront = `${pagesDir}/0.jpg`;
   const insideBack = `${pagesDir}/${numSheets * 2 + 1}.jpg`;
   const sheets = Array.from({ length: numSheets }, (_, i) => [
@@ -44,7 +46,7 @@ export function Book(props: Props) {
   const bookOpen = flips > 0 && flips < sheets.length + 2;
 
   const applyOffsetUnits = (v) =>
-    `calc(${v * sheetOffsetK} * var(--book-height))`;
+    `calc(${v * sheetOffsetK} * var(--cover-height))`;
 
   const getSheetTransform = (index) => {
     let rotate = "";
@@ -99,7 +101,6 @@ export function Book(props: Props) {
   const onNext = () => setFlips((page) => page + 1);
   const onPrev = () => setFlips((page) => page - 1);
 
-  console.log(flips);
   return (
     <>
       <div
@@ -111,7 +112,7 @@ export function Book(props: Props) {
           marginInline: "auto",
         }}
       >
-        <div className="h-full w-full absolute flex justify-center z-10">
+        <div className="absolute h-full w-full flex justify-center z-10">
           <div
             className="h-full w-1/2 cursor-pointer"
             onClick={flips ? onPrev : onNext}
@@ -121,7 +122,7 @@ export function Book(props: Props) {
           )}
         </div>
         <div
-          className="h-full aspect-[7/11] relative mx-auto"
+          className="relative h-full aspect-[var(--cover-aspect)] mx-auto"
           style={{
             transformOrigin: "inherit",
             transition: "inherit",
@@ -132,7 +133,7 @@ export function Book(props: Props) {
           }}
         >
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full absolute"
+            className="absolute h-full w-full"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
@@ -140,16 +141,19 @@ export function Book(props: Props) {
               transform: getSheetTransform(0),
             }}
           >
-            <div className="absolute bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full backface-hidden"></div>
             <div
-              className="rounded-l-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden bg-cover"
+              className="absolute bg-[var(--cover-color)] rounded-r-[var(--cover-radius)] h-full w-full backface-hidden bg-cover"
+              style={{ backgroundImage: `url(${front})` }}
+            ></div>
+            <div
+              className="absolute bg-[var(--cover-color)] rounded-l-[var(--cover-radius)] h-full w-full backface-hidden bg-right bg-no-repeat [background-size:var(--page-height)]"
               style={{
                 transform: "rotateY(180deg)",
                 backgroundImage: `url(${insideFront})`,
               }}
             ></div>
             <div
-              className="bg-red-700 absolute h-full"
+              className="absolute bg-[var(--cover-color)] h-full"
               style={{
                 width: applyOffsetUnits((sheets.length + 1) * spineCurveK),
                 transformOrigin: "inherit",
@@ -161,7 +165,7 @@ export function Book(props: Props) {
             ></div>
           </div>
           <div
-            className="absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109]"
+            className="absolute top-0 bottom-0 my-auto h-[var(--page-height)] aspect-[var(--page-aspect)]"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
@@ -173,7 +177,7 @@ export function Book(props: Props) {
               return (
                 <div
                   key={i}
-                  className="w-full h-full absolute shadow-2xl"
+                  className="absolute h-full w-full shadow-2xl rounded-r-[var(--page-radius)]"
                   style={{
                     transition: "inherit",
                     transformOrigin: "inherit",
@@ -182,11 +186,11 @@ export function Book(props: Props) {
                   }}
                 >
                   <div
-                    className="absolute backface-hidden h-full w-full rounded-r-[5.45%_3.45%] bg-cover"
+                    className="absolute backface-hidden h-full w-full rounded-r-[var(--page-radius)] bg-cover"
                     style={{ backgroundImage: `url(${front})` }}
                   ></div>
                   <div
-                    className="absolute backface-hidden h-full w-full rounded-l-[5.45%_3.45%] bg-cover"
+                    className="absolute backface-hidden h-full w-full rounded-l-[var(--page-radius)] bg-cover"
                     style={{
                       transform: "rotateY(180deg)",
                       backgroundImage: `url(${back})`,
@@ -197,7 +201,7 @@ export function Book(props: Props) {
             })}
           </div>
           <div
-            className="bg-red-700 rounded-r-[5.5%_3.5%] h-full w-full"
+            className="h-full w-full"
             style={{
               transformOrigin: "inherit",
               transformStyle: "inherit",
@@ -206,15 +210,18 @@ export function Book(props: Props) {
             }}
           >
             <div
-              className="rounded-r-[5.45%_3.45%] absolute top-0 bottom-0 my-auto h-[98%] aspect-[69/109] backface-hidden bg-cover"
+              className="absolute bg-[var(--cover-color)] rounded-r-[var(--page-radius)] h-full w-full backface-hidden bg-left bg-no-repeat [background-size:var(--page-height)]"
               style={{ backgroundImage: `url(${insideBack})` }}
             ></div>
             <div
-              className="absolute bg-red-700 rounded-l-[5.5%_3.5%] h-full w-full backface-hidden"
-              style={{ transform: "rotateY(180deg)" }}
+              className="absolute bg-[var(--cover-color)] rounded-l-[var(--cover-radius)] h-full w-full backface-hidden bg-cover"
+              style={{
+                transform: "rotateY(180deg)",
+                backgroundImage: `url(${back})`,
+              }}
             ></div>
             <div
-              className="bg-red-700 absolute h-full"
+              className="absolute bg-[var(--cover-color)] h-full"
               style={{
                 width: applyOffsetUnits((sheets.length + 1) * spineCurveK),
                 transformOrigin: "inherit",

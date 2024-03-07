@@ -19,6 +19,7 @@ export default function Page() {
           title="moleskine sketchbook (red)"
           date="JAN '24 - NOW"
           pages="104 pages 5x8.25in"
+          className="mb-16"
         >
           <p>
             I bought this from an art supply store while in New York. That's a
@@ -26,19 +27,24 @@ export default function Page() {
           </p>
           <Book
             numSheets={6}
-            className="h-[--book-height] mb-16 [--book-height:calc(min(480px,70vw))]"
             pagesDir="/images/moleskine"
+            className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:7/11] [--cover-radius:5.5%_3.5%] [--page-aspect:69/109] [--page-height:98%] [--page-radius:5.45%_3.45%] [--cover-color:#b91c1c]"
           />
         </Section>
         <Section
           title="muji pocketnote"
           date="JUN - DEC '23"
           pages="368 pages 5.4x7.7in"
+          className="mb-16"
         >
           <p>This makes for a terrible sketchbook, perfect for terrible art.</p>
-          <p className="text-center font-mono font-light my-2 text-stone-500">
-            TO BE SCANNED
-          </p>
+          <Book
+            numSheets={7}
+            sheetOffsetK={1 / 100}
+            spineCurveK={0.51}
+            pagesDir="/images/muji"
+            className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:15/22] [--cover-radius:0] [--page-aspect:15/22] [--page-height:100%] [--page-radius:0] [--cover-color:#c7a36f]"
+          />
         </Section>
         <Section
           title="pacific arc sketchbook (black)"
@@ -94,7 +100,7 @@ export default function Page() {
 function Section(props) {
   return (
     <>
-      <div>
+      <div className={props.className}>
         <div className="flex justify-between">
           <h2 className="text-xl font-bold font-mono">{props.title}</h2>
           <div className="text-right font-light whitespace-pre">
