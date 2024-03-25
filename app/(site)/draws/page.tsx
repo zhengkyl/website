@@ -10,8 +10,8 @@ export default function Page() {
           ink— that's what I like.
         </p>
         <p className="my-8 mb-16">
-          Below are digital recreations of my sketchbooks, with some sample
-          pages.
+          Below are digital recreations of my sketchbooks. I picked out some of
+          the better pages, with a couple stinkers for perspective.
         </p>
       </div>
       <div className="flex flex-col gap-8">
@@ -55,9 +55,13 @@ export default function Page() {
             Only 2 were in stock at the University Book Store. I should've
             bought both.
           </p>
-          <p className="text-center font-mono font-light my-2 text-stone-500">
-            TO BE SCANNED
-          </p>
+          <Book
+            numSheets={5}
+            sheetOffsetK={1 / 120}
+            spineCurveK={0.51}
+            pagesDir="/images/pacific_arc"
+            className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:2/3] [--cover-radius:0] [--page-aspect:2/3] [--page-height:100%] [--page-radius:0] [--cover-color:transparent]"
+          />
         </Section>
         <Section
           title="kurzgesagt notebook (ocean)"

@@ -19,6 +19,16 @@ type Props = {
   spineCurveK?: number;
 };
 
+// the following css variables need to be set
+// --cover-height
+// --cover-aspect
+// --cover-radius
+// --cover-color
+//
+// --page-height
+// --page-aspect
+// --page-radius
+
 export function Book(props: Props) {
   const {
     numSheets = 5,
