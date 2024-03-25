@@ -9,12 +9,12 @@ export default function Page() {
           hustlers in New York, and of course, Kim Jung Gi. Drawing fast with
           ink— that's what I like.
         </p>
-        <p className="my-8 mb-16">
+        <p className="my-8">
           Below are digital recreations of my sketchbooks. I picked out some of
           the better pages, with a couple stinkers for perspective.
         </p>
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 py-8">
         <Section
           title="moleskine sketchbook (red)"
           date="JAN '24 - NOW"
@@ -22,8 +22,8 @@ export default function Page() {
           className="mb-16"
         >
           <p>
-            I bought this from an art supply store while in New York. That's a
-            zero interest rate phenomenon.
+            This is a nice sketchbook, but buying it was a zero interest rate
+            phenomenon.
           </p>
           <Book
             numSheets={6}
@@ -51,10 +51,7 @@ export default function Page() {
           date="FEB - MAY '23"
           pages="128 pages 5.6x8.25in"
         >
-          <p>
-            Only 2 were in stock at the University Book Store. I should've
-            bought both.
-          </p>
+          <p>My favorite and first real sketchbook.</p>
           <Book
             numSheets={5}
             sheetOffsetK={1 / 120}

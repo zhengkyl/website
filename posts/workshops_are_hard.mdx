@@ -53,7 +53,7 @@ This was a ~~canon event~~ learning experience.
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
-~~~go
+```go
 package life
 
 func NewBoard(width, height int) [][]bool {
@@ -101,7 +101,7 @@ func NextBoard(board [][]bool) [][]bool {
 
 	return newBoard
 }
-~~~
+```
 
 You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending implementations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
 
