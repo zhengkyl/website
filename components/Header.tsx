@@ -23,7 +23,7 @@ export default function Header(props) {
             {" "}
             <Link
               href={`/${sections.slice(0, i + 1).join("/")}`}
-              className="hover:text-zinc-400 transition-colors cursor-pointer"
+              className="hover:text-zinc-400 transition-colors cursor-pointer underline"
             >
               {section.replaceAll("_", " ")}
             </Link>

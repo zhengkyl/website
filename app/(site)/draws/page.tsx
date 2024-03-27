@@ -9,17 +9,16 @@ export default function Page() {
           hustlers in New York, and of course, Kim Jung Gi. Drawing fast with
           ink— that's what I like.
         </p>
-        <p className="my-8">
+        <p className="my-8 mb-16">
           Below are digital recreations of my sketchbooks. I picked out some of
           the better pages, with a couple stinkers for perspective.
         </p>
       </div>
-      <div className="flex flex-col gap-8 py-8">
+      <div className="flex flex-col gap-8">
         <Section
           title="moleskine sketchbook (red)"
           date="JAN '24 - NOW"
           pages="104 pages 5x8.25in"
-          className="mb-16"
         >
           <p>
             This is a nice sketchbook, but buying it was a zero interest rate
@@ -35,7 +34,6 @@ export default function Page() {
           title="muji pocketnote"
           date="JUN - DEC '23"
           pages="368 pages 5.4x7.7in"
-          className="mb-16"
         >
           <p>This makes for a terrible sketchbook, perfect for terrible art.</p>
           <Book
@@ -101,7 +99,7 @@ export default function Page() {
 function Section(props) {
   return (
     <>
-      <div className={props.className}>
+      <div className="mb-8">
         <div className="flex justify-between">
           <h2 className="text-xl font-bold font-mono">{props.title}</h2>
           <div className="text-right font-light whitespace-pre">
