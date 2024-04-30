@@ -18,8 +18,8 @@ export default async function HomePage() {
         <Link href="/runs" className=" underline text-rose-600">
           running (slowly)
         </Link>{" "}
-        and finally started reading again. I'm still studying Chinese, but I'm
-        also learning Japanese so I can read anime subtitles.
+        and I finally started reading again. I'm studying Chinese by playing
+        Genshin Impact, and I'm learning Japanese so I can read anime subtitles.
       </p>
       <div className="flex gap-4 font-mono my-2">
         <a
@@ -37,7 +37,7 @@ export default async function HomePage() {
           linkedin
         </a>
         <a
-          href="./resume.pdf"
+          href="./Kyle_Zheng_Resume.pdf"
           className="font-bold underline text-rose-600"
           target="_blank"
         >
@@ -81,6 +81,28 @@ export default async function HomePage() {
       </div>
       <h2 className="text-2xl font-bold mt-4 mb-2 font-mono">projects</h2>
       <div className="flex flex-col gap-4">
+        <Project
+          title={
+            <>
+              <span className="">fuqr</span>
+              <span className="font-normal text-sm">
+                {" "}
+                {"<-"} currently working on
+              </span>
+            </>
+          }
+          links={[
+            {
+              href: "https://github.com/zhengkyl/fuqr",
+              text: "fuqr",
+            },
+          ]}
+        >
+          <p>
+            I made this QR code generator to take advantage of error tolerance
+            and make wacky QR codes. Now I have to make a cool frontend for it.
+          </p>
+        </Project>
         <Project
           title={
             <a
@@ -132,7 +154,7 @@ export default async function HomePage() {
         </Project>
         <Project
           title={
-            <span className="bg-gray-100 border text-blue-600 px-1">
+            <span className="bg-gray-100 border px-1">
               ssh reviews.kylezhe.ng
             </span>
           }
