@@ -84,7 +84,13 @@ export default async function HomePage() {
         <Project
           title={
             <>
-              <span className="">fuqr</span>
+              <a
+                className="underline text-blue-600"
+                href="https://qrframe.kylezhe.ng"
+                target="_blank"
+              >
+                qrframe.kylezhe.ng
+              </a>
               <span className="font-normal text-sm">
                 {" "}
                 {"<-"} currently working on
@@ -96,21 +102,25 @@ export default async function HomePage() {
               href: "https://github.com/zhengkyl/fuqr",
               text: "fuqr",
             },
+            {
+              href: "https://github.com/zhengkyl/qrframe",
+              text: "qrframe",
+            },
           ]}
         >
           <p>
-            I made this QR code generator to take advantage of error tolerance
-            and make wacky QR codes. Now I have to make a cool frontend for it.
+            I wanted to make cool custom QR codes, so I made this generator from
+            scratch to learn just how far I can push the boundaries.
           </p>
         </Project>
         <Project
           title={
             <a
               className="underline text-blue-600"
-              href="https://kana.vercel.app"
+              href="https://kana.kylezhe.ng"
               target="_blank"
             >
-              kana.vercel.app
+              kana.kylezhe.ng
             </a>
           }
           links={[
@@ -134,10 +144,10 @@ export default async function HomePage() {
           title={
             <a
               className="underline text-blue-600"
-              href="https://pixelgame.fly.dev"
+              href="https://pixelgame.kylezhe.ng"
               target="_blank"
             >
-              pixelgame.fly.dev
+              pixelgame.kylezhe.ng
             </a>
           }
           links={[
@@ -171,7 +181,8 @@ export default async function HomePage() {
         >
           <p>
             I like movies, but not rating systems. This is a minimalist movie
-            review app I wrote to try out Go and Rust.
+            review app I wrote to try out Rust, Go, and terminal user
+            interfaces.
           </p>
         </Project>
       </div>
