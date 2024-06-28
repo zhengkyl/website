@@ -23,7 +23,9 @@ export default function Header(props) {
             {" "}
             <Link
               href={`/${sections.slice(0, i + 1).join("/")}`}
-              className="hover:text-zinc-400 transition-colors cursor-pointer underline"
+              className={` hover:text-zinc-400 transition-colors cursor-pointer ${
+                i === sections.length - 1 ? "underline" : ""
+              }`}
             >
               {section.replaceAll("_", " ")}
             </Link>
