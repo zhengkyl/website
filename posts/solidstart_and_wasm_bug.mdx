@@ -1,0 +1,110 @@
+---
+subtitle: ERROR copy crates failed
+posted: 2024-27-6
+---
+
+## The Setup
+
+I'm building an app using the [`solid-start`](https://github.com/solidjs/solid-start) framework and I'm loading a local wasm package built with [`wasm-pack`](https://github.com/rustwasm/wasm-pack) using [`vite-plugin-wasm-pack`](https://github.com/nshen/vite-plugin-wasm-pack).
+
+## The Problem
+
+I run `nr dev` and I get ` ERROR  copy crates failed`.
+
+My local package, located at `fuqr/pkg` failed to be copied to `node_modules/fuqr`, but an empty `node_modules/fuqr` folder is created.
+
+I run `nr dev` again and the dev server starts correctly. The pkg is copied to `node_modules/fuqr`. Yipee!
+
+Then, I restart the dev server and I get ` ERROR  copy crates failed`, even though `node_modules/fuqr` exists with all the pkg files.
+
+After trial and error, I find out the only way to successfully start the dev server is to start with an existing but empty `node_modules/fuqr` folder.
+
+## The Debugging
+
+I can work around this by simply deleting the contents of `node_modules/fuqr` every time I start the dev server. But that gets old quick.
+
+There's an [promising github issue](https://github.com/nshen/vite-plugin-wasm-pack/issues/10) with the same error message, but my issue has nothing to do with symlinks.
+
+Clicking on the stack trace takes me straight to this code in the vite plugin.
+
+```js
+try {
+  await fs.copy(pkgPath, path.join("node_modules", crateName));
+} catch (error) {
+  this.error(`copy crates failed: ${error}`);
+}
+```
+
+So I guess `fs.copy()` is erroring. Except, I can't find documentation for a `copy` method in `fs`. Eventually I scroll up.
+
+```js
+import fs from "fs-extra";
+```
+
+Long story short, it's just utilities for stuff like copying directories which Node didn't have until recently. I dig around, but `fs-extra` is not the culprit either.
+
+I even try to trigger the error by just running the problematic logic manually with `node_modules/fuqr` in all possible states of nonexisting/empty/full/, but this code executes flawlessly.
+
+```js
+import fs from "fs/promises";
+try {
+  await fs.cp("fuqr/pkg", "node_modules/fuqr", { recursive: true });
+} catch (e) {
+  console.log(e);
+}
+```
+
+With no other choice, I clone [`vite-plugin-wasm-pack`](https://github.com/nshen/vite-plugin-wasm-pack) and use `pnpm link --dir ../qrframe` to use this local package in my `qrframe` project. I add a generous helping of `console.log()` to the plugin's hooks and pray.
+
+I start the dev server, and it errors, but one thing sticks out. The `buildStart()` hook where the copying takes place runs 3 times in a row.
+
+I know `solid-start` uses [`vinxi`](https://github.com/nksaraf/vinxi) so I look through their Github issues with a little hope. Lo and behold, someone has had this [same observation about buildStart](https://github.com/nksaraf/vinxi/issues/262). From this [comment](https://github.com/nksaraf/vinxi/issues/262#issuecomment-2011412971), we learn...
+
+> A SolidStart app is made of three vite subapps (a client app, a server app and server functions app). If you apply a vite plugin normally, it will be applied to all three subapps, thus will run thrice.
+
+This looks promising. Running the same copying operation (especially asynchronously), seems like a potential area for errors.
+
+Sure enough, after crudely modifying the `buildStart()` hook to only copy files once, I can finally run `nr dev` and use the dev server normally.
+
+## The Solution
+
+So the final solution (based on this [comment from the `vinxi` github issue](https://github.com/nksaraf/vinxi/issues/262#issuecomment-2011412971)) might look something like this. This way, the `buildStart()` hook that copies the files is only run when the router is `client` and not when it's `server` or `server-function`.
+
+```js
+import { defineConfig } from "@solidjs/start/config";
+import wasmpack from "vite-plugin-wasm-pack";
+
+export default defineConfig({
+  vite({ router }) {
+    return {
+      plugins: router === "client" ? [wasmpack("./fuqr")] : []
+    }
+  }
+})
+```
+
+Unfortunately, returning a different plugin each time causes a problem with plugins like [`UnoCSS`](https://github.com/unocss/unocss), so in my project I end up having to use a single reference for that plugin like so.
+
+```js
+import { defineConfig } from "@solidjs/start/config";
+import UnoCSS from "unocss/vite";
+import wasmpack from "vite-plugin-wasm-pack";
+
+const SharedUnoCss = UnoCSS();
+
+export default defineConfig({
+  vite({ router }) {
+    return {
+      plugins: router === "client" ? [SharedUnoCss, wasmpack("./fuqr")] : [SharedUnoCss]
+    }
+  }
+})
+```
+
+## Thoughts
+
+In reality, I left out a lot of time faffing around, trying to understand the error messages coming from the failed copy operation which changed as I messed with the destination folder. I was scratching my head as I was told the files that I could clearly see, failed to be removed because they didn't exist.
+
+What's left is a streamlined version of the steps I took to debug an intersection of unknown expected behavior from `vinxi` and `solid-start` and unknown unexpected behavior from copying the same directory concurrently.
+
+Wasm is a pain to work with, even with projects like `wasm-pack` and plugins like `vite-plugin-wasm-pack`. It's way more of a hassle and more limited than I thought. This bug had nothing to do with wasm per se, but it's a good indication of all the sharp edges everywhere when you try to do anything.
