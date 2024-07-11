@@ -1,0 +1,62 @@
+---
+subtitle: Stealing jobs from law-abiding QR codes
+posted:
+---
+
+QR codes have become the defacto way to share URLs in the physical world.
+
+// todo photos
+
+## Legal operations
+
+- Change color as long as contrast/brightness/luminance??? is maintained
+- Invert color/invert transparency
+- Rotate
+- Mirror
+- Multiple QR codes design
+
+## Prior work
+
+[Russ Cox, QArt Codes](https://research.swtch.com/qart)
+By encoding arbitrary numbers in an ignored url anchor, images can be placed into the QR code without relying on error correction.
+
+[Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes)
+This process involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color. Also, by introducing a limited number of errors, they can further enhance visual quality in key areas.
+
+A simpler approach involves overlaying a QR code with smaller data pixels on top of a background image so that only the center of each QR code pixel is the correct color.
+
+https://jsfiddle.net/lachlan/r8qWV/
+
+https://github.com/nythrox/halftone-qrcode
+
+[Bad Apple but it is played with QR code](https://www.youtube.com/watch?v=tPYUdjptMpk)
+
+[Amazing-QR](https://github.com/x-hw/amazing-qr)
+Supports color and GIFs.
+
+[vCode](https://github.com/ruitaocc/vCode)
+Uses color thresholds to reduce number and intensity of overlayed pixels.
+
+[QRpicture](https://github.com/xyzzy/qrpicture)
+Uses color quantization and a high-contrast color palette to maximize scannability of color images. Really good at hiding the QR code's noisy "texture".
+
+[Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
+The weirdest of the bunch, but super cool.
+
+## What's the deal with QR codes?
+
+There's a 100 page PDF describing the QR code standard (ISO/IEC 18004) in detail, but here's the truth.
+
+A QR code is whatever a QR code scanner can scan.
+
+Here are some undocumented behaviors I discovered while making [a simple QR code generator](https://github.com/fuqr).
+
+- UTF-8 is implicitly supported when using the byte encoding mode.
+- Kanji, Structured append, EC1, and FNC1 encoding modes aren't relevant for normal use. Scanners might not even support them (I can't find generators that support them either).
+
+Oversimplifiying to the point of misinformation, there are 2\* parts of a QR code decoder we need to swindle.
+
+- A QR code detector (based on computer vision) gets a bounding box
+- A binarizer algorithm converts an image to a matrix of on/off bits
+
+We can do anything to a QR code as long as those two parts still function mostly correctly.

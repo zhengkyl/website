@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Link from "next/link";
 import React from "react";
 
@@ -18,8 +17,8 @@ export default async function HomePage() {
         <Link href="/runs" className=" underline text-rose-600">
           running (slowly)
         </Link>{" "}
-        and I finally started reading again. I'm studying Chinese by playing
-        Genshin Impact, and I'm learning Japanese so I can read anime subtitles.
+        and I started reading books again. I'm studying Chinese by playing video
+        games, and I'm learning Japanese so I can read anime subtitles.
       </p>
       <div className="flex gap-4 font-mono my-2">
         <a
@@ -99,12 +98,12 @@ export default async function HomePage() {
           }
           links={[
             {
-              href: "https://github.com/zhengkyl/fuqr",
-              text: "fuqr",
-            },
-            {
               href: "https://github.com/zhengkyl/qrframe",
               text: "qrframe",
+            },
+            {
+              href: "https://github.com/zhengkyl/fuqr",
+              text: "fuqr",
             },
           ]}
         >

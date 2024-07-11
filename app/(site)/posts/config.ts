@@ -2,9 +2,10 @@ import path from "path";
 import fs from "fs";
 
 export const published = [
-  "ssh_game_of_life.mdx",
-  "solidstart_and_wasm_bug.mdx",
+  "ssh_game_of_life",
+  "vite-plugin-wasm-pack_bug",
 ];
+
 export const postsDir = path.join(process.cwd(), "posts");
 export function getSlugs() {
   let fileNames = fs.readdirSync(postsDir);
