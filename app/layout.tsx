@@ -1,11 +1,10 @@
 import { ReactNode } from "react";
-import Header from "../components/Header";
 
 import "../styles/global.css";
 
 export const metadata = {
   title: "Kyle Zheng",
-  description: "A decent programmer",
+  description: "Human programmer",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

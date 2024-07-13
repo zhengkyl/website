@@ -3,9 +3,9 @@ import { ReactNode } from "react";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <Header className="px-4 pt-16 pb-8 max-w-screen-sm m-auto" />
-      <main className="px-4 pb-16 max-w-screen-sm m-auto">{children}</main>
-    </>
+    <div className="px-4 py-16 m-auto max-w-screen-md">
+      <Header className="pb-8" />
+      <main>{children}</main>
+    </div>
   );
 }

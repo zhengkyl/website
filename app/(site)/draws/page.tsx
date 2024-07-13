@@ -5,19 +5,16 @@ export default function Page() {
     <>
       <div>
         <p>
-          I am inspired by speed sketch artists on TikTok, street portrait
-          hustlers in New York, and of course, Kim Jung Gi. Drawing fast with
-          ink— that's what I like.
+          I saw my friend's art progress after one year and thought "I can get that good in one year?".
         </p>
         <p className="my-8 mb-16">
-          Below are digital recreations of my sketchbooks. I picked out some of
-          the better pages, with a couple stinkers for perspective.
+          Below are digital recreations of my sketchbooks. I picked out some pages I like, with a few stinkers sprinkled in for contrast.
         </p>
       </div>
       <div className="flex flex-col gap-8">
         <Section
           title="moleskine sketchbook (red)"
-          date="JAN '24 - NOW"
+          date="JAN '24 - APR '24"
           pages="104 pages 5x8.25in"
         >
           <p>

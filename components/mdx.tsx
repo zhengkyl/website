@@ -54,5 +54,5 @@ export function Pre(props) {
 }
 
 export function H2(props) {
-  return <h2 {...props} className="text-3xl font-bold" />;
+  return <h2 {...props} className="text-xl font-bold" />;
 }
