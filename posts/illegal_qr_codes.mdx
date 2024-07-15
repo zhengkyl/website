@@ -1,5 +1,5 @@
 ---
-subtitle: How to break rules and get away with it
+subtitle: Let's do bad things and get away with it
 posted: 2024-7-12
 ---
 
@@ -9,7 +9,24 @@ UNFINISHED
 // finish lit review
 // actually show illegal qr codes
 
-QR codes have become the defacto way to share URLs in the physical world.
+QR codes have become the defacto way to share URLs in the physical world. Usually, as nondescript as a 
+
+## The State of QR Codes
+When I go out to eat, and when I open my pantry. When I browse books at the library, and when I close my eyes to embrace sleep. They stare at me with square eyes and a TV static face, as if I were an overworked Japanese salaryman in a world where faces are censored with QR codes.
+
+<div className="flex flex-wrap gap-4 text-center text-sm">
+  <div className="flex-1 min-w-[240px]">
+    <h3 className="font-semibold text-xl">QR codes in the wild</h3>
+    ![rush_hour](./illegal_qr_codes/rush_hour.jpg)
+    <Sa href="https://commons.wikimedia.org/wiki/File:Just_going_to_work_(3509126762).jpg">Original photo</Sa> by <Sa href="https://www.flickr.com/people/erikjohansson78/">erikjohansson</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
+  </div>
+
+  <div className="flex-1 min-w-[240px]">
+    <h3 className="font-semibold text-xl">Me writing this blog post</h3>
+    ![train escape](./illegal_qr_codes/train_escape.jpg)
+    <Sa href="https://www.flickr.com/photos/19736899@N04/2046534730">Original photo</Sa> by <Sa href="https://www.flickr.com/people/hern42/">Arnaud DG</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
+  </div>
+</div>
 
 // todo photos
 
@@ -22,6 +39,9 @@ QR codes have become the defacto way to share URLs in the physical world.
 - Multiple QR codes design
 
 ## Prior work
+// TODO burger king
+
+Here is a brief and incomplete overview of ways people have tried to subvert QR codes.
 
 [Russ Cox, QArt Codes](https://research.swtch.com/qart)
 By encoding arbitrary numbers in an ignored url anchor, images can be placed into the QR code without relying on error correction.
@@ -67,3 +87,10 @@ Oversimplifiying to the point of misinformation, there are 2\* parts of a QR cod
 - A binarizer algorithm converts an image to a matrix of on/off bits
 
 We can do anything to a QR code as long as those two parts still function mostly correctly.
+
+Google's scanner is part of their MLKit.
+Apple's is part of their AVFoundation.
+
+Neither implementation has available source code, not that it would do us much good.
+
+Thankfully, the Wechat scanner is seemingly open source. It's available as an OpenCV extension. It's a fork of the cpp port of the popular zxing library.

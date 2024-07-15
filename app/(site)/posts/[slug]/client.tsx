@@ -2,7 +2,7 @@
 
 import { Gol } from "@/components/Gol";
 import { getMDXComponent } from "mdx-bundler/client";
-import { P, A, Img, Card, Link, Code, H2, Pre } from "@/components/mdx";
+import { P, A, Img, Card, Link, Code, H2, Pre, Sa } from "@/components/mdx";
 
 export function InteractiveArticle({ code }) {
   const Component = getMDXComponent(code);
@@ -11,6 +11,7 @@ export function InteractiveArticle({ code }) {
     <article>
       <Component
         components={{
+          Sa,
           p: P,
           a: A,
           img: Img,

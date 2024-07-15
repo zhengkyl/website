@@ -20,6 +20,20 @@ export function A(props) {
   );
 }
 
+export function Sa(props) {
+  const text = props.children ?? props.href;
+  const url = props.href ?? props.children;
+  return (
+    <a
+      className="@hover-underline font-semibold"
+      href={url}
+      target="_blank"
+    >
+      {typeof text === "string" ? text.replace("https://", "") : text}
+    </a>
+  );
+}
+
 export function Card(props) {
   return (
     <div className={`rounded border p-4 my-4 ${props.className}`}>
@@ -38,7 +52,7 @@ export function Link(props) {
 }
 
 export function Img(props) {
-  return <img alt="" {...props} border="~ rounded" />;
+  return <img className="w-full" {...props} />;
 }
 
 export function Code(props) {

@@ -11,7 +11,7 @@ I made Conway's Game of Life, except it's **multiplayer**, runs in the **termina
 ssh gol.kylezhe.ng
 ```
 
-![multiplayer game of life](/ssh_game_of_life/multiplayer.gif)
+![multiplayer game of life](./ssh_game_of_life/multiplayer.gif)
 
 <Card>
   <Link title="Code">{"https://github.com/zhengkyl/gol"}</Link>
@@ -19,7 +19,7 @@ ssh gol.kylezhe.ng
 
 ## The Idea
 
-![game of life menu](/ssh_game_of_life/menu.png)
+![game of life menu](./ssh_game_of_life/menu.png)
 
 Somehow I got hoodwinked by [@purduehackers](https://www.purduehackers.com) into holding a workshop to teach Go. This was good, because it justified the previous week I spent learning Go.
 
@@ -29,7 +29,7 @@ After a little work, I ended up with a small (less than 200 line) terminal appli
 
 ## The Workshop
 
-![me talking](/ssh_game_of_life/workshop.jpg)
+![me talking](./ssh_game_of_life/workshop.jpg)
 
 Not many people showed up, and I think only 1 person actually coded the program from start to finish. Having the finished project available on Github beforehand was a good idea, but the live coding was not very successful.
 
@@ -130,7 +130,7 @@ Of course, the true challenge was the multiplayer experience and debugging count
 
 Here is a diagram of the [complexity demon](https://grugbrain.dev/) I summoned. For simplicity, only one player is shown. In reality, one lobby exists for each game, which has up to 10 players, each with their own `playerState`. <span text="sm">(In actual reality, there are zero players, but you get the point)</span>.
 
-![complexity demon data flow](/ssh_game_of_life/chart.png)
+![complexity demon data flow](./ssh_game_of_life/chart.png)
 
 <Card className="flex flex-col gap-2">
 
@@ -148,15 +148,15 @@ I'm not proud of it, so I'll save you any further details, but I'm 100% sure I s
 
 Although the game board has a fixed size, I decided to make it tile infinitely to fill terminals of any size and allow player movement. This was hard, but only in the way math is.
 
-![testing tiling and movement](/ssh_game_of_life/dev_tiling.gif)
+![testing tiling and movement](./ssh_game_of_life/dev_tiling.gif)
 
 I contemplated summoning more complexity demons for the sake of rendering optimization, but thankfully I gave up and just added more colors.
 
-![testing many player colors](/ssh_game_of_life/dev_multi.gif)
+![testing many player colors](./ssh_game_of_life/dev_multi.gif)
 
 And months later, I wrote gave it some polish and wrote this post.
 
-![thanks](/ssh_game_of_life/thanks.gif)
+![thanks](./ssh_game_of_life/thanks.gif)
 
 I started this when I was excited about working on anything other than another web app using some Javascript framework. In fact, I ended up writing another ssh app using the same libraries to track the movies I watch. The code is at [review-ssh](https://github.com/zhengkyl/review-ssh) and the app is live at `ssh reviews.kylezhe.ng`. Suprisingly, I actually use it.
 
@@ -168,4 +168,4 @@ These two projects gave me a taste of Go, even if they are somewhat niche projec
 
 Thanks to [@purduehackers](https://www.purduehackers.com) and [@matthiewstanciu](https://www.matthewstanciu.com) for the idea and motivation and fun times!
 
-![original workshop idea dm](/ssh_game_of_life/msg.png)
+![original workshop idea dm](./ssh_game_of_life/msg.png)
