@@ -24,11 +24,7 @@ export function Sa(props) {
   const text = props.children ?? props.href;
   const url = props.href ?? props.children;
   return (
-    <a
-      className="@hover-underline font-semibold"
-      href={url}
-      target="_blank"
-    >
+    <a className="@hover-underline font-semibold" href={url} target="_blank">
       {typeof text === "string" ? text.replace("https://", "") : text}
     </a>
   );

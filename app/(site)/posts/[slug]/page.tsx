@@ -4,6 +4,7 @@ import path from "path";
 import remarkGfm from "remark-gfm";
 import { getSlugs, postsDir } from "../config";
 import { InteractiveArticle } from "./client";
+import { visit } from "unist-util-visit";
 
 export const dynamicParams = false;
 
@@ -27,9 +28,20 @@ export default async function Page({
   const filePath = path.join(postsDir, `${params.slug}.mdx`);
   const fileData = fs.readFileSync(filePath, "utf8");
   const { code, frontmatter } = await bundleMDX({
-    source: fileData,
+    // Relative urls break when switching pages
+    // Rewrite all mdx image src to absolute path
+    source: fileData.replaceAll('src="', `src="/posts/${params.slug}/`),
     mdxOptions(options, frontmatter) {
-      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      options.remarkPlugins = [
+        ...(options.remarkPlugins ?? []),
+        remarkGfm,
+        // Rewrite all markdown ![]() image src to absolute path
+        () => (tree, _file) => {
+          visit(tree, "image", (image) => {
+            image.url = `/posts/${params.slug}/${image.url}`;
+          });
+        },
+      ];
 
       return options;
     },
