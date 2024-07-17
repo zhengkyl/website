@@ -1,6 +1,10 @@
 import Image from "next/image";
 import runsImg from "../../../public/images/runs.jpg";
 
+export const metadata = {
+  title: "runs | kyle zheng"
+}
+
 export default function Page() {
   return (
     <>

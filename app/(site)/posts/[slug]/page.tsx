@@ -6,6 +6,12 @@ import { getSlugs, postsDir } from "../config";
 import { InteractiveArticle } from "./client";
 import { visit } from "unist-util-visit";
 
+export function generateMetadata(props: { params: { slug: string } }) {
+  return {
+    title: `${props.params.slug.replaceAll("_", " ")} | kyle zheng`,
+  };
+}
+
 export const dynamicParams = false;
 
 export async function generateStaticParams() {

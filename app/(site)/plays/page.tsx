@@ -1,8 +1,12 @@
+export const metadata = {
+  title: "plays | kyle zheng",
+};
+
 export default function Page() {
   return (
     <div className="flex flex-col gap-4">
       <p>我为什么用中文玩游戏呢？</p>
-      <p>我的中文很差。在我的日常里，我并不接触到很多中文，所以我一直在想办法提高我的中文水平。以前玩游戏时总会感到内疚，觉得我在浪费时间，但现在玩游戏<span className="line-through">特别费劲，所以我就不玩了</span>又变得好玩了。</p>
+      <p>我的中文很差。在我的日常里，我并不接触到很多中文，所以我一直在想办法提高我的中文水平。以前玩游戏时总会感到内疚，觉得我在浪费时间，但现在玩游戏<span className="line-through decoration-2">特别费劲，所以我就不玩了</span>又变得好玩了。</p>
       <h2 className="text-xl font-bold">
         我最近在玩《绝区零》（Zenless Zone Zero）
       </h2>

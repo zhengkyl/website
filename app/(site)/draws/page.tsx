@@ -1,5 +1,9 @@
 import { Book } from "./book";
 
+export const metadata = {
+  title: "draws | kyle zheng",
+};
+
 export default function Page() {
   return (
     <>

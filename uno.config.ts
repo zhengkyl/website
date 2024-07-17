@@ -3,7 +3,7 @@ export default defineConfig({
   content: {
     filesystem: ["**/*.{ts,tsx}", "./posts/*.mdx"],
   },
-  blocklist: ["my"],
+  blocklist: ["my", "me"],
   transformers: [transformerVariantGroup()],
   presets: [presetWind()],
 });

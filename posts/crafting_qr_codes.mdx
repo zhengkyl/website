@@ -6,71 +6,113 @@ posted: 2024-7-12
 UNFINISHED
 
 // TODO
-// finish lit review
-// actually show illegal qr codes
 
-QR codes have become the defacto way to share URLs in the physical world. Usually, as nondescript as a 
+// finish lit review
+
+// actually show my qr codes
+
+QR codes have become the defacto way to share URLs in the physical world. But for something plastered so pervasively on every possible advertising surface, they sure can be ugly.
+
+Today, I want to dive into the craft of making QR codes.
+
+![qr code crafting recipe](crafting_recipe.jpg)
+
+## The Story Before the Recipe
+
+Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks using a giant stencil. I had just learned that QR codes have built in error correction capabilities, up to 30% at the highest level, and it seemed like the perfect complement to those sidewalk chalk advertisements I saw as a college student. 
+
+{
+  <div className="grid cols-2 gap-4 font-thin text-sm text-center">
+    <div>
+      <img src="stencil_1.jpg" alt="bad qr code stencil"/>
+      A terrible first attempt. Why did I use wood?
+    </div>
+    <div>
+      <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
+      Improved but still nearly unscannable.
+    </div>
+  </div>
+}
+
+TLDR; this worked poorly for several reasons. Chalk smears easily, has bad contrast, is really slow to fill large spaces, and higher error correction requires larger QR codes with smaller pixels. 
+
+But, while designing those stencils, I did end up learning a little about how robust QR code scanners are.
+
+At the start of this year, I started building a [basic QR code generator](https://github.com/zhengkyl/fuqr) for fun and to get more practice with Rust (i use windows btw).
+
+I also built [a web app to quickly iterate and preview QR code designs](https://github.com/zhengkyl/qrframe). It uses my Rust library via WASM, and it's way faster to iterate with. It comes with a code editor that directly runs code in your browser to render onto a canvas. It has no safeguards or sandboxing, so please don't self-XSS yourself by pasting unknown code. Though if you do, just close the tab.
+
+I'm using it to craft QR codes that look like this.
+
+
 
 ## The State of QR Codes
 
 When I go out to eat, and when I open my pantry. When I browse books at the library, and when I close my eyes to embrace sleep. They stare at me with square eyes and a TV static face, as if I were an overworked Japanese salaryman in a world where faces are censored with QR codes.
 
 {
-<div className="flex flex-wrap gap-4 text-center text-sm">
-  <div className="flex-1 min-w-[240px]">
-    <div className="font-semibold text-xl">QR codes in the wild</div>
-    <img src="rush_hour.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
+<div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-sm text-center">
+  <div className="font-semibold text-lg">QR codes in the wild</div>
+  <img src="rush_hour.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
+  <span>
     <Sa href="https://commons.wikimedia.org/wiki/File:Just_going_to_work_(3509126762).jpg">Original photo</Sa> by <Sa href="https://www.flickr.com/people/erikjohansson78/">erikjohansson</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
-  </div>
-
-  <div className="flex-1 min-w-[240px]">
-    <div className="font-semibold text-xl">Me writing this blog post</div>
-    <img src="train_escape.jpg" alt="me escaping from a train full of salarymen with qr code faces"/>
-    <Sa href="https://www.flickr.com/photos/19736899@N04/2046534730">Original photo</Sa> by <Sa href="https://www.flickr.com/people/hern42/">Arnaud DG</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
-  </div>
+  </span>
+  <div className="font-semibold text-lg">Me writing this blog post</div>
+  <img src="train_escape.jpg" alt="me escaping from a train full of salarymen with qr code faces"/>
+  <span>
+  <Sa href="https://www.flickr.com/photos/19736899@N04/2046534730">Original photo</Sa> by <Sa href="https://www.flickr.com/people/hern42/">Arnaud DG</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
+  </span>
 </div>
 }
 
 
 I took some photos of QR codes that caught my eye on a trip to San Francisco this summer.
 
-Here are some honorable mentions.
+Here are some that shocked me in some way or another.
 
 {
-<div className="grid cols-3 gap-4 text-sm">
-  <img src="sf_ad.jpg" alt="double qr codes on beer ad"/>
-  <img src="sf_book.jpg" alt="qr code on book cover"/>
-  <img src="sf_logo.jpg" alt="qr code shaped like logo"/>
-  <div>Using two QR codes for a different shape. Mindblowing.</div>
+<div className="grid cols-3 gap-4 font-thin text-sm text-center">
   <div>
-    Unscannable book cover. I cracked it and found the <a href="https://www.istockphoto.com/vector/qr-code-gm156283521-15512938">original stock image</a> by <a href="https://www.istockphoto.com/portfolio/Oehoeboeroe">Oehoeboeroe</a>. 
+    <img src="sf_ad.jpg" alt="double qr codes on beer ad"/>
+    Using two QR codes for a different shape. First time I've seen it.
   </div>
   <div>
-    A QR code shaped like the restaurant logo.
+    <img src="sf_book.jpg" alt="qr code on book cover"/>
+    Unscannable book cover. I cracked it and found the <Sa href="https://www.istockphoto.com/vector/qr-code-gm156283521-15512938">original stock image</Sa> by <Sa href="https://www.istockphoto.com/portfolio/Oehoeboeroe">Oehoeboeroe</Sa>. 
+  </div>
+  <div>
+    <img src="sf_logo.jpg" alt="qr code shaped like logo"/>
+    Incorporated into the restaurant logo.
   </div>
 </div>
 }
 
-Here are my personal favorites. They are simple, clean, yet overflowing with brand identity.
+And here are some good QR codes that I saw.
 
 {
-<div className="grid cols-3 gap-4 text-sm">
-  <img src="sf_insta.jpg" alt="instagram qr code"/>
-  <img src="sf_uber.jpg" alt="circular uber flowcode qr code"/>
-  <img src="duolingo.jpg" alt="duolingo qr code"/>
-  <div>Perfectly themed around the Instagram logo.</div>
+<div className="grid cols-2 sm:cols-4 gap-4 font-thin text-sm text-center">
   <div>
-    Black, white, and circular. The flowcode branding only slightly detracts from it.
+    <img src="sf_insta.jpg" alt="instagram qr code"/>
+    Instagram's official QR code generator
   </div>
   <div>
-    Classic. Iconic logo and rounded corners.
+    <img src="sf_uber.jpg" alt="circular uber flowcode qr code"/>
+    Uber advertisement inside airport
+  </div>
+  <div>
+    <img src="sf_maven.jpg" alt="maven retail qr code"/>
+    Real estate property information
+  </div>
+  <div>
+    <img src="sf_servy.jpg" alt="servy mobile ordering qr code"/>
+    Promoting mobile ordering on ordering kiosk
   </div>
 </div>
 }
 
-The other pictures I took are available at https://photos.app.goo.gl/mXLhxVieRw72iCJt7.
+Notice how they all look like a QR code, but are distinct in a way that fits their brand identity.
 
-// todo photos
+If you want to see some counterexamples, all the pictures I took are available at https://photos.app.goo.gl/mXLhxVieRw72iCJt7.
 
 ## Legal operations
 
