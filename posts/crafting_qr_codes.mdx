@@ -116,11 +116,11 @@ If you want to see some counterexamples, all the pictures I took are available a
 
 ## Legal operations
 
-- Change color as long as contrast/brightness/luminance??? is maintained
-- Invert color/invert transparency
-- Rotate
-- Mirror
-- Multiple QR codes design
+Besides the error correction, based on Reed-Solomon codes, used to encode the data (as well as the format and version metadata), QR codes are robust to a variety of simple transformations.
+
+There is no limit on the color of the pixels as long as their is sufficient contrast between dark and light pixels. The "dark" and "light" pixels can also be inverted, which you've probably often seen already.
+
+It may seem obvious, but QR codes can be rotated any which way. Less obvious is the fact that they can be mirrored as well. This makes it possible to make interesting symmetric designs using multiple QR codes.
 
 ## Prior work
 // TODO burger king
@@ -135,10 +135,7 @@ This process involves replacing each QR code pixel with a 3x3 grid of pixels tha
 
 A simpler approach involves overlaying a QR code with smaller data pixels on top of a background image so that only the center of each QR code pixel is the correct color.
 
-https://jsfiddle.net/lachlan/r8qWV/
-https://github.com/lachlanarthur
-
-https://github.com/nythrox/halftone-qrcode
+[Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) which inspired [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://github.com/nythrox/halftone-qrcode) and [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone).
 
 [Bad Apple but it is played with QR code](https://www.youtube.com/watch?v=tPYUdjptMpk)
 
@@ -154,24 +151,21 @@ Uses color quantization and a high-contrast color palette to maximize scannabili
 [Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
 The weirdest of the bunch, but super cool.
 
-
 Tangent -> Creating QR code that matches a string
 https://marienraat.nl/hacking-qr-codes.html
 
-# AI branch
-https://troyni.com/articles/building-qrbtf-zh
-https://troyni.com/articles/qrcode-controlnet-zh
+[Troy Ni (@ciaochaos)](https://github.com/ciaochaos) created QRBTF, a generator used to create truly beautiful QR codes like the ones below. The original inspiration is detailed in [this blog post](https://troyni.com/articles/building-qrbtf-zh).
 
-https://github.com/ciaochaos
+{
+  <div className="grid cols-2 gap-4">
+    <img src="qrbtf_blocks.svg" alt="bad qr code stencil"/>
+    <img src="qrbtf_alien.svg" alt="slightly better qr code stencil"/>
+  </div>
+}
 
-https://qrbtf.com
+Perhaps unsuprisingly, they also created the first AI QR codes, which they documented in [this blog post](https://troyni.com/articles/qrcode-controlnet-zh).
 
-![blocks](qrbtf_blocks.svg)
-![alien](qrbtf_alien.svg)
-
-https://github.com/antfu
-https://antfu.me/posts/ai-qrcode-refine
-https://antfu.me/posts/ai-qrcode-101
+Following that, Anthony Fu ([@antfu](https://github.com/antfu)) made a series of blog posts detailing his experiments ([first](https://antfu.me/posts/ai-qrcode), [second](https://antfu.me/posts/ai-qrcode-refine)), culiminating in a definite guide https://antfu.me/posts/ai-qrcode-101 co-authored by [赛博迪克朗](https://space.bilibili.com/339984/), wangcai, and [代々木](https://www.xiaohongshu.com/user/profile/5be8fb806b58b745447aab0f).
 
 
 ## What's the deal with QR codes?
