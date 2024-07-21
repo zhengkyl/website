@@ -1,3 +1,4 @@
+"use client"
 import { useRef, useState, useEffect } from "react";
 import { Play, Pause, Trash2, Shuffle } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";

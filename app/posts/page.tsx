@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { getPostDetails } from "./config";
+import { getPostDetails } from "./util";
 
 export const metadata = {
   title: "posts | kyle zheng",
 };
 
 export default async function Page() {
-  const posts = getPostDetails();
+  const posts = await getPostDetails();
 
   return (
     <div>

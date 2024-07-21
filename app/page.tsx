@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
-import { getPostDetails } from "./posts/config";
+import { getPostDetails } from "./posts/util";
 
 export default async function HomePage() {
-  const recentPosts = getPostDetails().slice(0, 2);
+  const recentPosts = (await getPostDetails()).slice(0, 2);
 
   return (
     <>

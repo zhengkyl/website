@@ -1,0 +1,23 @@
+@import "@unocss/reset/tailwind.css";
+@unocss all;
+
+html {
+  @apply text-stone-800;
+  tab-size: 2;
+}
+body {
+  /* stop books overflowing */
+  overflow-x: hidden;
+}
+
+/* details summary {
+  cursor: pointer;
+} */
+
+/* article > * {
+  @apply my-4;
+}
+
+article > details > * {
+  @apply my-4;
+} */
