@@ -12,6 +12,41 @@ const withMDX = createMDX({
     remarkPlugins: [
       remarkGfm,
       remarkFrontmatter,
+      () => {
+        // This plugin appends the post folder path to img srcs
+        // ex image.png -> /posts/crafting_qr_codes/image.png
+        return (tree, file) => {
+          const start = file.history[0].lastIndexOf("/") + 1;
+          const end = file.history[0].length - 4;
+          const slug = file.history[0].slice(start, end);
+
+          const visit = (node) => {
+            if (node.type !== "JSXElement") return;
+
+            for (const child of node.children) {
+              visit(child);
+            }
+
+            if (node.openingElement.name.name !== "img") return;
+
+            for (const attr of node.openingElement.attributes) {
+              if (attr.name.name !== "src") continue;
+              attr.value.value = `/posts/${slug}/${attr.value.value}`;
+            }
+          };
+
+          for (const node of tree.children) {
+            if (node.type === "mdxFlowExpression") {
+              visit(node.data.estree.body[0].expression);
+            } else if (node.type === "paragraph") {
+              for (const child of node.children) {
+                if (child.type !== "image") continue;
+                child.url = `/posts/${slug}/${child.url}`;
+              }
+            }
+          }
+        };
+      },
       (_options) => {
         // This plugin converts frontmatter to an exported object
         // reference https://github.com/omidantilong/remark-mdx-next

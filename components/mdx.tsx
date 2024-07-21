@@ -1,10 +1,3 @@
-export function P(props) {
-  if (typeof props.children !== "string" && props.children.type === "img") {
-    return <>{props.children}</>;
-  }
-
-  return <p>{props.children}</p>;
-}
 
 export function A(props) {
   const text = props.children ?? props.href;
@@ -45,24 +38,4 @@ export function Link(props) {
       <A {...props} />
     </div>
   );
-}
-
-export function Img(props) {
-  return <img className="w-full" {...props} />;
-}
-
-export function Code(props) {
-  return (
-    <code className="bg-stone-200 rounded py-0.4 px-1 text-sm">
-      {props.children}
-    </code>
-  );
-}
-
-export function Pre(props) {
-  return <pre className="">{props.children}</pre>;
-}
-
-export function H2(props) {
-  return <h2 {...props} className="text-xl font-bold" />;
 }

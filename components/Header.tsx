@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function Header(props) {
   const pathname = usePathname();
 
-  const sections = pathname === "/" ? [] : pathname.slice(1).split("/");
+  const sections = pathname === "/" ? [] : pathname!.slice(1).split("/");
 
   return (
     <nav {...props}>

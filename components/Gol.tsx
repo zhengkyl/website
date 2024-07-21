@@ -58,7 +58,7 @@ export function Gol({ width, height }) {
   const bigScreen = useMediaQuery("(min-width: 1024px)");
   const [showControls, setShowControls] = useState(false)
 
-  const canvasRef = useRef<HTMLCanvasElement>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestFrame = useRef<number>();
   const prevTime = useRef(0);
   const spawning = useRef(false);
@@ -69,7 +69,7 @@ export function Gol({ width, height }) {
   const cells = useRef(nextBoard(randomize(newBoard(width, height))));
 
   const iterate = () => {
-    const ctx = canvasRef.current.getContext("2d");
+    const ctx = canvasRef.current!.getContext("2d")!;
 
     ctx.fillStyle = color.current;
     for (let i = 0; i < cells.current.length; i++) {
@@ -96,16 +96,16 @@ export function Gol({ width, height }) {
   useEffect(() => {
     requestFrame.current = requestAnimationFrame(frame);
     setShowControls(true)
-    return () => cancelAnimationFrame(requestFrame.current);
+    return () => cancelAnimationFrame(requestFrame.current!);
   }, []);
 
   const spawn = (e) => {
     if (!spawning.current) return;
 
-    const rect = canvasRef.current.getBoundingClientRect();
+    const rect = canvasRef.current!.getBoundingClientRect();
 
-    const xFrac = (e.clientX - rect.left) / canvasRef.current.clientWidth;
-    const yFrac = (e.clientY - rect.top) / canvasRef.current.clientHeight;
+    const xFrac = (e.clientX - rect.left) / canvasRef.current!.clientWidth;
+    const yFrac = (e.clientY - rect.top) / canvasRef.current!.clientHeight;
 
     if (xFrac >= 1 || yFrac >= 1) return;
 
@@ -115,7 +115,7 @@ export function Gol({ width, height }) {
     if (cells.current[x][y]) return;
     cells.current[x][y] = true;
 
-    const ctx = canvasRef.current.getContext("2d");
+    const ctx = canvasRef.current!.getContext("2d")!;
     ctx.fillStyle = color.current;
     ctx.fillRect(x, y, 1, 1);
   };
@@ -129,7 +129,7 @@ export function Gol({ width, height }) {
             className="px-2"
             onClick={() => {
               if (playing) {
-                cancelAnimationFrame(requestFrame.current);
+                cancelAnimationFrame(requestFrame.current!);
               } else {
                 requestFrame.current = requestAnimationFrame(frame);
               }

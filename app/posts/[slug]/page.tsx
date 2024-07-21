@@ -11,15 +11,29 @@ export const dynamicParams = false;
 export async function generateStaticParams() {
   return getPostSlugs();
 }
+const dateOptions = {
+  month: "short",
+  // day: "numeric",
+  year: "numeric",
+} as const;
+
+const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
 export default async function Page({ params }) {
-  // Webpack can't load arbitrary dynamic paths, must be limited
+  // Webpack can't load arbitrary dynamic paths, must have string literal parts
   // https://github.com/webpack/webpack/issues/6680#issuecomment-370800037
-  const MdxContent = (await import(`/posts/${params.slug}.mdx`)).default;
+  const { default: MdxContent, frontmatter } = await import(
+    `/posts/${params.slug}.mdx`
+  );
 
   return (
-    <div>
-      <MdxContent />
-    </div>
+    <>
+      <div className="font-light italic text-stone-500 text-xl pb-4">
+        {dateFormat.format(Date.parse(frontmatter.posted))}
+      </div>
+      <article className="flex flex-col gap-4">
+        <MdxContent />
+      </article>
+    </>
   );
 }
