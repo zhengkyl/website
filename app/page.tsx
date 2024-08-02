@@ -75,10 +75,10 @@ export default async function HomePage() {
             <>
               <a
                 className="underline text-blue-600"
-                href="https://qrcode.kylezhe.ng"
+                href="https://qrframe.kylezhe.ng"
                 target="_blank"
               >
-                qrcode.kylezhe.ng
+                qrframe.kylezhe.ng
               </a>
               <span className="font-normal text-sm">
                 {" "}

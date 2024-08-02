@@ -16,9 +16,11 @@ const withMDX = createMDX({
         // This plugin appends the post folder path to img srcs
         // ex image.png -> /posts/crafting_qr_codes/image.png
         return (tree, file) => {
-          const start = file.history[0].lastIndexOf("/") + 1;
-          const end = file.history[0].length - 4;
-          const slug = file.history[0].slice(start, end);
+          const dirs = file.history[0].split("/")
+          const parent = dirs[dirs.length - 2];
+          if (parent !== "posts") return
+
+          const slug = dirs[dirs.length - 1].slice(0, -4)
 
           const visit = (node) => {
             if (node.type !== "JSXElement") return;
