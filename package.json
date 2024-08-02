@@ -16,6 +16,7 @@
     "esbuild": "^0.14.54",
     "eslint": "^8.55.0",
     "eslint-config-next": "^14.0.3",
+    "fuqr": "^0.0.6",
     "lucide-react": "^0.263.1",
     "next": "^14.2.5",
     "react": "^18.2.0",

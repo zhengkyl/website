@@ -4,6 +4,7 @@ posted: 2024-7-12
 ---
 
 import { Sa } from "../components/mdx"
+import {QrTutorial} from "../components/QrTutorial"
 
 UNFINISHED
 
@@ -14,44 +15,7 @@ UNFINISHED
 // actually show my qr codes
 
 
-QR codes have become the defacto way to share URLs in the physical world. But for something plastered so pervasively on every possible advertising surface, they sure can be ugly.
-
-Today, I want to dive into the craft of making QR codes.
-
-![qr code crafting recipe](crafting_recipe.jpg)
-
-## The Story Before the Recipe
-
-Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks using a giant stencil. I had just learned that QR codes have built in error correction capabilities, up to 30% at the highest level, and it seemed like the perfect complement to those sidewalk chalk advertisements I saw as a college student. 
-
-{
-  <div className="grid cols-2 gap-4 font-thin text-sm text-center">
-    <div>
-      <img src="stencil_1.jpg" alt="bad qr code stencil"/>
-      A terrible first attempt. Why did I use wood?
-    </div>
-    <div>
-      <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
-      Improved but still nearly unscannable.
-    </div>
-  </div>
-}
-
-TLDR; this worked poorly for several reasons. Chalk smears easily, has bad contrast, is really slow to fill large spaces, and higher error correction requires larger QR codes with smaller pixels. 
-
-But, while designing those stencils, I did end up learning a little about how robust QR code scanners are.
-
-At the start of this year, I started building a [basic QR code generator](https://github.com/zhengkyl/fuqr) for fun and to get more practice with Rust (i use windows btw).
-
-I also built [a web app to quickly iterate and preview QR code designs](https://github.com/zhengkyl/qrframe). It uses my Rust library via WASM, and it's way faster to iterate with. It comes with a code editor that directly runs code in your browser to render onto a canvas. It has no safeguards or sandboxing, so please don't self-XSS yourself by pasting unknown code. Though if you do, just close the tab.
-
-I'm using it to craft QR codes that look like this.
-
-
-
-## The State of QR Codes
-
-When I go out to eat, and when I open my pantry. When I browse books at the library, and when I close my eyes to embrace sleep. They stare at me with square eyes and a TV static face, as if I were an overworked Japanese salaryman in a world where faces are censored with QR codes.
+QR codes are the bridge between the physical world and the internet. For this reason, they are vital to traditional advertisers, those sick bastards. Originally created as a high capacity barcode for automobile parts, QR codes now grace the covers of... literally everything. Yet despite a massively successful career switch, they carry unmistakable signs of their original purpose.
 
 {
 <div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-sm text-center">
@@ -67,6 +31,54 @@ When I go out to eat, and when I open my pantry. When I browse books at the libr
   </span>
 </div>
 }
+
+To be clear, there is nothing wrong with a plain, black and white, 2D barcode that links to extra product details or food nutrition facts.
+
+But equally clearly, aesthetics matter. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity
+
+![four proprietary scan codes](four_horsemen.png)
+
+But even for billion dollar companies, non-QR codes are relegated to the position of party trick. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes, and we, the non-billion dollar non-companies, stand even less chance at using something custom because a scannable code that can only be scanned inside a specific app is hardly "scannable" at all.
+
+We cannot make beautiful codes scannable. We must make QR codes beautiful.
+
+![qr code crafting recipe](crafting_recipe.jpg)
+
+## The Story Before the Recipe
+
+Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks using a giant stencil. I had just learned that QR codes have built in error correction capabilities, and it seemed like the perfect complement to those sidewalk chalk advertisements I saw on campus.
+
+{
+  <div className="grid cols-2 gap-4 font-thin text-sm text-center">
+    <div>
+      <img src="stencil_1.jpg" alt="bad qr code stencil"/>
+      A terrible first attempt
+    </div>
+    <div>
+      <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
+      Improved but still nearly unscannable
+    </div>
+  </div>
+}
+
+TLDR; this worked poorly for several reasons. Chalk smears easily, has bad contrast, is painfull slow to fill in, and higher error correction requires larger QR codes with smaller pixels. 
+
+But, while designing those stencils, I did end up learning a little about how QR codes works.
+
+There are **finder patterns** in 3 corners.
+
+<QrTutorial/>
+
+## The State of QR Codes
+
+At the start of this year, I started building a [basic QR code generator](https://github.com/zhengkyl/fuqr) for fun and to get more practice with Rust (i use windows btw).
+
+I also built [a web app to quickly iterate and preview QR code designs](https://github.com/zhengkyl/qrframe). It uses my Rust library via WASM, and it's way faster to iterate with. It comes with a code editor that directly runs code in your browser to render onto a canvas. It has no safeguards or sandboxing, so please don't self-XSS yourself by pasting unknown code. Though if you do, just close the tab.
+
+I'm using it to craft QR codes that look like this.
+When I go out to eat, and when I open my pantry. When I browse books at the library, and when I close my eyes to embrace sleep. They stare at me with square eyes and a TV static face, as if I were an overworked Japanese salaryman in a world where faces are censored with QR codes.
+
+
 
 
 I took some photos of QR codes that caught my eye on a trip to San Francisco this summer.
