@@ -9,8 +9,9 @@ export function generateMetadata(props: { params: { slug: string } }) {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return getPostSlugs();
+  return getPostSlugs().map((slug) => ({ slug }));
 }
+
 const dateOptions = {
   month: "short",
   // day: "numeric",

@@ -4,7 +4,7 @@ posted: 2024-7-12
 ---
 
 import { Sa } from "../components/mdx"
-import {QrTutorial} from "../components/QrTutorial"
+import { QrTutorial } from "../components/QrTutorial"
 
 UNFINISHED
 
@@ -40,7 +40,7 @@ But equally clearly, aesthetics matter. Some companies have even gone so far as 
 
 But even for billion dollar companies, non-QR codes are relegated to the position of party trick. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes, and we, the non-billion dollar non-companies, stand even less chance at using something custom because a scannable code that can only be scanned inside a specific app is hardly "scannable" at all.
 
-We cannot make beautiful codes scannable. We must make QR codes beautiful.
+If we cannot make beautiful codes scannable, we must make QR codes beautiful.
 
 ![qr code crafting recipe](crafting_recipe.jpg)
 
@@ -61,11 +61,19 @@ Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks usin
   </div>
 }
 
-TLDR; this worked poorly for several reasons. Chalk smears easily, has bad contrast, is painfull slow to fill in, and higher error correction requires larger QR codes with smaller pixels. 
+TLDR; this worked poorly for several reasons. Chalk smears SO easily, contrasts poorly, is painfully slow to fill in, and higher error correction requires larger QR codes with smaller pixels. 
 
 But, while designing those stencils, I did end up learning a little about how QR codes works.
 
-There are **finder patterns** in 3 corners.
+There are **finder patterns** in three corners.
+
+There is usually one **alignment pattern** in last corner. The smallest possible code has none, and very large codes have multiple.
+
+There is a horizontal and vertical **timing pattern**.
+
+There is **format information**, storing the error correction level and the mask pattern applied to the data. There are 4 error correction levels, which can recover 7% to 30% of the data. There are 8 mask patterns, which 
+
+Very large QR codes will have **version information** on the remaining two finder pattern sides not taken by format information. Version means size, and it ranges from 1 - 40. Most QR codes fit in Versions 1 through 6.
 
 <QrTutorial/>
 
@@ -145,8 +153,22 @@ Here is a brief and incomplete overview of ways people have tried to subvert QR 
 [Russ Cox, QArt Codes](https://research.swtch.com/qart)
 By encoding arbitrary numbers in an ignored url anchor, images can be placed into the QR code without relying on error correction.
 
+{
+  <div className="grid cols-2" style={{imageRendering:"pixelated"}}>
+    <img src="qart_go.png" alt="golang mascot qart code"/>
+    <img src="qart_mike.png" alt="mike wazowski qart code"/>
+  </div>
+}
+
 [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes)
 This process involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color. Also, by introducing a limited number of errors, they can further enhance visual quality in key areas.
+
+{
+  <div className="grid cols-2" style={{imageRendering:"pixelated"}}>
+    <img src="halftone_albert.png" alt="golang mascot qart code"/>
+    <img src="halftone_mike.png" alt="mike wazowski qart code"/>
+  </div>
+}
 
 A simpler approach involves overlaying a QR code with smaller data pixels on top of a background image so that only the center of each QR code pixel is the correct color.
 
@@ -156,12 +178,24 @@ A simpler approach involves overlaying a QR code with smaller data pixels on top
 
 [Amazing-QR](https://github.com/x-hw/amazing-qr)
 Supports color and GIFs.
+{
+  <div className="grid cols-2">
+    <img src="amzqr.gif" alt="golang mascot qart code"/>
+    <img src="amzqr_mike.jpg" alt="mike wazowski qart code"/>
+  </div>
+}
 
 [vCode](https://github.com/ruitaocc/vCode)
 Uses color thresholds to reduce number and intensity of overlayed pixels.
 
 [QRpicture](https://github.com/xyzzy/qrpicture)
 Uses color quantization and a high-contrast color palette to maximize scannability of color images. Really good at hiding the QR code's noisy "texture".
+{
+  <div className="grid cols-2">
+    <img src="qrpicture.gif" alt="golang mascot qart code"/>
+    <img src="qrpicture.jpg" alt="mike wazowski qart code"/>
+  </div>
+}
 
 [Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
 The weirdest of the bunch, but super cool.
@@ -182,6 +216,14 @@ Perhaps unsuprisingly, they also created the first AI QR codes, which they docum
 
 Following that, Anthony Fu ([@antfu](https://github.com/antfu)) made a series of blog posts detailing his experiments ([first](https://antfu.me/posts/ai-qrcode), [second](https://antfu.me/posts/ai-qrcode-refine)), culiminating in a definite guide https://antfu.me/posts/ai-qrcode-101 co-authored by [赛博迪克朗](https://space.bilibili.com/339984/), wangcai, and [代々木](https://www.xiaohongshu.com/user/profile/5be8fb806b58b745447aab0f).
 
+{
+  <div className="grid cols-2 gap-4">
+    <img src="ai_anime.jpg" alt="golang mascot qart code"/>
+    <img src="ai_mike.jpg" alt="mike wazowski qart code"/>
+  </div>
+}
+
+Try moving your phone away from the screen (farther than you think), and maybe increase your brightness.
 
 ## What's the deal with QR codes?
 

@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import { useState } from "react";
 
 export function QrTutorial(props) {
   const [version, setVersion] = useState(2);
@@ -31,11 +31,13 @@ export function QrTutorial(props) {
           />
         </g>
         {/* Alignment pattern */}
-        <path
-          d={`M${width - 9},${width - 9}h5v5h-5zM${width - 8},${
-            width - 8
-          }v3h3v-3zM${width - 7},${width - 7}h1v1h-1z`}
-        />
+        {version > 1 && (
+          <path
+            d={`M${width - 9},${width - 9}h5v5h-5zM${width - 8},${
+              width - 8
+            }v3h3v-3zM${width - 7},${width - 7}h1v1h-1z`}
+          />
+        )}
         {/* Timing pattern */}
         <g>
           <path
