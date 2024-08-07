@@ -13,7 +13,7 @@ export function QrTutorial(props) {
         onChange={(e) => setVersion(e.target.valueAsNumber)}
         type="range"
         min="1"
-        max="6"
+        max="40"
       />
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${width}`}>
         {/* Finder patterns */}
@@ -32,11 +32,16 @@ export function QrTutorial(props) {
         </g>
         {/* Alignment pattern */}
         {version > 1 && (
-          <path
-            d={`M${width - 9},${width - 9}h5v5h-5zM${width - 8},${
-              width - 8
-            }v3h3v-3zM${width - 7},${width - 7}h1v1h-1z`}
-          />
+          <g>
+            {getAlignCoords(version).map(([x, y]) => (
+              <path
+                key={`${x},${y}`}
+                d={`M${x - 2},${y - 2}h5v5h-5zM${x - 1},${
+                  y - 1
+                }v3h3v-3zM${x},${y}h1v1h-1z`}
+              />
+            ))}
+          </g>
         )}
         {/* Timing pattern */}
         <g>
@@ -59,7 +64,56 @@ export function QrTutorial(props) {
           <path d={`M${width},8v1h-8v-1zM8,${width}v-7h1v7z`} />
           <path fill="#000" d={`M8,${width - 8}h1v1h-1z`} />
         </g>
+
+        {/* Version information */}
+        {version >= 7 && (
+          <g fill="#ccc">
+            <rect x={width - 11} y="0" width="3" height="6" />
+            <rect x="0" y={width - 11} width="6" height="3" />
+          </g>
+        )}
       </svg>
     </div>
   );
 }
+
+function getAlignCoords(version) {
+  if (version === 1) return [];
+
+  const last = version * 4 + 17 - 7;
+  if (version < 7) return [[last, last]];
+
+  const coords = [6];
+
+  const len = Math.floor(version / 7) + 2;
+  for (let gap = len - 2; gap > 0; gap--) {
+    coords.push(last - gap * ALIGN_OFFSETS[version - 7]);
+  }
+  coords.push(last);
+
+  const pairs: [number, number][] = [];
+
+  for (let i = 0; i < len; i++) {
+    for (let j = 0; j < len; j++) {
+      if (
+        (i === 0 && (j === 0 || j === len - 1)) ||
+        (i === len - 1 && j === 0)
+      ) {
+        continue;
+      }
+
+      pairs.push([coords[i], coords[j]]);
+    }
+  }
+
+  return pairs;
+}
+
+// prettier-ignore
+const ALIGN_OFFSETS = [
+  16, 18, 20, 22, 24, 26, 28, // 7-13
+  20, 22, 24, 24, 26, 28, 28, // 14-20
+  22, 24, 24, 26, 26, 28, 28, // 21-27
+  24, 24, 26, 26, 26, 28, 28, // 28-34
+  24, 26, 26, 26, 28, 28, // 35-40
+];
