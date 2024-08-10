@@ -24,11 +24,7 @@ export function QrTutorial(props) {
   return (
     <div className="w-screen ml-[calc(50%-50vw)] px-4 flex flex-col gap-4 sm:flex-row">
       <div className="flex-1 relative">
-        <canvas
-          ref={canvas}
-          className="bg-slate-400 w-full"
-          style={{ imageRendering: "pixelated" }}
-        />
+        <canvas ref={canvas} className="bg-slate-400 w-full pixelated" />
         <svg
           className="absolute top-0 left-0"
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +34,7 @@ export function QrTutorial(props) {
             d={path}
             fill="none"
             stroke="#f0f"
-            stroke-width="0.1"
+            strokeWidth="0.1"
             transform="translate(0.5 0.5)"
           />
         </svg>
@@ -107,6 +103,10 @@ export function QrTutorial(props) {
           two finder pattern sides not taken by format information. Version
           means size, and it ranges from 1 - 40. Most QR codes fit in Versions 1
           through 6.
+        </p>
+        <p>
+          QR codes can be rotated any which way, mirrored, and the "dark" and
+          "light" pixels can be inverted.
         </p>
       </div>
     </div>

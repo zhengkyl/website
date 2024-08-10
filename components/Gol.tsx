@@ -174,8 +174,7 @@ export function Gol({ width, height }) {
         ref={canvasRef}
         width={width}
         height={height}
-        className="absolute w-screen top-0 left-0 -z-50 opacity-25 !m-0"
-        style={{ imageRendering: "crisp-edges" }}
+        className="absolute w-screen top-0 left-0 -z-50 opacity-25 !m-0 pixelated"
         onMouseDown={(e) => {
           spawning.current = true;
           spawn(e);

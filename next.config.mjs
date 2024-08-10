@@ -9,6 +9,7 @@ const nextConfig = {
 
 const withMDX = createMDX({
   options: {
+    remarkRehypeOptions: { clobberPrefix: "" },
     remarkPlugins: [
       remarkGfm,
       remarkFrontmatter,
@@ -16,11 +17,11 @@ const withMDX = createMDX({
         // This plugin appends the post folder path to img srcs
         // ex image.png -> /posts/crafting_qr_codes/image.png
         return (tree, file) => {
-          const dirs = file.history[0].split("/")
+          const dirs = file.history[0].split("/");
           const parent = dirs[dirs.length - 2];
-          if (parent !== "posts") return
+          if (parent !== "posts") return;
 
-          const slug = dirs[dirs.length - 1].slice(0, -4)
+          const slug = dirs[dirs.length - 1].slice(0, -4);
 
           const visit = (node) => {
             if (node.type !== "JSXElement") return;

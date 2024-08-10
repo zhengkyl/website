@@ -1,6 +1,6 @@
 ---
-subtitle: Let's do bad things and get away with it
-posted: 2024-7-12
+subtitle: How to generate a QR code in 4 months
+posted: 2024-8-12
 ---
 
 import { Sa } from "../components/mdx"
@@ -15,7 +15,8 @@ UNFINISHED
 // actually show my qr codes
 
 
-QR codes are the bridge between the physical world and the internet. For this reason, they are vital to traditional advertisers, those sick bastards. Originally created as a high capacity barcode for automobile parts, QR codes now grace the covers of... literally everything. Yet despite a massively successful career switch, they carry unmistakable signs of their original purpose.
+
+QR codes are the bridge between the physical world and the internet. For this reason, they are vital to traditional advertisers, those sick bastards. Yet despite being , I doubt anyone would be suprised that QR codes were originally created as high capacity barcodes for automobile parts.
 
 {
 <div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-sm text-center">
@@ -34,13 +35,15 @@ QR codes are the bridge between the physical world and the internet. For this re
 
 To be clear, there is nothing wrong with a plain, black and white, 2D barcode that links to extra product details or food nutrition facts.
 
-But equally clearly, aesthetics matter. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity
+But QR codes are increasingly used in a context where aesthetics matter. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity
 
 ![four proprietary scan codes](four_horsemen.png)
 
 But even for billion dollar companies, non-QR codes are relegated to the position of party trick. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes, and we, the non-billion dollar non-companies, stand even less chance at using something custom because a scannable code that can only be scanned inside a specific app is hardly "scannable" at all.
 
 If we cannot make beautiful codes scannable, we must make QR codes beautiful.
+
+I built [a web app to quickly create and design QR codes](https://qrframe.kylezhe.ng). It uses my own [Rust QR code library](https://github.com/zhengkyl/fuqr) via WASM, and it features a code editor that allows anyone to create new or modify existing designs.
 
 ![qr code crafting recipe](crafting_recipe.jpg)
 
@@ -52,7 +55,7 @@ Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks usin
   <div className="grid cols-2 gap-4 font-thin text-sm text-center">
     <div>
       <img src="stencil_1.jpg" alt="bad qr code stencil"/>
-      A terrible first attempt
+      My terrible first attempt
     </div>
     <div>
       <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
@@ -70,16 +73,6 @@ But, while designing those stencils, I did end up learning a little about how QR
 <QrTutorial/>
 
 ## The State of QR Codes
-
-At the start of this year, I started building a [basic QR code generator](https://github.com/zhengkyl/fuqr) for fun and to get more practice with Rust (i use windows btw).
-
-I also built [a web app to quickly iterate and preview QR code designs](https://github.com/zhengkyl/qrframe). It uses my Rust library via WASM, and it's way faster to iterate with. It comes with a code editor that directly runs code in your browser to render onto a canvas. It has no safeguards or sandboxing, so please don't self-XSS yourself by pasting unknown code. Though if you do, just close the tab.
-
-I'm using it to craft QR codes that look like this.
-When I go out to eat, and when I open my pantry. When I browse books at the library, and when I close my eyes to embrace sleep. They stare at me with square eyes and a TV static face, as if I were an overworked Japanese salaryman in a world where faces are censored with QR codes.
-
-
-
 
 I took some photos of QR codes that caught my eye on a trip to San Francisco this summer.
 
@@ -129,51 +122,69 @@ Notice how they all look like a QR code, but are distinct in a way that fits the
 
 If you want to see some counterexamples, all the pictures I took are available at https://photos.app.goo.gl/mXLhxVieRw72iCJt7.
 
-## Legal operations
-
-Besides the error correction, based on Reed-Solomon codes, used to encode the data (as well as the format and version metadata), QR codes are robust to a variety of simple transformations.
-
-There is no limit on the color of the pixels as long as their is sufficient contrast between dark and light pixels. The "dark" and "light" pixels can also be inverted, which you've probably often seen already.
-
-It may seem obvious, but QR codes can be rotated any which way. Less obvious is the fact that they can be mirrored as well. This makes it possible to make interesting symmetric designs using multiple QR codes.
-
 ## Prior work
 // TODO burger king
 
-Here is a brief and incomplete overview of ways people have tried to subvert QR codes.
+Since QR codes are a matrix of pixels, many have tried to encode an image into 
 
-[Russ Cox, QArt Codes](https://research.swtch.com/qart)
-By encoding arbitrary numbers in an ignored url anchor, images can be placed into the QR code without relying on error correction.
+
+
+One way to add an image is to manipulate the input data.
+
+For URL's specifically, arbitrary data can be added as an ignored URL anchor. This data can be calculated to precisely manipulate pixels in the QR code in limited areas. This approach doesn't rely on error correction at all, but it is limited in the images it can create ([Russ Cox, QArt Codes](https://research.swtch.com/qart)).
 
 {
-  <div className="grid cols-2" style={{imageRendering:"pixelated"}}>
-    <img src="qart_go.png" alt="golang mascot qart code"/>
-    <img src="qart_mike.png" alt="mike wazowski qart code"/>
+  <div className="grid cols-2 font-thin text-sm text-center pixelated">
+    <div>
+      <img src="qart_go.png" alt="golang mascot qart code"/>
+      Go Gopher by Russ Cox, <Sa href="https://research.swtch.com/qart">QArt Codes</Sa>
+    </div>
+    <div>
+      <img src="qart_mike.png" alt="mike wazowski qart code"/>
+      Created using <Sa href="https://research.swtch.com/qr/draw/">QArt Coder</Sa>
+    </div>
   </div>
 }
 
-[Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes)
-This process involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color. Also, by introducing a limited number of errors, they can further enhance visual quality in key areas.
+A more common approach is to change how each QR code pixel is represented.
+
+
+
+One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes) paper, involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color.
 
 {
-  <div className="grid cols-2" style={{imageRendering:"pixelated"}}>
-    <img src="halftone_albert.png" alt="golang mascot qart code"/>
-    <img src="halftone_mike.png" alt="mike wazowski qart code"/>
+  <div className="grid cols-2 font-thin text-sm text-center pixelated">
+    <div>
+      <img src="halftone_albert.png" alt="halftone einstein qr code"/>
+      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
+    </div>
+    <div>
+      <img src="halftone_mike.png" alt="halftone mike wazowski qr code"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+    </div>
   </div>
 }
 
-A simpler approach involves overlaying a QR code with smaller data pixels on top of a background image so that only the center of each QR code pixel is the correct color.
+Generally, as long as the center of each QR code pixel is correct, it can be decoded correctly. In other words, this approach is basically equivalent to overlaying the correct center pixels on top of a low resolution image (usually combined with a dithering effect). Due to it's simplicity and natural aesthetic, there are many implementations online [^1] as well as a version of [Bad Apple](https://www.youtube.com/watch?v=tPYUdjptMpk).
 
-[Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) which inspired [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://github.com/nythrox/halftone-qrcode) and [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone).
+[^1]: [Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) 
 
-[Bad Apple but it is played with QR code](https://www.youtube.com/watch?v=tPYUdjptMpk)
+    [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://github.com/nythrox/halftone-qrcode)
 
-[Amazing-QR](https://github.com/x-hw/amazing-qr)
-Supports color and GIFs.
+    [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone).
+
+Moreover, the image doesn't have to be black and white or low resolution at all.
+
 {
-  <div className="grid cols-2">
-    <img src="amzqr.gif" alt="golang mascot qart code"/>
-    <img src="amzqr_mike.jpg" alt="mike wazowski qart code"/>
+  <div className="grid cols-2 font-thin text-sm text-center">
+    <div>
+      <img src="amzqr.gif" alt="animated qr code"/>
+      Example from <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
+    </div>
+    <div>
+      <img src="amzqr_mike.jpg" alt="color image qr code"/>
+      Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
+    </div>
   </div>
 }
 
@@ -183,42 +194,58 @@ Uses color thresholds to reduce number and intensity of overlayed pixels.
 [QRpicture](https://github.com/xyzzy/qrpicture)
 Uses color quantization and a high-contrast color palette to maximize scannability of color images. Really good at hiding the QR code's noisy "texture".
 {
-  <div className="grid cols-2">
-    <img src="qrpicture.gif" alt="golang mascot qart code"/>
-    <img src="qrpicture.jpg" alt="mike wazowski qart code"/>
+  <div className="grid cols-2 font-thin text-sm text-center">
+    <div>
+      <img src="qrpicture.gif" alt="animated qr picture"/>
+      Example from <Sa href="https://qrbtf.com">https://github.com/xyzzy/qrpicture</Sa>
+    </div>
+    <div>
+      <img src="qrpicture.jpg" alt="mike wazowski qr picture"/>
+      Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
+    </div>
   </div>
 }
 
 [Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
 The weirdest of the bunch, but super cool.
 
-Tangent -> Creating QR code that matches a string
-https://marienraat.nl/hacking-qr-codes.html
-
-[Troy Ni (@ciaochaos)](https://github.com/ciaochaos) created QRBTF, a generator used to create truly beautiful QR codes like the ones below. The original inspiration is detailed in [this blog post](https://troyni.com/articles/building-qrbtf-zh).
-
-{
-  <div className="grid cols-2 gap-4">
-    <img src="qrbtf_blocks.svg" alt="bad qr code stencil"/>
-    <img src="qrbtf_alien.svg" alt="slightly better qr code stencil"/>
-  </div>
-}
-
 Perhaps unsuprisingly, they also created the first AI QR codes, which they documented in [this blog post](https://troyni.com/articles/qrcode-controlnet-zh).
 
 Following that, Anthony Fu ([@antfu](https://github.com/antfu)) made a series of blog posts detailing his experiments ([first](https://antfu.me/posts/ai-qrcode), [second](https://antfu.me/posts/ai-qrcode-refine)), culiminating in a definite guide https://antfu.me/posts/ai-qrcode-101 co-authored by [赛博迪克朗](https://space.bilibili.com/339984/), wangcai, and [代々木](https://www.xiaohongshu.com/user/profile/5be8fb806b58b745447aab0f).
 
 {
-  <div className="grid cols-2 gap-4">
-    <img src="ai_anime.jpg" alt="golang mascot qart code"/>
-    <img src="ai_mike.jpg" alt="mike wazowski qart code"/>
+  <div className="grid cols-2 font-thin text-sm text-center">
+    <div>
+      <img className="p4" src="ai_anime.jpg" alt="ai generated anime qr code"/>
+      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
+    <div>
+      <img className="p4" src="ai_mike.jpg" alt="ai generated mike wazowski qr code"/>
+      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
   </div>
 }
 
 Try moving your phone away from the screen (farther than you think), and maybe increase your brightness.
 
-## What's the deal with QR codes?
 
+[Troy Ni (@ciaochaos)](https://github.com/ciaochaos) created QRBTF, a generator used to create truly beautiful QR codes like the ones below. The original inspiration is detailed in [this blog post](https://troyni.com/articles/building-qrbtf-zh).
+
+{
+  <div className="grid cols-2 font-thin text-sm text-center">
+    <div>
+    <img src="qrbtf_blocks.svg" alt="color blocks qr code"/>
+      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
+    <div>
+    <img src="qrbtf_alien.svg" alt="alien goo qr code"/>
+      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
+  </div>
+}
+## What's the deal with QR codes?
+Tangent -> Creating QR code that matches a string
+https://marienraat.nl/hacking-qr-codes.html
 There's a 100 page PDF describing the QR code standard (ISO/IEC 18004) in detail, but here's the truth.
 
 A QR code is whatever a QR code scanner can scan.
@@ -241,3 +268,5 @@ Apple's is part of their AVFoundation.
 Neither implementation has available source code, not that it would do us much good.
 
 Thankfully, the Wechat scanner is seemingly open source. It's available as an OpenCV extension. It's a fork of the cpp port of the popular zxing library.
+
+[^1]: My reference.
