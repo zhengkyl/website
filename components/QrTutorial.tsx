@@ -21,9 +21,10 @@ export function QrTutorial(props) {
     setPath(newPath);
   }, [drawColor, drawPath]);
 
+  // ugly parent max-w instead of child max-w makes padding easier
   return (
-    <div className="w-screen ml-[calc(50%-50vw)] px-4 flex flex-col gap-4 sm:flex-row">
-      <div className="flex-1 relative">
+    <div className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] px-4 flex flex-col gap-4 sm:flex-row">
+      <div className="flex-1 relative sticky top-4 h-full">
         <canvas ref={canvas} className="bg-slate-400 w-full pixelated" />
         <svg
           className="absolute top-0 left-0"
@@ -76,38 +77,64 @@ export function QrTutorial(props) {
             Show zigzag pattern
           </label>
         </div>
-        <p>
-          There are <span className="font-bold">finder patterns</span> in three
-          corners.
-        </p>
-
-        <p>
-          There is usually one{" "}
-          <span className="font-bold">alignment pattern</span> in last corner.
-          The smallest possible code has none, and very large codes have
-          multiple.
-        </p>
-        <p>
-          There is a horizontal and vertical{" "}
-          <span className="font-bold">timing pattern</span>.
-        </p>
-
-        <p>
-          There is <span className="font-bold">format information</span>,
-          storing the error correction level and the mask pattern applied to the
-          data. There are 4 error correction levels, which can recover 7% to 30%
-          of the data. There are 8 mask patterns, which
-        </p>
-        <p>
-          Very large QR codes will have **version information** on the remaining
-          two finder pattern sides not taken by format information. Version
-          means size, and it ranges from 1 - 40. Most QR codes fit in Versions 1
-          through 6.
-        </p>
-        <p>
-          QR codes can be rotated any which way, mirrored, and the "dark" and
-          "light" pixels can be inverted.
-        </p>
+        <div className="flex flex-col gap-2">
+          <div className="font-bold text-lg">Functional patterns</div>
+          <p>
+            There are <span className="font-bold">finder patterns</span> in
+            three corners. These allow scanners to detect the code. Specifically
+            the ratio of 1:1:3:1:1 black and white pixels through the vertical
+            and horizontal center. This means the corners aren't absolutely
+            necessary and having a white buffer or "quiet zone" on the outside
+            border is important.
+          </p>
+          <p>
+            There is usually one{" "}
+            <span className="font-bold">alignment pattern</span> in last corner.
+            The smallest possible code has none, and very large codes have
+            multiple. These help scanners account for distortion and
+            perspective.
+          </p>
+          <p>
+            There are two <span className="font-bold">timing patterns</span>{" "}
+            which run vertically and horizontally. These help determine rows and
+            columns.
+          </p>
+          <p>
+            The timing patterns and alignment patterns are{" "}
+            <span className="font-italic">technically</span> optional, in the
+            sense that a QR code without them will still be scannable, albeit
+            less reliably. This should not be relied upon, but it works with
+            every scanner I have on my phone.
+          </p>
+          <div className="font-bold text-lg">Metadata</div>
+          <p>
+            There is <span className="font-bold">format information</span>,
+            storing the error correction level and the mask pattern applied to
+            the data. One copy is in the top left, and the other copy is split
+            between the top right and bottom left.
+          </p>
+          <p>
+            Very large QR codes will have{" "}
+            <span className="font-bold">version information</span>. Version
+            means size, and it ranges from 1 - 40. Most QR codes fit in Versions
+            1 through 6, where size can be accurately calculated using the
+            distance between the finder patterns. One copy is in the top left,
+            and the other copy is in the bottom left.
+          </p>
+          <div className="font-bold text-lg">Data</div>
+          <p>
+            The remaining space is for the{" "}
+            <span className="font-bold">data</span>. It starts with a header
+            describing the encoding mode and the data length. The is followed by
+            the actual data, padding to fill the capacity, and then error
+            correction codewords.
+          </p>
+          <div className="font-bold text-lg">Transformations</div>
+          <p>
+            QR codes can be rotated, mirrored, and the "dark" and "light" pixels
+            can be inverted.
+          </p>
+        </div>
       </div>
     </div>
   );

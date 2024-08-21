@@ -200,7 +200,7 @@ export default async function HomePage() {
         </h3>
         <p></p>
         <h3>
-          2019-23 programmer at{" "}
+          2020-23 programmer at{" "}
           <a
             href="https://learninglab.psych.purdue.edu/"
             className="font-bold underline text-blue-600"

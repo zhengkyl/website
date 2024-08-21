@@ -6,50 +6,48 @@ posted: 2024-8-12
 import { Sa } from "../components/mdx"
 import { QrTutorial } from "../components/QrTutorial"
 
-UNFINISHED
+![qr code crafting recipe](crafting_recipe.jpg)
 
-// TODO
+QR codes are portals to the internet. Everyone knows what they are, and every phone can scan them, so for better or worse, they are the defacto way to share URLs offline.
 
-// finish lit review
-
-// actually show my qr codes
-
-
-
-QR codes are the bridge between the physical world and the internet. For this reason, they are vital to traditional advertisers, those sick bastards. Yet despite being , I doubt anyone would be suprised that QR codes were originally created as high capacity barcodes for automobile parts.
+I don't know if you've noticed them in your daily life, but I've seen a few.
 
 {
 <div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-sm text-center">
-  <div className="font-semibold text-lg">QR codes in the wild</div>
-  <img src="rush_hour.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
-  <span>
-    <Sa href="https://commons.wikimedia.org/wiki/File:Just_going_to_work_(3509126762).jpg">Original photo</Sa> by <Sa href="https://www.flickr.com/people/erikjohansson78/">erikjohansson</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
-  </span>
   <div className="font-semibold text-lg">Me writing this blog post</div>
   <img src="train_escape.jpg" alt="me escaping from a train full of salarymen with qr code faces"/>
   <span>
   <Sa href="https://www.flickr.com/photos/19736899@N04/2046534730">Original photo</Sa> by <Sa href="https://www.flickr.com/people/hern42/">Arnaud DG</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
   </span>
+  <div className="font-semibold text-lg">Everywhere I look</div>
+  <img src="rush_hour.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
+  <span>
+    <Sa href="https://commons.wikimedia.org/wiki/File:Just_going_to_work_(3509126762).jpg">Original photo</Sa> by <Sa href="https://www.flickr.com/people/erikjohansson78/">erikjohansson</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
+  </span>
 </div>
 }
 
-To be clear, there is nothing wrong with a plain, black and white, 2D barcode that links to extra product details or food nutrition facts.
+I doubt anyone would be suprised to learn that QR codes were originally created as high capacity barcodes for automobile parts. They look the part.
 
-But QR codes are increasingly used in a context where aesthetics matter. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity
+A regular QR code is classy, but some occasions call for a little style.
 
-![four proprietary scan codes](four_horsemen.png)
+// TODO insert COOLEST guys at the HOTTEST restaurants here
 
-But even for billion dollar companies, non-QR codes are relegated to the position of party trick. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes, and we, the non-billion dollar non-companies, stand even less chance at using something custom because a scannable code that can only be scanned inside a specific app is hardly "scannable" at all.
+Many have done.
 
-If we cannot make beautiful codes scannable, we must make QR codes beautiful.
+This is not necessarily recommended.
 
-I built [a web app to quickly create and design QR codes](https://qrframe.kylezhe.ng). It uses my own [Rust QR code library](https://github.com/zhengkyl/fuqr) via WASM, and it features a code editor that allows anyone to create new or modify existing designs.
+These are not explicitly supported, but it's pretty hard to make a working QR code scanner that doesn't also scan these artistically disfigured QR codes. 
 
-![qr code crafting recipe](crafting_recipe.jpg)
+Form hinders function.
 
-## The Story Before the Recipe
+I want to show you the path I took, the lessons learned from those who came before me, and my little project to put it all together, a web app to create these QR codes, available at [qrframe.kylezhe.ng](https://qrframe.kylezhe.ng).
 
-Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks using a giant stencil. I had just learned that QR codes have built in error correction capabilities, and it seemed like the perfect complement to those sidewalk chalk advertisements I saw on campus.
+This is how to *craft* a qr code.
+
+## How do QR codes work?
+
+Around 2 years ago, I had the idea to draw QR codes using chalk and a giant stencil.
 
 {
   <div className="grid cols-2 gap-4 font-thin text-sm text-center">
@@ -64,11 +62,9 @@ Around 2 years ago, I had the idea to draw QR codes with chalk on sidewalks usin
   </div>
 }
 
-TLDR; this worked poorly for several reasons. Chalk smears SO easily, contrasts poorly, is painfully slow to fill in, and higher error correction requires larger QR codes with smaller pixels. 
+TLDR; Chalk smears easily, contrasts poorly against concrete, and is painfully slow to fill in.
 
-But, while designing those stencils, I did end up learning a little about how QR codes works.
-
-
+Unfortunately, while designing those stencils, I did end up learning a little about how QR codes work.
 
 <QrTutorial/>
 
@@ -127,8 +123,6 @@ If you want to see some counterexamples, all the pictures I took are available a
 
 Since QR codes are a matrix of pixels, many have tried to encode an image into 
 
-
-
 One way to add an image is to manipulate the input data.
 
 For URL's specifically, arbitrary data can be added as an ignored URL anchor. This data can be calculated to precisely manipulate pixels in the QR code in limited areas. This approach doesn't rely on error correction at all, but it is limited in the images it can create ([Russ Cox, QArt Codes](https://research.swtch.com/qart)).
@@ -137,7 +131,7 @@ For URL's specifically, arbitrary data can be added as an ignored URL anchor. Th
   <div className="grid cols-2 font-thin text-sm text-center pixelated">
     <div>
       <img src="qart_go.png" alt="golang mascot qart code"/>
-      Go Gopher by Russ Cox, <Sa href="https://research.swtch.com/qart">QArt Codes</Sa>
+      Go Gopher from <Sa href="https://research.swtch.com/qart">QArt Codes</Sa>
     </div>
     <div>
       <img src="qart_mike.png" alt="mike wazowski qart code"/>
@@ -147,8 +141,6 @@ For URL's specifically, arbitrary data can be added as an ignored URL anchor. Th
 }
 
 A more common approach is to change how each QR code pixel is represented.
-
-
 
 One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes) paper, involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color.
 
@@ -165,7 +157,10 @@ One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nth
   </div>
 }
 
-Generally, as long as the center of each QR code pixel is correct, it can be decoded correctly. In other words, this approach is basically equivalent to overlaying the correct center pixels on top of a low resolution image (usually combined with a dithering effect). Due to it's simplicity and natural aesthetic, there are many implementations online [^1] as well as a version of [Bad Apple](https://www.youtube.com/watch?v=tPYUdjptMpk).
+Generally, as long as the center of each QR code pixel is correct, it can be decoded correctly. In other words, this approach is basically equivalent to overlaying the correct center pixels on top of a image. 
+
+The low resolution black and white dithered effect is just a smart stylistic choice that hides the data as noise. There are many implementations online [^1] as well as a version of [Bad Apple](https://www.youtube.com/watch?v=tPYUdjptMpk).
+
 
 [^1]: [Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) 
 
@@ -178,12 +173,12 @@ Moreover, the image doesn't have to be black and white or low resolution at all.
 {
   <div className="grid cols-2 font-thin text-sm text-center">
     <div>
-      <img src="amzqr.gif" alt="animated qr code"/>
-      Example from <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
+      <img src="bk.jpg" alt="burger king ad qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=hnYXq1oyi2g">Burger King VMA Commercials</Sa>
     </div>
     <div>
-      <img src="amzqr_mike.jpg" alt="color image qr code"/>
-      Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
+      <img src="visualead_mike.jpg" alt="visualead qr code"/>
+      Created using <Sa href="https://github.com/x-hw/amazing-qr">Visualead</Sa>
     </div>
   </div>
 }
@@ -196,8 +191,8 @@ Uses color quantization and a high-contrast color palette to maximize scannabili
 {
   <div className="grid cols-2 font-thin text-sm text-center">
     <div>
-      <img src="qrpicture.gif" alt="animated qr picture"/>
-      Example from <Sa href="https://qrbtf.com">https://github.com/xyzzy/qrpicture</Sa>
+      <img src="amzqr_mike.jpg" alt="color image qr code"/>
+      Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
     </div>
     <div>
       <img src="qrpicture.jpg" alt="mike wazowski qr picture"/>
@@ -206,6 +201,18 @@ Uses color quantization and a high-contrast color palette to maximize scannabili
   </div>
 }
 
+{
+  <div className="grid cols-2 font-thin text-sm text-center">
+    <div>
+      <img src="qrpicture.gif" alt="animated qr picture"/>
+      Example from <Sa>https://github.com/xyzzy/qrpicture</Sa>
+    </div>
+    <div>
+      <img src="micro_mike.jpg" alt="mike wazowski micrography qr"/>
+      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</Sa>
+    </div>
+  </div>
+}
 [Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
 The weirdest of the bunch, but super cool.
 
@@ -243,7 +250,9 @@ Try moving your phone away from the screen (farther than you think), and maybe i
     </div>
   </div>
 }
-## What's the deal with QR codes?
+
+## Tangents
+
 Tangent -> Creating QR code that matches a string
 https://marienraat.nl/hacking-qr-codes.html
 There's a 100 page PDF describing the QR code standard (ISO/IEC 18004) in detail, but here's the truth.
@@ -267,6 +276,24 @@ Apple's is part of their AVFoundation.
 
 Neither implementation has available source code, not that it would do us much good.
 
+
+
+
+
+Whether it's an app with a shareable code, an advertisement meant to catch your eye, or someone with too much time, the possibilities of beautiful QR codes awaits.
+
+The QR code standard (ISO/IEC 18004) suggests how a QR code can be created and decoded. It is up to the QR code scanner to convert an image into this decodable 2d matrix of black and white pixels. This makes everything possible.
+
 Thankfully, the Wechat scanner is seemingly open source. It's available as an OpenCV extension. It's a fork of the cpp port of the popular zxing library.
 
 [^1]: My reference.
+
+
+
+Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity, to varying success[^scannable-codes].
+
+[^scannable-codes]: Tiktok and Snapchat have already replaced their custom codes with stylized QR codes.
+
+![four proprietary scan codes](four_horsemen.png)
+
+Notice how they're all mostly gimmicks since they can only be scanned with a specific app (or device).
