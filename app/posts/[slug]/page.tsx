@@ -3,6 +3,9 @@ import { getPostSlugs } from "../util";
 export function generateMetadata(props: { params: { slug: string } }) {
   return {
     title: `${props.params.slug.replaceAll("_", " ")} | kyle zheng`,
+    openGraph: {
+      images: `/posts/${props.params.slug}/og.jpg`
+    }
   };
 }
 

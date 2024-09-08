@@ -5,6 +5,13 @@ import remarkGfm from "remark-gfm";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["mdx", "ts", "tsx"],
+  redirects: () => [
+    {
+      source: "/posts/illegal_qr_codes",
+      destination: "/posts/crafting_qr_codes",
+      permanent: true,
+    },
+  ],
 };
 
 const withMDX = createMDX({

@@ -2,6 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import init from "fuqr";
+
+const SECTIONS = [
+  "finder",
+  "quietZone",
+  "alignment",
+  "timing",
+  "format1",
+  "format2",
+  "version1",
+  "version2",
+  "dataHeader",
+  "dataData",
+  "dataPadding",
+  "dataECC",
+] as const;
+
+// TODO
+// timing off
+// alignment off
+// cross finder
+// planet finder
+// 1/3 pixels
 export function QrTutorial(props) {
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -10,6 +33,28 @@ export function QrTutorial(props) {
   const [path, setPath] = useState("");
   const [version, setVersion] = useState(2);
   const width = version * 4 + 17;
+
+  let highlight: (typeof SECTIONS)[number][] = [];
+
+  let enabled = {
+    alignment: true,
+    timing: true,
+    format1: true,
+    format2: true,
+    version1: true,
+    version2: true,
+  };
+
+  let transforms = {
+    // rotate
+    rotateZ: 0,
+    // perspective
+    rotateX: 0,
+    rotateY: 0,
+    // mirroring
+    scaleX: 1,
+    scaleY: 1,
+  };
 
   useEffect(() => {
     const newPath = update(
@@ -24,21 +69,23 @@ export function QrTutorial(props) {
   // ugly parent max-w instead of child max-w makes padding easier
   return (
     <div className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] px-4 flex flex-col gap-4 sm:flex-row">
-      <div className="flex-1 relative sticky top-4 h-full">
-        <canvas ref={canvas} className="bg-slate-400 w-full pixelated" />
-        <svg
-          className="absolute top-0 left-0"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox={`0 0 ${width} ${width}`}
-        >
-          <path
-            d={path}
-            fill="none"
-            stroke="#f0f"
-            strokeWidth="0.1"
-            transform="translate(0.5 0.5)"
-          />
-        </svg>
+      <div className="flex-1 relative sticky top-0 h-full p-4 bg-gradient-to-b from-white from-95%">
+        <div className="max-w-80% mx-auto sm:max-w-unset relative">
+          <canvas ref={canvas} className="bg-slate-400 w-full pixelated" />
+          <svg
+            className="absolute top-0 left-0"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox={`0 0 ${width} ${width}`}
+          >
+            <path
+              d={path}
+              fill="none"
+              stroke="#f0f"
+              strokeWidth="0.1"
+              transform="translate(0.5 0.5)"
+            />
+          </svg>
+        </div>
       </div>
       <div className="flex-1">
         <input
@@ -65,7 +112,7 @@ export function QrTutorial(props) {
               checked={drawColor}
               onChange={(e) => setDrawColor(e.target.checked)}
             />
-            Show data bytes
+            Show byte boundaries
           </label>
           <label className="flex items-center">
             <input
@@ -77,34 +124,40 @@ export function QrTutorial(props) {
             Show zigzag pattern
           </label>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <div className="font-bold text-lg">Functional patterns</div>
           <p>
             There are <span className="font-bold">finder patterns</span> in
             three corners. These allow scanners to detect the code. Specifically
             the ratio of 1:1:3:1:1 black and white pixels through the vertical
-            and horizontal center. This means the corners aren't absolutely
-            necessary and having a white buffer or "quiet zone" on the outside
-            border is important.
+            and horizontal center. A white separator or "quiet zone" around each
+            finder pattern is generally necessary for scanners to detect it.
           </p>
+          <label>
+            <input
+              className="w-5 h-5 mr-1"
+              type="checkbox"
+              checked={drawColor}
+              onChange={(e) => setDrawColor(e.target.checked)}
+            />
+            Highlight finder
+          </label>
           <p>
             There is usually one{" "}
-            <span className="font-bold">alignment pattern</span> in last corner.
-            The smallest possible code has none, and very large codes have
-            multiple. These help scanners account for distortion and
-            perspective.
+            <span className="font-bold">alignment pattern</span> in last corner,
+            but the smallest code has none, and very large codes have multiple.
+            These help scanners account for distortion and perspective.
           </p>
           <p>
             There are two <span className="font-bold">timing patterns</span>{" "}
-            which run vertically and horizontally. These help determine rows and
-            columns.
+            consisting of alternating black and white pixels. These help
+            scanners align rows and columns.
           </p>
           <p>
             The timing patterns and alignment patterns are{" "}
             <span className="font-italic">technically</span> optional, in the
             sense that a QR code without them will still be scannable, albeit
-            less reliably. This should not be relied upon, but it works with
-            every scanner I have on my phone.
+            less reliably.
           </p>
           <div className="font-bold text-lg">Metadata</div>
           <p>
@@ -125,9 +178,17 @@ export function QrTutorial(props) {
           <p>
             The remaining space is for the{" "}
             <span className="font-bold">data</span>. It starts with a header
-            describing the encoding mode and the data length. The is followed by
-            the actual data, padding to fill the capacity, and then error
-            correction codewords.
+            describing the encoding mode and the data length.
+          </p>
+          <p>
+            There are efficient encoding modes for numbers, alphanumeric
+            strings, and Japanese characters, but the only relevant mode for
+            URLs is Byte mode. This just means UTF-8.
+          </p>
+          <p>
+            The header is followed by the actual data, padded to fill the
+            capacity, and then error correction codewords fill the remaining
+            space.
           </p>
           <div className="font-bold text-lg">Transformations</div>
           <p>
