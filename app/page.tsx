@@ -59,9 +59,7 @@ export default async function HomePage() {
             <h3 className="font-bold font-mono group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
               {post.slug.replaceAll("_", " ")}
             </h3>
-            <h4 className="font-light italic text-stone-500">
-              {post.subtitle}
-            </h4>
+            <h4 className="font-light italic text-stone-500">{post.desc}</h4>
           </Link>
         ))}
         <Link href="/posts" className="underline text-rose-600">

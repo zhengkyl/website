@@ -1,6 +1,7 @@
 ---
-subtitle: We're making bespoke motherfuckas
 posted: 2024-9-12
+desc: How they work and how to make them pretty
+image: crafting.jpg
 ---
 
 import { Sa } from "../components/mdx"
@@ -29,37 +30,92 @@ Suffice it to say, I've seen a few QR codes in my day to day.
 </div>
 }
 
-Brands have already figured out that you can slap a logo in the center and rely on the error correction algorithm to recover missing data.
+With how widespread they are in consumer facing spaces like advertising, it's also no suprise that companies would want to brand their QR codes. The most common practice is placing a logo in the center, which relies on error correction to recover the missing data. 
 
 {
-  <div className="grid cols-4 gap-2">
-    <img src="in_mcd.jpg" alt="mcdonalds app"/>
-    <img src="sf_uber.jpg" alt="uber ad"/>
-    <img src="duo.jpg" alt="duolingo profile"/>
-    <img src="insta.svg" alt="instagram profile"/>
+  <div className="grid cols-2 sm:cols-4 gap-2">
+    <img src="logo/in_mcdonalds.jpg" alt="mcdonalds app"/>
+    <img src="logo/sf_uber.jpg" alt="uber ad"/>
+    <img src="logo/duolingo.jpg" alt="duolingo profile"/>
+    <img src="logo/instagram.svg" alt="instagram profile"/>
   </div>
 }
 
-There have been many attempts to create "artistic" QR codes, which overwhelmingly focus on creating images within the code's confines. Some techniques use the pixel grid, some work around it, and the most recent breakthroughs involve using generative AI to turn QR codes into beautiful pictures.
-
-I believe there's a different path we can take to creating QR code art.
+Beyond simply placing a logo on top, there have been many attempts to create "artistic" QR codes, which use the entire code as a canvas. Some techniques use the pixel grid, some work around it, while more recent developments involve using generative AI to create scannable anime women.
 
 {
-  <div className="grid cols-4 gap-2">
-    <img src="stained_glass.svg" alt="stained glass"/>
-    <img src="quantum.svg" alt="physics"/>
-    <img src="whiteboard.png" alt="whiteboard marker"/>
-    <img src="neon.svg" alt="neon sign"/>
-    <img src="layers.svg" alt="layered patterns"/>
-    <img src="tile.png" alt="bathroom tile"/>
-    <img src="dots.svg" alt="benday dots"/>
-    <img src="mondrian.svg" alt="abstract art"/>
+  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="image/qart_go.png" alt="golang mascot qart code"/>
+      <Sa href="https://research.swtch.com/qart">QArt Codes</Sa>
+    </div>
+    <div>
+      <img src="image/halftone_einstein.png" alt="halftone einstein qr code"/>
+      <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
+    </div>
+    <div>
+      <img src="image/overlay_burger_king.jpg" alt="burger king ad qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=hnYXq1oyi2g">Burger King VMA Commercials</Sa>
+    </div>
+    <div>
+      <img src="image/ai_anime.jpg" alt="ai generated anime qr code"/>
+      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
   </div>
 }
 
-First, I'll teach you how QR codes work, and all the techniques for creating QR code art. Then I'll show you my little project to put it all together, a web app to create these QR codes, available at [qrframe.kylezhe.ng](https://qrframe.kylezhe.ng).
+While limited, these techniques are not specific to a single QR code and generalize to any image and URL. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
 
-This is how to *craft* a qr code.
+{
+  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="bespoke/qrcanvas.jpg" alt="qrcanvas"/>
+      <Sa href="https://qrcanvas.nl">QRcanvas</Sa>
+    </div>
+    <div>
+      <img src="bespoke/amicollective.png" alt="amicollective"/>
+      <Sa href="https://www.behance.net/gallery/3702490/CALENDAR">2012 MTS Calendar</Sa> <span className="whitespace-pre">Am I Collective</span> (<Sa href="https://thedsgnblog.tumblr.com/post/32805738545/am-i-collective-httpamicollectivecom">source</Sa>)
+    </div>
+    <div>
+      <img src="bespoke/minor.png" alt="minor"/>
+      minor<br/>
+      (<Sa href="https://dribbble.com/minorart/shots">Dribbble</Sa>, <Sa href="https://www.behance.net/739019620c2bc">Behance</Sa>)
+    </div>
+    <div>
+      <img src="bespoke/elkoy.png" alt="elkoy artists collective"/>
+      <Sa href="https://art-qrcode.com/">The Art of QR Codes / <span className="whitespace-pre">Elkoy Artists</span> Collective</Sa>
+    </div>
+  </div>
+}
+
+{
+  <small className="text-stone-700">
+    These were suprisingly hard to find. I started from this <Sa href="https://www.flickr.com/groups/qr-art/pool/page1">Flickr group</Sa> featuring QR code art from the early 2010's, but Pinterest proved an invaluable resource that surfaced obscure work from Behance, Dribbble, and random blogs.
+  </small>
+}
+
+Where does this leave us if we want a unique QR code, but we don't want to design each one from scratch for every URL?
+
+I'm not exactly a designer, but <Sa href="https://troyni.com/articles/building-qrbtf-zh">this blog post</Sa> from the creator of <Sa href="https://qrbtf.com">QRBTF</Sa> convinced me that QR code generators *can* create beautiful QR codes. So I got inspired by stained glass, Persian rugs, comic books, and retro logos, and locked in for minutes at a time between months of procrastination.
+
+{
+  <div className="grid cols-2 sm:cols-4 gap-2">
+    <img src="qrframe/stained_glass.svg" alt="stained glass"/>
+    <img src="qrframe/quantum.svg" alt="physics"/>
+    <img src="qrframe/whiteboard.png" alt="whiteboard marker"/>
+    <img src="qrframe/neon.svg" alt="neon sign"/>
+    <img src="qrframe/layers.svg" alt="layered patterns"/>
+    <img src="qrframe/tile.png" alt="bathroom tile"/>
+    <img src="qrframe/dots.svg" alt="benday dots"/>
+    <img src="qrframe/mondrian.svg" alt="abstract art"/>
+  </div>
+}
+
+The end result is https://qrframe.kylezhe.ng, a web app that lets you define parameters and write code to render QR codes however you want. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
+
+It comes with many example presets, based on existing styles and my original designs, which I hope others can use and build upon to create their own custom QR codes.
+
+Feel free to play with it, but in order to craft QR codes with intention, we need to learn how QR codes *actually* work.
 
 ## How do QR codes work?
 
@@ -108,33 +164,6 @@ Here are some that shocked me in some way or another.
   </div>
 </div>
 }
-
-And here are some good QR codes that I saw.
-
-{
-<div className="grid cols-2 sm:cols-4 gap-4 font-thin text-xs text-center">
-  <div>
-    <img src="sf_insta.jpg" alt="instagram qr code"/>
-    Instagram's official QR code generator
-  </div>
-  <div>
-    <img src="sf_uber.jpg" alt="circular uber flowcode qr code"/>
-    Uber advertisement inside airport
-  </div>
-  <div>
-    <img src="sf_maven.jpg" alt="maven retail qr code"/>
-    Real estate property information
-  </div>
-  <div>
-    <img src="sf_servy.jpg" alt="servy mobile ordering qr code"/>
-    Promoting mobile ordering on ordering kiosk
-  </div>
-</div>
-}
-
-Notice how they all look like a QR code, but are distinct in a way that fits their brand identity.
-
-If you want to see some counterexamples, all the pictures I took are available at https://photos.app.goo.gl/mXLhxVieRw72iCJt7.
 
 ## Prior work
 // TODO burger king

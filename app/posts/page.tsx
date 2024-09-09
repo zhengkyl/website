@@ -18,7 +18,7 @@ export default async function Page() {
                 /{post.slug.replaceAll("_", " ")}
               </h2>
               <h3 className="font-light italic text-stone-500 text-xl mt-2">
-                {post.subtitle}
+                {post.desc}
               </h3>
             </li>
           </Link>

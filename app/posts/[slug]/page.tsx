@@ -1,18 +1,24 @@
 import { getPostSlugs } from "../util";
 
-export function generateMetadata(props: { params: { slug: string } }) {
+export async function generateMetadata({ params: { slug } }) {
+  const { frontmatter } = await import(`/posts/${slug}.mdx`);
   return {
-    title: `${props.params.slug.replaceAll("_", " ")} | kyle zheng`,
+    title: `${slug.replaceAll("_", " ")} | kyle zheng`,
     openGraph: {
-      images: `/posts/${props.params.slug}/og.jpg`
-    }
+      images: `/posts/${slug}/${frontmatter.image}`,
+      description: frontmatter.desc,
+    },
   };
 }
 
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return getPostSlugs().map((slug) => ({ slug }));
+  return await Promise.all(
+    getPostSlugs().map(async (slug) => {
+      return { slug };
+    })
+  );
 }
 
 const dateOptions = {
@@ -23,13 +29,12 @@ const dateOptions = {
 
 const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
-export default async function Page({ params }) {
+export default async function Page({ params: { slug } }) {
   // Webpack can't load arbitrary dynamic paths, must have string literal parts
   // https://github.com/webpack/webpack/issues/6680#issuecomment-370800037
   const { default: MdxContent, frontmatter } = await import(
-    `/posts/${params.slug}.mdx`
+    `/posts/${slug}.mdx`
   );
-
   return (
     <>
       <div className="font-light italic text-stone-500 text-xl pb-4">

@@ -10,15 +10,15 @@ export function getPostSlugs() {
 }
 
 export async function getPostDetails() {
-
   const details = await Promise.all(
     getPostSlugs().map(async (slug) => {
       const { frontmatter } = await import(`posts/${slug}.mdx`);
 
       return {
         slug,
-        subtitle: frontmatter.subtitle,
         posted: new Date(frontmatter.posted),
+        desc: frontmatter.desc,
+        image: frontmatter.image,
       };
     })
   );
