@@ -2,37 +2,38 @@
   "name": "website",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.25.2",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
-    "@next/mdx": "^14.2.5",
+    "@next/mdx": "^14.2.9",
     "@types/mdx": "^2.0.13",
     "esbuild": "^0.14.54",
-    "eslint": "^8.55.0",
-    "eslint-config-next": "^14.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.9",
     "fuqr": "^0.0.6",
     "lucide-react": "^0.263.1",
-    "next": "^14.2.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "^14.2.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
-    "sharp": "^0.33.2",
-    "usehooks-ts": "^2.9.1"
+    "sharp": "^0.33.5",
+    "usehooks-ts": "^2.16.0"
   },
   "devDependencies": {
-    "@types/node": "^18.19.2",
-    "@types/react": "^18.2.41",
-    "@unocss/postcss": "^0.58.5",
-    "@unocss/webpack": "^0.58.5",
+    "@types/node": "^18.19.50",
+    "@types/react": "^18.3.5",
+    "@unocss/postcss": "^0.58.9",
+    "@unocss/webpack": "^0.58.9",
     "babel-plugin-inline-react-svg": "^2.0.2",
-    "typescript": "^4.9.5",
-    "unocss": "^0.61.3"
+    "typescript": "^5.6.2",
+    "unocss": "^0.61.9"
   }
 }

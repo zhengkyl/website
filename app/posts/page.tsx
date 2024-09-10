@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPostDetails } from "./util";
 
 export const metadata = {
-  title: "posts | kyle zheng",
+  title: "posts",
 };
 
 export default async function Page() {

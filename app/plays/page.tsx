@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "plays | kyle zheng",
+  title: "plays",
 };
 
 export default function Page() {

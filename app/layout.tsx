@@ -4,7 +4,10 @@ import Header from "@/components/Header";
 import "./styles.css";
 
 export const metadata = {
-  title: "kyle zheng",
+  title:{
+    default: "kyle zheng",
+    template: "%s | kyle zheng",
+  }
 };
 
 export default function SiteLayout({ children }: { children: ReactNode }) {

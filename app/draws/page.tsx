@@ -1,7 +1,7 @@
 import { Book } from "./book";
 
 export const metadata = {
-  title: "draws | kyle zheng",
+  title: "draws",
 };
 
 export default function Page() {

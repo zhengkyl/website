@@ -1,9 +1,10 @@
 import { getPostSlugs } from "../util";
 
 export async function generateMetadata({ params: { slug } }) {
-  const { frontmatter } = await import(`/posts/${slug}.mdx`);
+  // destructure triggers unsupported server component error
+  const frontmatter = (await import(`/posts/${slug}.mdx`)).frontmatter;
   return {
-    title: `${slug.replaceAll("_", " ")} | kyle zheng`,
+    title: slug.replaceAll("_", " "),
     openGraph: {
       images: `/posts/${slug}/${frontmatter.image}`,
       description: frontmatter.desc,

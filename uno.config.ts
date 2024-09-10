@@ -1,12 +1,16 @@
 import { defineConfig, presetWind, transformerVariantGroup } from "unocss";
 export default defineConfig({
   content: {
-    filesystem: ["**/*.{ts,tsx}", "./posts/*.mdx"],
+    filesystem: [
+      "app/**/*.{ts,tsx}",
+      "components/**/*.{ts,tsx}",
+      "lib/**/*.{ts,tsx}",
+      "posts/*.mdx",
+      "mdx-components.tsx",
+    ],
   },
   blocklist: ["my", "me", "h2", "b"],
-  rules: [
-    ['pixelated', { "image-rendering": 'pixelated' }],
-  ],
+  rules: [["pixelated", { "image-rendering": "pixelated" }]],
   transformers: [transformerVariantGroup()],
   presets: [presetWind()],
 });

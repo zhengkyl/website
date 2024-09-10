@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ["mdx", "ts", "tsx"],
+  pageExtensions: ["mdx", "ts", "tsx", "js", "jsx"],
   redirects: () => [
     {
       source: "/posts/illegal_qr_codes",
