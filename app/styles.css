@@ -6,6 +6,7 @@ html {
   tab-size: 2;
   line-height: 1.6;
   font-size: 18px;
+  --un-default-border-color: rgb(41 37 36)
 }
 body {
   /* stop books overflowing */

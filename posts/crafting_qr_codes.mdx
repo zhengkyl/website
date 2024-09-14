@@ -119,7 +119,7 @@ Feel free to play with it, but in order to craft QR codes with intention, we nee
 
 ## How do QR codes work?
 
-Around 2 years ago, I had the idea to draw QR codes using chalk and a giant stencil.
+Around few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
 {
   <div className="grid cols-2 gap-4 font-thin text-xs text-center">
@@ -134,41 +134,21 @@ Around 2 years ago, I had the idea to draw QR codes using chalk and a giant sten
   </div>
 }
 
-TLDR; Chalk smears easily, contrasts poorly against concrete, and is painfully slow to fill in.
+This was a failure for many reasons (it takes forever to draw and smears instantly), but the biggest issue was that the end result couldn't be scanned.
 
-Unfortunately, while designing those stencils, I did end up learning a little about how QR codes work.
+I failed because I didn't understand two important things.
 
-These are not explicitly supported, but it's pretty hard to make a working QR code scanner that doesn't also scan these artistically disfigured QR codes. 
+1. Smartphone camera apps are not dedicated QR code scanners. They don't even attempt to scan until after a QR code is detected by a computer vision model. I *suspect* they favor solid colors and high contrast, and my chalk didn't contrast enough against or completely cover the gray concrete. This is (probably) also why some "artistic" QR codes scan better from farther away; the pixel colors are more solid on a smaller image.
+
+2. The finder patterns have to be somewhat precise for decoding to succeed
 
 <QrTutorial/>
 
-## The State of QR Codes
+These are not explicitly supported, but it's pretty hard to make a working QR code scanner that doesn't also scan these artistically disfigured QR codes. 
 
-I took some photos of QR codes that caught my eye on a trip to San Francisco this summer.
 
-Here are some that shocked me in some way or another.
-
-{
-<div className="grid cols-3 gap-4 font-thin text-xs text-center">
-  <div>
-    <img src="sf_ad.jpg" alt="double qr codes on beer ad"/>
-    Using two QR codes for a different shape. First time I've seen it.
-  </div>
-  <div>
-    <img src="sf_book.jpg" alt="qr code on book cover"/>
-    Unscannable book cover. I cracked it and found the <Sa href="https://www.istockphoto.com/vector/qr-code-gm156283521-15512938">original stock image</Sa> by <Sa href="https://www.istockphoto.com/portfolio/Oehoeboeroe">Oehoeboeroe</Sa>. 
-  </div>
-  <div>
-    <img src="sf_logo.jpg" alt="qr code shaped like logo"/>
-    Incorporated into the restaurant logo.
-  </div>
-</div>
-}
 
 ## Prior work
-// TODO burger king
-
-Since QR codes are a matrix of pixels, many have tried to encode an image into 
 
 One way to add an image is to manipulate the input data.
 
@@ -327,18 +307,24 @@ Apple's is part of their AVFoundation.
 Neither implementation has available source code, not that it would do us much good.
 
 
-
-
-
 Whether it's an app with a shareable code, an advertisement meant to catch your eye, or someone with too much time, the possibilities of beautiful QR codes awaits.
 
 The QR code standard (ISO/IEC 18004) suggests how a QR code can be created and decoded. It is up to the QR code scanner to convert an image into this decodable 2d matrix of black and white pixels. This makes everything possible.
 
 Thankfully, the Wechat scanner is seemingly open source. It's available as an OpenCV extension. It's a fork of the cpp port of the popular zxing library.
 
+
+I found this book in a random library I stopped in. Too much of the QR code was missing for it to scan, but I thought it might contain an Easter egg. I used [QRazyBox](https://merri.cx/qrazybox/) to recover what data remained which was only about half the URL. This was the first strange finding. The code was almost entirely padding! The error correction was set to low too! Why wasn't the error correction set higher if the space was all wasted? 
+
+![qr code on book cover](sf_book.jpg)
+
+Using an ASCII chart to decode some partially obscured bytes, I figured out it pointed to an iStockphoto page, but unfortunately iStockphoto had changed their URL structure. I had what looked like half a username, but there was no way to search for users. With no other option, I brute-forced all 80,000 possible QR codes and compared the error correction pixels to find a match. I was shocked to find nothing. In a desperate last try, I checked for near matches and finally found the matching username which led me to the [original stock image from 2011](https://www.istockphoto.com/vector/qr-code-gm156283521-15512938).
+
+It turns out the QR code incorrectly has a last byte filled with 1s instead of 0s.
+
+Why was this used for the book cover? The book came out in 2021. Did the designer just have it on hand? Even though they could just get a QR code from anywhere? I guess it didn't matter, because who would notice? Kind of an anticlimax, but my takeaway is that damaged QR codes are probably all decodable with effort.
+
 [^1]: My reference.
-
-
 
 Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity, to varying success[^scannable-codes].
 
