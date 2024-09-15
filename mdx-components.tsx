@@ -20,5 +20,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     pre: (props) => <pre className="">{props.children}</pre>,
     h2: (props) => <h2 {...props} className="text-xl font-bold pt-4" />,
+    ol: (props) => <ol className="ps-4 list-decimal">{props.children}</ol>,
+    ul: (props) => <ul className="ps-4 list-disc">{props.children}</ul>,
   };
 }

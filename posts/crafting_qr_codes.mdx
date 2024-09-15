@@ -5,6 +5,7 @@ image: crafting.jpg
 ---
 
 import { Sa } from "../components/mdx"
+import init from "fuqr"
 import { QrTutorial } from "../components/QrTutorial"
 
 QR codes have invaded our world.
@@ -64,7 +65,7 @@ Beyond simply placing a logo on top, there have been many attempts to create "ar
   </div>
 }
 
-While limited, these techniques are not specific to a single QR code and generalize to any image and URL. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
+While limited in range, these techniques are not specific to a single QR code and generalize to any image and URL. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -90,13 +91,20 @@ While limited, these techniques are not specific to a single QR code and general
 
 {
   <small className="text-stone-700">
-    These were suprisingly hard to find. I started from this <Sa href="https://www.flickr.com/groups/qr-art/pool/page1">Flickr group</Sa> featuring QR code art from the early 2010's, but Pinterest proved an invaluable resource that surfaced obscure work from Behance, Dribbble, and random blogs.
+    There are way more Chinese examples, especially with animation and integration into larger designs, but those don't fit here nicely. I recommend using Pinterest to find them.
   </small>
 }
 
-Where does this leave us if we want a unique QR code, but we don't want to design each one from scratch for every URL?
+Having a human fine-tune each aspect does lead to the best results, and I figured the limits of programmatically generated QR codes had long been reached. Then I saw these two style options on [QRBTF.com](https://qrbtf.com) created by [Troy Ni](https://troyni.com/) and [@CPunisher](https://github.com/CPunisher).
 
-I'm not exactly a designer, but <Sa href="https://troyni.com/articles/building-qrbtf-zh">this blog post</Sa> from the creator of <Sa href="https://qrbtf.com">QRBTF</Sa> convinced me that QR code generators *can* create beautiful QR codes. So I got inspired by stained glass, Persian rugs, comic books, and retro logos, and locked in for minutes at a time between months of procrastination.
+{
+  <div className="grid cols-2 gap-2">
+    <img src="qrbtf/sp1.svg" alt="blocky design"/>
+    <img src="qrbtf/sp2.svg" alt="bubble design"/>
+  </div>
+}
+
+It's so obvious in hindsight, but I never even considered breaking the mold this much. As if seeing for the first time, all the world around me turned into inspiration.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2">
@@ -111,7 +119,7 @@ I'm not exactly a designer, but <Sa href="https://troyni.com/articles/building-q
   </div>
 }
 
-The end result is https://qrframe.kylezhe.ng, a web app that lets you define parameters and write code to render QR codes however you want. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
+The end result is https://qrframe.kylezhe.ng, a web app that lets you write code and define parameters to render QR codes however you want. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
 It comes with many example presets, based on existing styles and my original designs, which I hope others can use and build upon to create their own custom QR codes.
 
@@ -119,7 +127,7 @@ Feel free to play with it, but in order to craft QR codes with intention, we nee
 
 ## How do QR codes work?
 
-Around few years ago, I had the idea to draw QR codes using chalk and a stencil.
+A few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
 {
   <div className="grid cols-2 gap-4 font-thin text-xs text-center">
@@ -134,19 +142,16 @@ Around few years ago, I had the idea to draw QR codes using chalk and a stencil.
   </div>
 }
 
-This was a failure for many reasons (it takes forever to draw and smears instantly), but the biggest issue was that the end result couldn't be scanned.
+This was a failure for many reasons (it takes forever to draw and smears instantly), but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
 
-I failed because I didn't understand two important things.
+I know now two things I failed to account for.
 
-1. Smartphone camera apps are not dedicated QR code scanners. They don't even attempt to scan until after a QR code is detected by a computer vision model. I *suspect* they favor solid colors and high contrast, and my chalk didn't contrast enough against or completely cover the gray concrete. This is (probably) also why some "artistic" QR codes scan better from farther away; the pixel colors are more solid on a smaller image.
+1. Smartphone camera apps are not dedicated QR code scanners. They don't even attempt to scan until after a QR code is detected by a computer vision model.
+    - <p className="py-2">In my experience, they favor **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete. This is likely why some QR codes scan better from farther away.</p>
 
-2. The finder patterns have to be somewhat precise for decoding to succeed
+2. The finder patterns have to be somewhat precise for the decoding process to start.
 
 <QrTutorial/>
-
-These are not explicitly supported, but it's pretty hard to make a working QR code scanner that doesn't also scan these artistically disfigured QR codes. 
-
-
 
 ## Prior work
 

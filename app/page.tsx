@@ -192,7 +192,7 @@ export default async function HomePage() {
       <h2 className="text-2xl font-bold mt-4 mb-2 font-mono">experience</h2>
       <div className="font-mono">
         <h3>
-          summer 2022 intern at{" "}
+          2022 summer intern at{" "}
           <a
             href="https://tulip.co/"
             className="font-bold underline text-blue-600"
@@ -203,7 +203,7 @@ export default async function HomePage() {
         </h3>
         <p></p>
         <h3>
-          summer 2021 intern at{" "}
+          2021 summer intern at{" "}
           <a
             href="https://lifeomic.com/"
             className="font-bold underline text-blue-600"

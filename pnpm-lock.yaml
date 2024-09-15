@@ -33,8 +33,8 @@ importers:
         specifier: ^14.2.9
         version: 14.2.9(eslint@8.57.0)(typescript@5.6.2)
       fuqr:
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^0.0.7
+        version: 0.0.7
       lucide-react:
         specifier: ^0.263.1
         version: 0.263.1(react@18.3.1)
@@ -1877,8 +1877,8 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  fuqr@0.0.6:
-    resolution: {integrity: sha512-pYq22vaBSzVEJJ9lkh11kFMdDtv++saB09I/dGSB5gL3GUTVrV0M1l5FDiSIjLisylrUOKsBXuSfH70a3desjg==}
+  fuqr@0.0.7:
+    resolution: {integrity: sha512-5+s5Lr0DaizSQwSsA+grIMK5DrVg45KOHIHe4oHCLvlfmIHba1iZSVvLchYLDZq/BbKyZUdPk6jeZa4QegD+Xw==}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -5246,7 +5246,7 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  fuqr@0.0.6: {}
+  fuqr@0.0.7: {}
 
   gensync@1.0.0-beta.2: {}
 
