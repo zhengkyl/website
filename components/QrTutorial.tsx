@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import init, { ECL, generate, Mask, QrOptions, Version } from "fuqr";
 
 const SECTIONS = [
@@ -18,16 +18,24 @@ const SECTIONS = [
   "dataECC",
 ] as const;
 
-// TODO
-// timing off
-// alignment off
-// cross finder
-// planet finder
-// 1/3 pixels
+const Module = {
+  ON: 1 << 0,
+  DATA: 1 << 1,
+  FINDER: 1 << 2,
+  ALIGNMENT: 1 << 3,
+  TIMING: 1 << 4,
+  FORMAT: 1 << 5,
+  VERSION: 1 << 6,
+  MODIFIER: 1 << 7,
+};
 
-let inited = false;
+let initDone = false;
+let initStarted = false;
+
 export function QrTutorial(props) {
-  const canvas = useRef<HTMLCanvasElement>(null);
+  const canvasA = useRef<HTMLCanvasElement>(null);
+  const canvasB = useRef<HTMLCanvasElement>(null);
+  const flip = useRef(true);
 
   const [text, setText] = useState("hello there");
   const [version, setVersion] = useState(2);
@@ -43,6 +51,9 @@ export function QrTutorial(props) {
   // const width = version * 4 + 17;
 
   const [invert, setInvert] = useState(false);
+  const [mirror, setMirror] = useState(false);
+
+  const [section, setSection] = useState("");
 
   let highlight: (typeof SECTIONS)[number][] = [];
 
@@ -66,56 +77,183 @@ export function QrTutorial(props) {
     scaleY: 1,
   };
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    if (!inited) {
+    if (!initStarted) {
+      initStarted = true;
       init().then(() => {
-        inited = true;
+        initDone = true;
         render();
       });
-    } else {
+    } else if (initDone) {
       render();
     }
-  }, [inited, text, version, ecl, mask]);
+  }, [text, version, ecl, mask, invert, mirror, section]);
+
+  const prevText = useRef(text);
+  const prevVersion = useRef(version);
 
   const render = () => {
     try {
+      console.log("rendder");
       const { matrix, version: outVersion } = generate(
         text,
         new QrOptions()
           .min_ecl(ecl)
           .strict_ecl(true)
           .min_version(new Version(version))
-          .strict_version(true)
           .mask(mask)
       );
-      const ctx = canvas.current!.getContext("2d")!;
+      const nextCanvas = (flip.current ? canvasA : canvasB).current!;
+      const prevCanvas = (flip.current ? canvasB : canvasA).current!;
+
+      prevCanvas.style.zIndex = "-1";
+      nextCanvas.style.zIndex = "1";
+
+      // nextCanvas.style.opacity = "0";
+
+      const ctx = nextCanvas.getContext("2d")!;
+      flip.current = !flip.current;
       const margin = 1;
       const qrWidth = outVersion * 4 + 17;
       const size = qrWidth + 2 * margin;
       ctx.canvas.width = size;
       ctx.canvas.height = size;
-      ctx.fillStyle = "#ffffff";
+
+      const fgColor = invert ? "#fff" : "#000";
+      const bgColor = invert ? "#000" : "#fff";
+
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, size, size);
 
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = fgColor;
       for (let y = 0; y < qrWidth; y++) {
         for (let x = 0; x < qrWidth; x++) {
-          if (matrix[y * qrWidth + x] & 1) {
+          let on;
+          if (section === "mask" && matrix[y * qrWidth + x] & Module.DATA) {
+            switch (mask) {
+              case 0:
+                on = (y + x) % 2 === 0;
+                break;
+              case 1:
+                on = y % 2 === 0;
+                break;
+              case 2:
+                on = x % 3 === 0;
+                break;
+              case 3:
+                on = (y + x) % 3 === 0;
+                break;
+              case 4:
+                on = (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0;
+                break;
+              case 5:
+                on = ((y * x) % 2) + ((y * x) % 3) === 0;
+                break;
+              case 6:
+                on = (((y * x) % 2) + ((y * x) % 3)) % 2 === 0;
+                break;
+              case 7:
+                on = (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
+                break;
+            }
+          } else {
+            on = matrix[y * qrWidth + x] & Module.ON;
+          }
+
+          if (!on) continue;
+
+          ctx.fillStyle = fgColor;
+          switch (section) {
+            case "finder":
+              if (!(matrix[y * qrWidth + x] & Module.FINDER)) {
+                ctx.fillStyle = "#ccc";
+              }
+              break;
+            case "alignment":
+              if (!(matrix[y * qrWidth + x] & Module.ALIGNMENT)) {
+                ctx.fillStyle = "#ccc";
+              }
+              break;
+            case "timing":
+              if (!(matrix[y * qrWidth + x] & Module.TIMING)) {
+                ctx.fillStyle = "#ccc";
+              }
+              break;
+            case "mask":
+              if (!(matrix[y * qrWidth + x] & Module.DATA)) {
+                ctx.fillStyle = "#ccc";
+              }
+              break;
+            case "version":
+              if (!(matrix[y * qrWidth + x] & Module.VERSION)) {
+                ctx.fillStyle = "#ccc";
+              }
+              break;
+          }
+
+          if (mirror) {
+            ctx.fillRect(size - 1 - margin - x, y + margin, 1, 1);
+          } else {
             ctx.fillRect(x + margin, y + margin, 1, 1);
           }
         }
       }
+
+      // only animate slow changing props
+      if (prevText.current === text && prevVersion.current === version) {
+        nextCanvas.animate([{ opacity: 0 }, { opacity: 1 }], {
+          duration: 100,
+          easing: "ease-out",
+        });
+      }
+      prevText.current = text;
+      prevVersion.current = version;
     } catch (e) {
-      console.error("Exceeded max capacity, stupid");
+      console.error("Exceeded max capacity, fool");
     }
   };
 
+  const observer = useRef<IntersectionObserver>(null!);
+  const finderRef = useRef<HTMLDivElement>(null!);
+  const alignmentRef = useRef<HTMLDivElement>(null!);
+  const timingRef = useRef<HTMLDivElement>(null!);
+  const formatRef = useRef<HTMLDivElement>(null!);
+  const maskRef = useRef<HTMLDivElement>(null!);
+  const versionRef = useRef<HTMLDivElement>(null!);
+  const dataRef = useRef<HTMLDivElement>(null!);
+
+  const setupObserver = useCallback(() => {
+    console.log("setupObserver");
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const key = entry.target.getAttribute("data-step")!;
+          if (entry.isIntersecting) {
+            setSection(key);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-50% 0px",
+      }
+    );
+
+    observer.current.observe(finderRef.current);
+    observer.current.observe(alignmentRef.current);
+    observer.current.observe(timingRef.current);
+    observer.current.observe(formatRef.current);
+    observer.current.observe(maskRef.current);
+    observer.current.observe(versionRef.current);
+    observer.current.observe(dataRef.current);
+  }, []);
   // ugly parent max-w instead of child max-w makes padding easier
   return (
-    <div className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] px-4 flex flex-col gap-4 sm:flex-row">
-      <div className="flex-1 relative sticky top-0 h-full p-4 bg-gradient-to-b from-white from-95%">
+    <div
+      className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] px-4 flex flex-col gap-4 sm:flex-row"
+      ref={setupObserver}
+    >
+      <div className="flex-1 relative sticky top-0 h-full p-2 bg-gradient-to-b from-white from-95%">
         <div
           className="max-w-80% mx-auto sm:max-w-unset relative"
           style={{
@@ -123,14 +261,14 @@ export function QrTutorial(props) {
           }}
         >
           <canvas
-            ref={canvas}
-            className={`w-full pixelated ${invert ? "invert" : ""}`}
+            ref={canvasA}
+            className="w-full pixelated absolute transition-opacity"
           />
-          {/* <svg
-            className={`absolute top-0 left-0`}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox={`0 0 ${width} ${width}`}
-          >
+          <canvas
+            ref={canvasB}
+            className="w-full pixelated absolute transition-opacity"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 1 1`}>
             <path
               d={path}
               fill="none"
@@ -138,153 +276,167 @@ export function QrTutorial(props) {
               strokeWidth="0.1"
               transform="translate(0.5 0.5)"
             />
-          </svg> */}
+          </svg>
         </div>
       </div>
       <div className="flex-1">
-        <div className="flex flex-col gap-2">
-          <div className="font-bold text-lg">Finder patterns</div>
-          <p>
-            These are the big squares shapes in three corners. These allow
-            scanners to detect the code's orientation, perspective, dimensions
-            and more. The approximate ratio of 1:1:3:1:1 black and white pixels
-            through the vertical and horizontal center is key.
-          </p>
-          <svg viewBox="-.1 -.1 7.2 1.2" stroke="gray" strokeWidth="0.1">
-            <path d="M0,0h1v1h-1z" fill="black" />
-            <path d="M1,0h1v1h-1z" fill="white" />
-            <path d="M2,0h1v1h-1z" fill="black" />
-            <path d="M3,0h1v1h-1z" fill="black" />
-            <path d="M4,0h1v1h-1z" fill="black" />
-            <path d="M5,0h1v1h-1z" fill="white" />
-            <path d="M6,0h1v1h-1z" fill="black" />
-          </svg>
-          <p>
-            A white separator or "quiet zone" around each finder pattern is
-            often necessary to preserve this ratio.
-          </p>
-          <label>
-            <input
-              className="w-5 h-5 mr-1"
-              type="checkbox"
-              checked={drawColor}
-              onChange={(e) => setDrawColor(e.target.checked)}
-            />
-            Highlight finder
-          </label>
-          <div className="font-bold text-lg">Alignment patterns</div>
-          <p>
-            This is the smaller square in the last corner which helps account
-            for distortion. The smallest QR code doesn't have one, while very
-            large codes have multiple.
-          </p>
-          <div className="font-bold text-lg">Timing patterns</div>
-          <p>
-            These are the horizontal and vertical belts of alternating black and
-            white pixels. These help scanners align rows and columns.
-          </p>
+        <div className="flex flex-col gap-32 py-32">
+          <div ref={finderRef} data-step="finder">
+            <p>
+              <span className="font-bold">Finder patterns</span> are the big
+              squares shapes in three corners. These allow scanners to detect
+              the code's orientation, perspective, dimensions and more. The
+              approximate ratio of 1:1:3:1:1 black and white pixels through the
+              vertical and horizontal center is key.
+            </p>
+            <svg viewBox="-.1 -.1 7.2 1.2" stroke="gray" strokeWidth="0.1">
+              <path d="M0,0h1v1h-1z" fill="black" />
+              <path d="M1,0h1v1h-1z" fill="white" />
+              <path d="M2,0h1v1h-1z" fill="black" />
+              <path d="M3,0h1v1h-1z" fill="black" />
+              <path d="M4,0h1v1h-1z" fill="black" />
+              <path d="M5,0h1v1h-1z" fill="white" />
+              <path d="M6,0h1v1h-1z" fill="black" />
+            </svg>
+            <p>
+              A white separator or "quiet zone" around each finder pattern is
+              often necessary to preserve this ratio.
+            </p>
+          </div>
+          <div ref={alignmentRef} data-step="alignment">
+            <p>
+              <span className="font-bold">Alignment patterns</span> are smaller
+              squares used to account for distortion. There's usually one in the
+              last corner, but the smallest QR code doesn't have any, while very
+              large codes have multiple.
+            </p>
+          </div>
+          <div ref={timingRef} data-step="timing">
+            <p>
+              <span className="font-bold">Timing patterns</span> are the
+              horizontal and vertical belts of alternating black and white
+              pixels. These help with aligning rows and columns while decoding.
+            </p>
+          </div>
           <p>
             The timing patterns and alignment patterns are{" "}
             <span className="font-italic">technically</span> optional, in the
             sense that a QR code without them will still be scannable, albeit
             less reliably.
           </p>
-          <div className="text-lg">Metadata</div>
-          <p>
-            <span className="font-bold">Format information</span> stores the
-            error correction level and the mask pattern applied to the data. One
-            copy is in the top left, and the other copy is split between the top
-            right and bottom left.
-          </p>
-          <div className="w-full flex select-none">
-            {["Low", "Medium", "Quartile", "High"].map((key, i) => (
-              <label className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer" key={key}>
-                <input
-                  type="radio"
-                  name="ecl"
-                  value={i}
-                  checked={i === ecl}
-                  onChange={() => setECL(i)}
-                />
-                {key}
-              </label>
-            ))}
+          <div ref={formatRef} data-step="format">
+            <p>
+              <span className="font-bold">Format information</span> stores the
+              error correction level and the mask pattern applied to the data.
+              One copy is in the top left, and the other copy is split between
+              the top right and bottom left.
+            </p>
           </div>
-          <small>
-            You'll often see figures like 7%, 15%, 25%, 30%, but those are just
-            lower bounds. Real error tolerance may be 3–5% higher. //TODO do
-            math to prove this
-          </small>
-          <div className="w-full flex select-none">
-            {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
-              <label className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer" key={key}>
-                <input
-                  type="radio"
-                  name="mask"
-                  value={i}
-                  checked={i === mask}
-                  onChange={() => setMask(i)}
-                />
-                {key}
-              </label>
-            ))}
+          <div ref={maskRef} data-step="mask">
+            <p>
+              The mask is one of 8 patterns XOR-ed with the data to break up
+              undesirable pixel arrangements (like the finder pattern ratio).
+            </p>
+            <div className="w-full flex border">
+              {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
+                <label
+                  className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
+                  key={key}
+                >
+                  <input
+                    type="radio"
+                    name="mask"
+                    value={i}
+                    checked={i === mask}
+                    onChange={() => setMask(i)}
+                  />
+                  {key}
+                </label>
+              ))}
+            </div>
           </div>
-          <p>
-            Only very large QR codes will have{" "}
-            <span className="font-bold">version information</span>. Version
-            means size, and it ranges from 1 - 40. Most QR codes fit in Versions
-            1 through 6, where size is just calculated using the distance
-            between the finder patterns. One copy is in the top left, and the
-            other copy is in the bottom left.
-          </p>
-          <input
-            value={version}
-            onChange={(e) => setVersion(e.target.valueAsNumber)}
-            type="range"
-            min="1"
-            max="40"
-          />
-          <div className="font-bold text-lg">Data</div>
-          <p>
-            The remaining space is for the{" "}
-            <span className="font-bold">data</span>. It starts with a header
-            describing the encoding mode and the data length.
-          </p>
-          <p>
-            There are efficient encoding modes for numbers, alphanumeric
-            strings, and Japanese characters, but the only relevant mode for
-            URLs is Byte mode. This just means UTF-8.
-          </p>
-          <input
-            className="border p-2"
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <p>
-            The header is followed by the actual data, padded to fill the
-            capacity, and then error correction codewords fill the remaining
-            space.
-          </p>
-          <div>
-            <label className="flex items-center">
-              <input
-                className="w-5 h-5 mr-1"
-                type="checkbox"
-                checked={drawColor}
-                onChange={(e) => setDrawColor(e.target.checked)}
-              />
-              Show byte boundaries
-            </label>
-            <label className="flex items-center">
-              <input
-                className="w-5 h-5 mr-1"
-                type="checkbox"
-                checked={drawPath}
-                onChange={(e) => setDrawPath(e.target.checked)}
-              />
-              Show zigzag pattern
-            </label>
+          <div ref={versionRef} data-step="version">
+            <p>
+              Only very large QR codes will have{" "}
+              <span className="font-bold">version information</span>. Version
+              means size, and it ranges from 1 - 40. Most QR codes fit in
+              Versions 1 through 6, where size is just calculated using the
+              distance between the finder patterns. One copy is in the top left,
+              and the other copy is in the bottom left.
+            </p>
+            <input
+              value={version}
+              onChange={(e) => setVersion(e.target.valueAsNumber)}
+              type="range"
+              min="1"
+              max="40"
+            />
+          </div>
+          <div ref={dataRef} data-step="data">
+            <div className="font-bold text-lg">Data</div>
+            <p>
+              The remaining space is for the{" "}
+              <span className="font-bold">data</span>. It starts with a header
+              describing the encoding mode and the data length.
+            </p>
+            <p>
+              There are efficient encoding modes for numbers, alphanumeric
+              strings, and Japanese characters, but the only relevant mode for
+              URLs is Byte mode. This just means UTF-8.
+            </p>
+            <input
+              className="border p-2"
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <p>
+              The header is followed by the actual data, padded to fill the
+              capacity, and then error correction codewords fill the remaining
+              space.
+            </p>
+            <div className="w-full flex border ">
+              {["Low", "Medium", "Quartile", "High"].map((key, i) => (
+                <label
+                  className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
+                  key={key}
+                >
+                  <input
+                    type="radio"
+                    name="ecl"
+                    value={i}
+                    checked={i === ecl}
+                    onChange={() => setECL(i)}
+                  />
+                  {key}
+                </label>
+              ))}
+            </div>
+            <small>
+              You'll often see figures like 7%, 15%, 25%, 30%, but those are
+              just lower bounds. Real error tolerance may be 3–5% higher. //TODO
+              do math to prove this
+            </small>
+            <div>
+              <label className="flex items-center">
+                <input
+                  className="w-5 h-5 mr-1"
+                  type="checkbox"
+                  checked={drawColor}
+                  onChange={(e) => setDrawColor(e.target.checked)}
+                />
+                Show byte boundaries
+              </label>
+              <label className="flex items-center">
+                <input
+                  className="w-5 h-5 mr-1"
+                  type="checkbox"
+                  checked={drawPath}
+                  onChange={(e) => setDrawPath(e.target.checked)}
+                />
+                Show zigzag pattern
+              </label>
+            </div>
           </div>
           <div className="font-bold text-lg">Transformations</div>
           <p>
@@ -301,6 +453,15 @@ export function QrTutorial(props) {
               min="-180"
               max="180"
             />
+          </label>
+          <label className="flex items-center">
+            <input
+              className="w-5 h-5 mr-1"
+              type="checkbox"
+              checked={mirror}
+              onChange={(e) => setMirror(e.target.checked)}
+            />
+            Mirror
           </label>
           <label className="flex items-center">
             <input
