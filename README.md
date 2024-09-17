@@ -9,3 +9,8 @@ I'm using `@next/mdx` for mdx files. I know, I'm insane. See `next.config.mjs` f
 ## TODO
 
 - [ ] write more
+
+
+## misc
+`transformerVariantGroup` doesn't work with postcss
+ - https://github.com/unocss/unocss/issues/3192

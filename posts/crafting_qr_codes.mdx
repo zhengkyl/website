@@ -65,7 +65,7 @@ Beyond simply placing a logo on top, there have been many attempts to create "ar
   </div>
 }
 
-While limited in range, these techniques are not specific to a single QR code and generalize to any image and URL. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
+While perhaps limited in stylistic range, these QR codes are trivial to make and the input image can easily be edited. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -144,47 +144,38 @@ A few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
 This was a failure for many reasons (it takes forever to draw and smears instantly), but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
 
-I know now two things I failed to account for.
+While in the past we had to use random QR code scanner apps, this feature has long since been handled by OEMs as part of the camera app. Unfortunately, this comes with a tradeoff.
 
-1. Smartphone camera apps are not dedicated QR code scanners. They don't even attempt to scan until after a QR code is detected by a computer vision model.
-    - <p className="py-2">In my experience, they favor **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete. This is likely why some QR codes scan better from farther away.</p>
+Smartphone camera apps are not dedicated QR code scanners. They don't even attempt to scan until after a QR code is detected using computer vision.
+    - In my experience, this favors **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete. This is also likely why some QR codes scan better from farther away.
 
-2. The finder patterns have to be somewhat precise for the decoding process to start.
+My second mistake was not at all understanding where I needed precision and where I could cut corners. For my first attempt, I even drew the finder patterns by hand without a guide.
 
 <QrTutorial/>
 
 ## Prior work
 
-One way to add an image is to manipulate the input data.
-
-For URL's specifically, arbitrary data can be added as an ignored URL anchor. This data can be calculated to precisely manipulate pixels in the QR code in limited areas. This approach doesn't rely on error correction at all, but it is limited in the images it can create ([Russ Cox, QArt Codes](https://research.swtch.com/qart)).
-
-{
-  <div className="grid cols-2 font-thin text-xs text-center pixelated">
-    <div>
-      <img src="qart_go.png" alt="golang mascot qart code"/>
-      Go Gopher from <Sa href="https://research.swtch.com/qart">QArt Codes</Sa>
-    </div>
-    <div>
-      <img src="qart_mike.png" alt="mike wazowski qart code"/>
-      Created using <Sa href="https://research.swtch.com/qr/draw/">QArt Coder</Sa>
-    </div>
-  </div>
-}
-
-A more common approach is to change how each QR code pixel is represented.
+Basically, as long as the space where a QR code pixel should be is dark enough or light enough, it will be decoded properly.
 
 One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes) paper, involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color.
 
 {
-  <div className="grid cols-2 font-thin text-xs text-center pixelated">
+  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
     <div>
-      <img src="halftone_albert.png" alt="halftone einstein qr code"/>
-      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
+      <img src="halftone.png" alt="halftone mike wazowski qr code"/>
+      Created using <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes"><span className="whitespace-pre">Halftone QR Codes, 2013</span></Sa>
     </div>
     <div>
-      <img src="halftone_mike.png" alt="halftone mike wazowski qr code"/>
-      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+      <img src="amzqr_mike.jpg" alt="color image qr code"/>
+      Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
+    </div>
+    <div>
+      <img src="visualead_mike.jpg" alt="visualead qr code"/>
+      Created using <Sa href="https://github.com/x-hw/amazing-qr">Visualead</Sa>
+    </div>
+    <div>
+      <img src="qrpicture.jpg" alt="mike wazowski qr picture"/>
+      Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
   </div>
 }
@@ -194,45 +185,34 @@ Generally, as long as the center of each QR code pixel is correct, it can be dec
 The low resolution black and white dithered effect is just a smart stylistic choice that hides the data as noise. There are many implementations online [^1] as well as a version of [Bad Apple](https://www.youtube.com/watch?v=tPYUdjptMpk).
 
 
+{
+  <div className="grid cols-2 sm:cols-4 pixelated">
+    <p className="col-span-2">
+      Other methods are available such as adjusting the input URL as in <a href="https://research.swtch.com/qr/draw">QArt Codes</a> and creating word clouds like in <a href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</a>. These are quite niche, but full of good ideas.
+    </p>
+    <div className="font-thin text-xs text-center ">
+      <img src="qart_mike.png" alt="mike wazowski qart code"/>
+      Created using <Sa href="https://research.swtch.com/qr/draw">QArt Coder</Sa>
+    </div>
+    <div className="font-thin text-xs text-center ">
+      <img src="micro_mike.png" alt="mike wazowski micrography qr"/>
+      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</Sa>
+    </div>
+  </div>
+}
+
 [^1]: [Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) 
 
     [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://github.com/nythrox/halftone-qrcode)
 
     [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone).
 
-Moreover, the image doesn't have to be black and white or low resolution at all.
 
-{
-  <div className="grid cols-2 font-thin text-xs text-center">
-    <div>
-      <img src="bk.jpg" alt="burger king ad qr code"/>
-      <Sa href="https://www.youtube.com/watch?v=hnYXq1oyi2g">Burger King VMA Commercials</Sa>
-    </div>
-    <div>
-      <img src="visualead_mike.jpg" alt="visualead qr code"/>
-      Created using <Sa href="https://github.com/x-hw/amazing-qr">Visualead</Sa>
-    </div>
-  </div>
-}
-
-A more subtle effect can be achieved by only adjusting the image color 
 [vCode](https://github.com/ruitaocc/vCode)
-Uses color thresholds to reduce number and intensity of overlayed pixels.
+
 
 [QRpicture](https://github.com/xyzzy/qrpicture)
-Uses color quantization and a high-contrast color palette to maximize scannability of color images. Really good at hiding the QR code's noisy "texture".
-{
-  <div className="grid cols-2 font-thin text-xs text-center">
-    <div>
-      <img src="amzqr_mike.jpg" alt="color image qr code"/>
-      Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
-    </div>
-    <div>
-      <img src="qrpicture.jpg" alt="mike wazowski qr picture"/>
-      Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
-    </div>
-  </div>
-}
+
 
 {
   <div className="grid cols-2 font-thin text-xs text-center">
@@ -240,14 +220,10 @@ Uses color quantization and a high-contrast color palette to maximize scannabili
       <img src="qrpicture.gif" alt="animated qr picture"/>
       Example from <Sa>https://github.com/xyzzy/qrpicture</Sa>
     </div>
-    <div>
-      <img src="micro_mike.jpg" alt="mike wazowski micrography qr"/>
-      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</Sa>
-    </div>
+
   </div>
 }
-[Micrography QR Codes](https://github.com/DiscreteKat/MicrographyQRCodes)
-The weirdest of the bunch, but super cool.
+
 
 Perhaps unsuprisingly, they also created the first AI QR codes, which they documented in [this blog post](https://troyni.com/articles/qrcode-controlnet-zh).
 
@@ -256,11 +232,7 @@ Following that, Anthony Fu ([@antfu](https://github.com/antfu)) made a series of
 {
   <div className="grid cols-2 font-thin text-xs text-center">
     <div>
-      <img className="p4" src="ai_anime.jpg" alt="ai generated anime qr code"/>
-      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
-    </div>
-    <div>
-      <img className="p4" src="ai_mike.jpg" alt="ai generated mike wazowski qr code"/>
+      <img className="p-4" src="ai_mike.jpg" alt="ai generated mike wazowski qr code"/>
       AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
     </div>
   </div>

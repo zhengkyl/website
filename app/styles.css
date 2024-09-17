@@ -12,15 +12,20 @@ body {
   /* stop books overflowing */
   overflow-x: hidden;
 }
-
-/* details summary {
-  cursor: pointer;
-} */
-
-/* article > * {
-  @apply my-4;
+/* QrTutorial */
+.scroll-highlight {
+  position: relative;
 }
-
-article > details > * {
-  @apply my-4;
-} */
+.scroll-highlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom:0;
+  left: 0;
+  width: 2px;
+  @apply bg-rose-500;
+  scale: 1 var(--_yScale, 0);
+  translate: 0 var(--_top, 0);
+  transform-origin: top;
+  transition: translate 200ms ease-out, scale 200ms ease-out;
+}

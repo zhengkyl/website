@@ -9,7 +9,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         return <>{props.children}</>;
       }
 
-      return <p>{props.children}</p>;
+      return <p {...props}/>;
     },
     img: (props) => <img className="w-full" {...props} />,
     a: A,

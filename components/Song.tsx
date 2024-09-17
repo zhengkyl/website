@@ -28,7 +28,7 @@ export default function Song(song: SongProps) {
       </span>{" "}
       by{" "}
       {song.artists.map((artist, i) => (
-        <span className="inline-block whitespace-pre-wrap" key={artist.link}>
+        <span className="inline-block whitespace-pre" key={artist.link}>
           <a
             className="@hover-underline font-semibold"
             href={artist.link}
