@@ -3,21 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import init, { ECL, generate, Mask, QrOptions, Version } from "fuqr";
 
-const SECTIONS = [
-  "finder",
-  "quietZone",
-  "alignment",
-  "timing",
-  "format1",
-  "format2",
-  "version1",
-  "version2",
-  "dataHeader",
-  "dataData",
-  "dataPadding",
-  "dataECC",
-] as const;
-
 const Module = {
   ON: 1 << 0,
   DATA: 1 << 1,
@@ -32,18 +17,77 @@ const Module = {
 let initDone = false;
 let initStarted = false;
 
-export function QrTutorial(props) {
+const FinderShapes = {
+  Perfect: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h3v3h-3z" fill="black" />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  OK: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M3,0h1v1h-1zM0,3h1v1h-1zM6,3h1v1h-1zM3,6h1v1h-1zM3,2h1v1h1v1h-1v1h-1v-1h-1v-1h1z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  Bad: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M0,0h3v1h-2v2h-1zM7,0v3h-1v-2h-2v-1zM0,7v-3h1v2h2v1zM7,7h-3v-1h2v-2h1zM2,2h3v3h-3z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  Bad2: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h1v1h1v-1h1v1h-1v1h1v1h-1v-1h-1v1h-1v-1h1v-1h-1z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+};
+
+export function QrTutorial() {
   const scrollHighlight = useRef<HTMLDivElement>(null!);
 
   const canvasA = useRef<HTMLCanvasElement>(null);
   const canvasB = useRef<HTMLCanvasElement>(null);
-  const flip = useRef(true);
+  const showA = useRef(false);
 
   const [text, setText] = useState("hello there");
   const [version, setVersion] = useState(2);
   const [mask, setMask] = useState(Mask.M0);
   const [ecl, setECL] = useState(ECL.Low);
 
+  const [finderShape, setFinderShape] =
+    useState<keyof typeof FinderShapes>("Perfect");
+  const [brap, setBrap] = useState(false); // bottom right alignment pattern
   const [drawColor, setDrawColor] = useState(false);
   const [drawPath, setDrawPath] = useState(false);
   const [path, setPath] = useState("");
@@ -56,171 +100,212 @@ export function QrTutorial(props) {
   const [mirror, setMirror] = useState(false);
 
   const [section, setSection] = useState("");
-
-  let highlight: (typeof SECTIONS)[number][] = [];
-
-  let enabled = {
-    alignment: true,
-    timing: true,
-    format1: true,
-    format2: true,
-    version1: true,
-    version2: true,
-  };
-
-  let transforms = {
-    // rotate
-    rotateZ: 0,
-    // perspective
-    rotateX: 0,
-    rotateY: 0,
-    // mirroring
-    scaleX: 1,
-    scaleY: 1,
-  };
+  const prevSection = useRef(section);
 
   useEffect(() => {
     if (!initStarted) {
       initStarted = true;
       init().then(() => {
         initDone = true;
-        render();
+        render(true, false);
       });
-    } else if (initDone) {
-      render();
     }
-  }, [text, version, ecl, mask, invert, mirror, section]);
+  }, []);
 
-  const prevSection = useRef(section);
+  useEffect(() => {
+    if (initDone) {
+      render(false, prevSection.current !== section);
+      prevSection.current = section;
+    }
+  }, [finderShape, brap, invert, mirror, section]);
 
-  const render = () => {
-    try {
-      console.log("rendder");
-      const { matrix, version: outVersion } = generate(
-        text,
-        new QrOptions()
-          .min_ecl(ecl)
-          .strict_ecl(true)
-          .min_version(new Version(version))
-          .mask(mask)
-      );
-      const nextCanvas = (flip.current ? canvasA : canvasB).current!;
-      const prevCanvas = (flip.current ? canvasB : canvasA).current!;
+  useEffect(() => {
+    if (initDone) {
+      render(true, false);
+    }
+  }, [text, version, ecl, mask]);
 
-      prevCanvas.style.zIndex = "-1";
-      nextCanvas.style.zIndex = "1";
+  // todo return type from fuqr
+  const qrCode = useRef<any>(null!);
 
-      // nextCanvas.style.opacity = "0";
+  const render = (regenerate, animate) => {
+    console.log("rendder", "regen", regenerate, "animate", animate);
+    if (regenerate) {
+      try {
+        qrCode.current = generate(
+          text,
+          new QrOptions()
+            .min_ecl(ecl)
+            .strict_ecl(true)
+            .min_version(new Version(version))
+            .mask(mask)
+        );
+      } catch (e) {
+        console.error("Exceeded max capacity, fool");
+        return;
+      }
+    }
+    const { matrix, version: outVersion } = qrCode.current;
 
-      const ctx = nextCanvas.getContext("2d")!;
-      flip.current = !flip.current;
-      const margin = 1;
-      const qrWidth = outVersion * 4 + 17;
-      const size = qrWidth + 2 * margin;
-      ctx.canvas.width = size;
-      ctx.canvas.height = size;
+    if (animate) showA.current = !showA.current;
+    const nextCanvas = (showA.current ? canvasA : canvasB).current!;
+    const prevCanvas = (showA.current ? canvasB : canvasA).current!;
+    prevCanvas.style.zIndex = "-1";
+    nextCanvas.style.zIndex = "1";
 
-      const fgColor = invert ? "#fff" : "#000";
-      const bgColor = invert ? "#000" : "#fff";
+    const ctx = nextCanvas.getContext("2d")!;
+    const margin = 1;
+    const qrWidth = outVersion * 4 + 17;
+    const size = qrWidth + 2 * margin;
+    ctx.canvas.width = size;
+    ctx.canvas.height = size;
 
-      ctx.fillStyle = bgColor;
-      ctx.fillRect(0, 0, size, size);
+    const fgColor = invert ? "#fff" : "#000";
+    const bgColor = invert ? "#000" : "#fff";
 
-      ctx.fillStyle = fgColor;
-      for (let y = 0; y < qrWidth; y++) {
-        for (let x = 0; x < qrWidth; x++) {
-          let on;
-          if (section === "mask" && matrix[y * qrWidth + x] & Module.DATA) {
-            switch (mask) {
-              case 0:
-                on = (y + x) % 2 === 0;
-                break;
-              case 1:
-                on = y % 2 === 0;
-                break;
-              case 2:
-                on = x % 3 === 0;
-                break;
-              case 3:
-                on = (y + x) % 3 === 0;
-                break;
-              case 4:
-                on = (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0;
-                break;
-              case 5:
-                on = ((y * x) % 2) + ((y * x) % 3) === 0;
-                break;
-              case 6:
-                on = (((y * x) % 2) + ((y * x) % 3)) % 2 === 0;
-                break;
-              case 7:
-                on = (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
-                break;
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, size, size);
+
+    ctx.fillStyle = fgColor;
+
+    for (const [x, y] of [
+      [margin, margin],
+      [margin + qrWidth - 7, margin],
+      [margin, margin + qrWidth - 7],
+    ]) {
+      switch (finderShape) {
+        case "Perfect":
+          ctx.fillRect(x, y, 7, 1);
+          for (let i = 1; i < 6; i++) {
+            ctx.fillRect(x, y + i, 1, 1);
+            ctx.fillRect(x + 6, y + i, 1, 1);
+          }
+          ctx.fillRect(x + 2, y + 2, 3, 1);
+          ctx.fillRect(x + 2, y + 3, 3, 1);
+          ctx.fillRect(x + 2, y + 4, 3, 1);
+          ctx.fillRect(x, y + 6, 7, 1);
+          break;
+        case "OK":
+          ctx.fillRect(x + 3, y, 1, 1);
+          ctx.fillRect(x + 3, y + 2, 1, 1);
+          ctx.fillRect(x, y + 3, 1, 1);
+          ctx.fillRect(x + 2, y + 3, 3, 1);
+          ctx.fillRect(x + 6, y + 3, 1, 1);
+          ctx.fillRect(x + 3, y + 4, 1, 1);
+          ctx.fillRect(x + 3, y + 6, 1, 1);
+          break;
+        case "Bad":
+          ctx.fillRect(x, y, 3, 1);
+          ctx.fillRect(x + 4, y, 3, 1);
+          for (let i = 1; i < 3; i++) {
+            ctx.fillRect(x, y + i, 1, 1);
+            ctx.fillRect(x + 6, y + i, 1, 1);
+          }
+          for (let i = 4; i < 6; i++) {
+            ctx.fillRect(x, y + i, 1, 1);
+            ctx.fillRect(x + 6, y + i, 1, 1);
+          }
+          ctx.fillRect(x + 2, y + 2, 3, 1);
+          ctx.fillRect(x + 2, y + 3, 3, 1);
+          ctx.fillRect(x + 2, y + 4, 3, 1);
+
+          ctx.fillRect(x, y + 6, 3, 1);
+          ctx.fillRect(x + 4, y + 6, 3, 1);
+          break;
+        case "Bad2":
+          ctx.fillRect(x, y, 7, 1);
+          for (let i = 1; i < 6; i++) {
+            ctx.fillRect(x, y + i, 1, 1);
+            ctx.fillRect(x + 6, y + i, 1, 1);
+          }
+          ctx.fillRect(x + 2, y + 2, 1, 1);
+          ctx.fillRect(x + 4, y + 2, 1, 1);
+          ctx.fillRect(x + 3, y + 3, 1, 1);
+          ctx.fillRect(x + 2, y + 4, 1, 1);
+          ctx.fillRect(x + 4, y + 4, 1, 1);
+
+          ctx.fillRect(x, y + 6, 7, 1);
+          break;
+      }
+    }
+
+    for (let y = 0; y < qrWidth; y++) {
+      for (let x = 0; x < qrWidth; x++) {
+        let on;
+        if (section === "mask" && matrix[y * qrWidth + x] & Module.DATA) {
+          on = maskValue(mask, x, y);
+        } else {
+          on = matrix[y * qrWidth + x] & Module.ON;
+        }
+
+        if (!on) continue;
+
+        ctx.fillStyle = fgColor;
+        switch (section) {
+          case "finder":
+            if (!(matrix[y * qrWidth + x] & Module.FINDER)) {
+              if (finderShape === "Perfect") {
+                ctx.fillStyle = "#ccc";
+              }
+            } else {
+              continue;
             }
-          } else {
-            on = matrix[y * qrWidth + x] & Module.ON;
-          }
+            break;
+          case "alignment":
+            if (!(matrix[y * qrWidth + x] & Module.ALIGNMENT)) {
+              ctx.fillStyle = "#ccc";
+            }
+            break;
+          case "timing":
+            if (!(matrix[y * qrWidth + x] & Module.TIMING)) {
+              ctx.fillStyle = "#ccc";
+            }
+            break;
+          case "no-alignment-timing":
+            if (matrix[y * qrWidth + x] & Module.TIMING) {
+              continue;
+            }
+            if (matrix[y * qrWidth + x] & Module.ALIGNMENT) {
+              if (!brap || y < qrWidth - 9 || x < qrWidth - 9) {
+                continue;
+              }
+            }
+            break;
+          case "mask":
+            if (!(matrix[y * qrWidth + x] & Module.DATA)) {
+              ctx.fillStyle = "#ccc";
+            }
+            break;
+          case "version":
+            if (!(matrix[y * qrWidth + x] & Module.VERSION)) {
+              ctx.fillStyle = "#ccc";
+            }
+            break;
+        }
 
-          if (!on) continue;
-
-          ctx.fillStyle = fgColor;
-          switch (section) {
-            case "finder":
-              if (!(matrix[y * qrWidth + x] & Module.FINDER)) {
-                ctx.fillStyle = "#ccc";
-              }
-              break;
-            case "alignment":
-              if (!(matrix[y * qrWidth + x] & Module.ALIGNMENT)) {
-                ctx.fillStyle = "#ccc";
-              }
-              break;
-            case "timing":
-              if (!(matrix[y * qrWidth + x] & Module.TIMING)) {
-                ctx.fillStyle = "#ccc";
-              }
-              break;
-            case "mask":
-              if (!(matrix[y * qrWidth + x] & Module.DATA)) {
-                ctx.fillStyle = "#ccc";
-              }
-              break;
-            case "version":
-              if (!(matrix[y * qrWidth + x] & Module.VERSION)) {
-                ctx.fillStyle = "#ccc";
-              }
-              break;
-          }
-
-          if (mirror) {
-            ctx.fillRect(size - 1 - margin - x, y + margin, 1, 1);
-          } else {
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
+        if (mirror) {
+          ctx.fillRect(size - 1 - margin - x, y + margin, 1, 1);
+        } else {
+          ctx.fillRect(x + margin, y + margin, 1, 1);
         }
       }
+    }
 
-      // only animate sections
-      if (prevSection.current !== section) {
-        nextCanvas.animate([{ opacity: 0 }, { opacity: 1 }], {
-          duration: 100,
-          easing: "ease-out",
-        });
-      }
-      prevSection.current = section;
-    } catch (e) {
-      console.error("Exceeded max capacity, fool");
+    if (animate) {
+      nextCanvas.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 100,
+        easing: "ease-out",
+      });
     }
   };
 
   const observer = useRef<IntersectionObserver>(null!);
-  const finderRef = useRef<HTMLDivElement>(null!);
-  const alignmentRef = useRef<HTMLDivElement>(null!);
-  const timingRef = useRef<HTMLDivElement>(null!);
-  const formatRef = useRef<HTMLDivElement>(null!);
-  const maskRef = useRef<HTMLDivElement>(null!);
-  const versionRef = useRef<HTMLDivElement>(null!);
-  const dataRef = useRef<HTMLDivElement>(null!);
+  const regions = useRef<HTMLDivElement[]>([]);
+
+  const setupRegion = useCallback((e) => {
+    console.log("regin");
+    regions.current.push(e);
+  }, []);
 
   const setupObserver = useCallback(() => {
     console.log("setupObserver");
@@ -251,13 +336,7 @@ export function QrTutorial(props) {
       }
     );
 
-    observer.current.observe(finderRef.current);
-    observer.current.observe(alignmentRef.current);
-    observer.current.observe(timingRef.current);
-    observer.current.observe(formatRef.current);
-    observer.current.observe(maskRef.current);
-    observer.current.observe(versionRef.current);
-    observer.current.observe(dataRef.current);
+    regions.current.forEach((e) => observer.current.observe(e));
   }, []);
   // ugly parent max-w instead of child max-w makes padding easier
   return (
@@ -267,7 +346,7 @@ export function QrTutorial(props) {
     >
       <div className="flex-1 z-10 sticky top-0 h-full py-4 px-2 mx-2 bg-gradient-to-b from-white from-95%">
         <div
-          className="max-w-80% mx-auto sm:max-w-unset relative"
+          className="max-w-80% mx-auto sm:max-w-unset relative border"
           style={{
             transform: `rotateZ(${zRot}deg) rotateX(${xRot}deg) rotateY(${yRot}deg)`,
           }}
@@ -295,29 +374,44 @@ export function QrTutorial(props) {
         ref={scrollHighlight}
         className="flex-1 flex flex-col gap-32 py-32 scroll-highlight px-4"
       >
-        <div ref={finderRef} data-step="finder">
+        <div ref={setupRegion} data-step="finder">
           <p>
             <span className="font-bold">Finder patterns</span> are the big
-            squares shapes in three corners. These are used to determine the
-            code's orientation, dimensions, perspective and more. The
-            approximate ratio of 1:1:3:1:1 black and white pixels through the
-            vertical and horizontal center is key.
+            squares shapes in three corners and the only part of a QR code that
+            requires some precision. These are used to determine the code's
+            orientation, dimensions, perspective and more. The approximate ratio
+            of 1:1:3:1:1 black and white pixels through the vertical and
+            horizontal center is key.
           </p>
-          <svg viewBox="-.1 -.1 7.2 1.2" stroke="gray" strokeWidth="0.1">
-            <path d="M0,0h1v1h-1z" fill="black" />
-            <path d="M1,0h1v1h-1z" fill="white" />
-            <path d="M2,0h1v1h-1z" fill="black" />
-            <path d="M3,0h1v1h-1z" fill="black" />
-            <path d="M4,0h1v1h-1z" fill="black" />
-            <path d="M5,0h1v1h-1z" fill="white" />
-            <path d="M6,0h1v1h-1z" fill="black" />
-          </svg>
+          <div className="flex">
+            <div className="w-full flex border ">
+              {Object.keys(FinderShapes).map(
+                // @ts-expect-error fuck this shit
+                (key: keyof typeof FinderShapes) => (
+                  <label
+                    className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
+                    key={key}
+                  >
+                    <input
+                      type="radio"
+                      name="finder"
+                      value={key}
+                      checked={key === finderShape}
+                      onChange={() => setFinderShape(key)}
+                    />
+                    {FinderShapes[key]()}
+                    {key}
+                  </label>
+                )
+              )}
+            </div>
+          </div>
           <p>
-            A white separator or "quiet zone" around each finder pattern is
-            often necessary to preserve this ratio. That's because this is the ONE AND ONLY place where precision somewhat matters.
+            To aid detection, finder patterns need a separator or "quiet zone"
+            around them, but this doesn't have to be a specific size.
           </p>
         </div>
-        <div ref={alignmentRef} data-step="alignment">
+        <div ref={setupRegion} data-step="alignment">
           <p>
             <span className="font-bold">Alignment patterns</span> are smaller
             squares used to account for distortion. There's usually one in the
@@ -325,19 +419,37 @@ export function QrTutorial(props) {
             large codes have multiple.
           </p>
         </div>
-        <div ref={timingRef} data-step="timing">
+        <div ref={setupRegion} data-step="timing">
           <p>
             <span className="font-bold">Timing patterns</span> are the
             horizontal and vertical belts of alternating black and white pixels.
             These help with aligning rows and columns while decoding.
           </p>
         </div>
-        <p>
-          Unlike the finder patterns, the timing patterns and alignment patterns
-          are not strictly necessary. A QR code will{" "}
-          <span className="font-italic">mostly</span> scan fine without them.
-        </p>
-        <div ref={formatRef} data-step="format">
+        <div ref={setupRegion} data-step="no-alignment-timing">
+          <p>
+            Unlike the finder patterns, the timing patterns and alignment
+            patterns are not strictly necessary. A QR code will{" "}
+            <span className="font-italic">mostly*</span> scan fine without them.
+          </p>
+          <small>
+            *I suspect the timing pattern is actually useless, while{" "}
+            <a href="https://github.com/zxing/zxing/blob/474f4bb5a0c5ca0f200df4a8cafc1b99c8f24397/core/src/main/java/com/google/zxing/qrcode/detector/AlignmentPatternFinder.java#L30">
+              the bottom right alignment pattern does help
+            </a>
+            .
+            <label className="flex items-center">
+              <input
+                className="w-4 h-4 mr-1"
+                type="checkbox"
+                checked={brap}
+                onChange={(e) => setBrap(e.target.checked)}
+              />
+              Enable bottom right alignment pattern
+            </label>
+          </small>
+        </div>
+        <div ref={setupRegion} data-step="format">
           <p>
             <span className="font-bold">Format information</span> stores the
             error correction level and the mask pattern applied to the data. One
@@ -345,10 +457,10 @@ export function QrTutorial(props) {
             right and bottom left.
           </p>
         </div>
-        <div ref={maskRef} data-step="mask">
+        <div ref={setupRegion} data-step="mask">
           <p>
             The mask is one of 8 patterns XOR-ed with the data to break up
-            undesirable pixel arrangements (like the finder pattern ratio).
+            undesirable pixel arrangements (like the finder pattern shape).
           </p>
           <div className="w-full flex border">
             {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
@@ -368,7 +480,7 @@ export function QrTutorial(props) {
             ))}
           </div>
         </div>
-        <div ref={versionRef} data-step="version">
+        <div ref={setupRegion} data-step="version">
           <p>
             Only very large QR codes will have{" "}
             <span className="font-bold">version information</span>. Version
@@ -385,7 +497,7 @@ export function QrTutorial(props) {
             max="40"
           />
         </div>
-        <div ref={dataRef} data-step="data">
+        <div ref={setupRegion} data-step="data">
           <div className="font-bold text-lg">Data</div>
           <p>
             The remaining space is for the{" "}
@@ -451,7 +563,7 @@ export function QrTutorial(props) {
             </label>
           </div>
         </div>
-        <div>
+        <div ref={setupRegion}>
           <div className="font-bold text-lg">Transformations</div>
           <p>
             QR codes can be rotated, mirrored, and the "dark" and "light" pixels
@@ -490,4 +602,25 @@ export function QrTutorial(props) {
       </div>
     </div>
   );
+}
+
+function maskValue(mask, x, y) {
+  switch (mask) {
+    case 0:
+      return (y + x) % 2 === 0;
+    case 1:
+      return y % 2 === 0;
+    case 2:
+      return x % 3 === 0;
+    case 3:
+      return (y + x) % 3 === 0;
+    case 4:
+      return (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0;
+    case 5:
+      return ((y * x) % 2) + ((y * x) % 3) === 0;
+    case 6:
+      return (((y * x) % 2) + ((y * x) % 3)) % 2 === 0;
+    case 7:
+      return (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
+  }
 }
