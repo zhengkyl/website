@@ -42,7 +42,7 @@ With how widespread they are in consumer facing spaces like advertising, it's al
   </div>
 }
 
-Beyond simply placing a logo on top, there have been many attempts to create "artistic" QR codes, which use the entire code as a canvas. Some techniques use the pixel grid, some work around it, while more recent developments involve using generative AI to create scannable anime women.
+Beyond simply placing a logo on top, there have been many attempts to create "artistic" QR codes. Creating images is a popular goal, whether by manipulating the appearance of pixels, darkening and lightening portions of the image, or some combination of techniques.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -55,12 +55,12 @@ Beyond simply placing a logo on top, there have been many attempts to create "ar
       <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
     </div>
     <div>
-      <img src="image/overlay_burger_king.jpg" alt="burger king ad qr code"/>
-      <Sa href="https://www.youtube.com/watch?v=hnYXq1oyi2g">Burger King VMA Commercials</Sa>
+      <img src="image/bad_apple.jpg" alt="bad apple video qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
     </div>
     <div>
-      <img src="image/ai_anime.jpg" alt="ai generated anime qr code"/>
-      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
+      <img src="image/overlay_burger_king.jpg" alt="burger king ad qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=hnYXq1oyi2g">Burger King VMA Commercials</Sa>
     </div>
   </div>
 }
@@ -91,20 +91,39 @@ While perhaps limited in stylistic range, these QR codes are trivial to make and
 
 {
   <small className="text-stone-700">
-    There are way more Chinese examples, especially with animation and integration into larger designs, but those don't fit here nicely. I recommend using Pinterest to find them.
+    There are many innovative Chinese examples, but I disagree with them aesthetically. I recommend using Pinterest to find them; they are impossible to find otherwise.
   </small>
 }
 
-Having a human fine-tune each aspect does lead to the best results, and I figured the limits of programmatically generated QR codes had long been reached. Then I saw these two style options on [QRBTF.com](https://qrbtf.com) created by [Troy Ni](https://troyni.com/) and [@CPunisher](https://github.com/CPunisher).
+Of course, we musn't neglect to beat the dead elephant in this room, generative AI. The demos are impressive, and with carefully engineered prompts the results appear good. But I've no prompting expertise, so I generated naught but nightmares.
 
 {
-  <div className="grid cols-2 gap-2">
-    <img src="qrbtf/sp1.svg" alt="blocky design"/>
-    <img src="qrbtf/sp2.svg" alt="bubble design"/>
+  <div className="mx-auto -indent-2 text-sm leading-loose font-serif">
+    <p className="ml-2">I shall not beleaguer thy weary eyes,</p>
+    <p className="ml-2">nor further burden the web, world wide,</p>
+    <p className="ml-2">with pages from this Babelian picture tome.</p>
+    <p className="ml-2">This is not a place of honor,</p>
+    <p className="ml-2"><em>there are thirteen fingers on her,</em></p>
+    <p className="ml-2">anime girl big boobs ancient rome.</p>
   </div>
 }
 
-It's so obvious in hindsight, but I never even considered breaking the mold this much. As if seeing for the first time, all the world around me turned into inspiration.
+[QRBTF](https://qrbtf.com) was created by the inventors of AI QR codes, but they originally created these parameterized styles which blew my mind.
+
+{
+  <div className="grid cols-2 gap-2 font-thin text-xs text-center">
+    <div>
+      <img src="qrbtf/sp1.svg" alt="blocky design"/>
+      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
+    <div>
+      <img src="qrbtf/sp2.svg" alt="bubble design"/>
+      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
+    </div>
+  </div>
+}
+
+I find these way more interesting, and I gave a go at making my own QR code generator.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2">
@@ -119,13 +138,15 @@ It's so obvious in hindsight, but I never even considered breaking the mold this
   </div>
 }
 
-The end result is https://qrframe.kylezhe.ng, a web app that lets you write code and define parameters to render QR codes however you want. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
+The end result is https://qrframe.kylezhe.ng, which comes with presets inspired by patterns from the world around us and the techniques mentioned above. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
-It comes with many example presets, based on existing styles and my original designs, which I hope others can use and build upon to create their own custom QR codes.
+The main feature is that you can freely create new presets or modify existing ones. It's all just code that generates an SVG or renders to an HTML canvas.
 
-Feel free to play with it, but in order to craft QR codes with intention, we need to learn how QR codes *actually* work.
+Feel free to play with it, but in order to craft QR codes with intention, we need to learn how they work.
 
-## How do QR codes work?
+## Anatomy of a QR Code
+
+<QrTutorial/>
 
 A few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
@@ -142,20 +163,19 @@ A few years ago, I had the idea to draw QR codes using chalk and a stencil.
   </div>
 }
 
-This was a failure for many reasons (it takes forever to draw and smears instantly), but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
+This turned out to be impractical, but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
 
-While we no longer have to use random QR code scanner apps, the tradeoff is that smartphone camera apps are not dedicated QR code scanners.
+The tradeoff with no longer using 3rd party scanners is that smartphone camera apps are much less aggressive at detecting or attempting to scan codes.
 
- They don't even attempt to scan until after a QR code is detected using computer vision.
-    - In my experience, this favors **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete. This is also likely why some QR codes scan better from farther away.
+In my experience, the key is **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete.
 
-My second mistake was not at all understanding where I needed precision and where I could cut corners. For my first chalk drawing, I even drew the finder patterns freehand.
-
-<QrTutorial/>
+For QR codes with a lot of "texture", moving farther away can help, but that is the exact opposite response people have to a code not scanning.
 
 ## Prior work
 
-Basically, as long as the space where a QR code pixel should be is dark enough or light enough, it will be decoded properly.
+The part where it turns a camera image into a grid of binary pixels, 
+
+Basically, if a space is dark enough or light enough, it will be decoded properly.
 
 One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes) paper, involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color.
 
@@ -224,40 +244,6 @@ The low resolution black and white dithered effect is just a smart stylistic cho
   </div>
 }
 
-
-Perhaps unsuprisingly, they also created the first AI QR codes, which they documented in [this blog post](https://troyni.com/articles/qrcode-controlnet-zh).
-
-Following that, Anthony Fu ([@antfu](https://github.com/antfu)) made a series of blog posts detailing his experiments ([first](https://antfu.me/posts/ai-qrcode), [second](https://antfu.me/posts/ai-qrcode-refine)), culiminating in a definite guide https://antfu.me/posts/ai-qrcode-101 co-authored by [赛博迪克朗](https://space.bilibili.com/339984/), wangcai, and [代々木](https://www.xiaohongshu.com/user/profile/5be8fb806b58b745447aab0f).
-
-{
-  <div className="grid cols-2 font-thin text-xs text-center">
-    <div>
-      <img className="p-4" src="ai_mike.jpg" alt="ai generated mike wazowski qr code"/>
-      AI generated using <Sa href="https://qrbtf.com">QRBTF</Sa>
-    </div>
-  </div>
-}
-
-Try moving your phone away from the screen (farther than you think), and maybe increase your brightness.
-
- Here's the [original blog post in Chinese](https://troyni.com/articles/qrcode-controlnet-zh) as well as a more [complete guide](https://antfu.me/posts/ai-qrcode-101) if you're interested in that.
-
-
-[Troy Ni (@ciaochaos)](https://github.com/ciaochaos) created QRBTF, a generator used to create truly beautiful QR codes like the ones below. The original inspiration is detailed in [this blog post]().
-
-{
-  <div className="grid cols-2 font-thin text-xs text-center">
-    <div>
-    <img src="qrbtf_blocks.svg" alt="color blocks qr code"/>
-      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
-    </div>
-    <div>
-    <img src="qrbtf_alien.svg" alt="alien goo qr code"/>
-      Created using <Sa href="https://qrbtf.com">QRBTF</Sa>
-    </div>
-  </div>
-}
-
 ## Tangents
 
 Tangent -> Creating QR code that matches a string
@@ -270,25 +256,6 @@ Here are some undocumented behaviors I discovered while making [a simple QR code
 
 - UTF-8 is implicitly supported when using the byte encoding mode.
 - Kanji, Structured append, EC1, and FNC1 encoding modes aren't relevant for normal use. Scanners might not even support them (I can't find generators that support them either).
-
-Oversimplifiying to the point of misinformation, there are 2\* parts of a QR code decoder we need to swindle.
-
-- A QR code detector (based on computer vision) gets a bounding box
-- A binarizer algorithm converts an image to a matrix of on/off bits
-
-We can do anything to a QR code as long as those two parts still function mostly correctly.
-
-Google's scanner is part of their MLKit.
-Apple's is part of their AVFoundation.
-
-Neither implementation has available source code, not that it would do us much good.
-
-
-Whether it's an app with a shareable code, an advertisement meant to catch your eye, or someone with too much time, the possibilities of beautiful QR codes awaits.
-
-The QR code standard (ISO/IEC 18004) suggests how a QR code can be created and decoded. It is up to the QR code scanner to convert an image into this decodable 2d matrix of black and white pixels. This makes everything possible.
-
-Thankfully, the Wechat scanner is seemingly open source. It's available as an OpenCV extension. It's a fork of the cpp port of the popular zxing library.
 
 
 I found this book in a random library I stopped in. Too much of the QR code was missing for it to scan, but I thought it might contain an Easter egg. I used [QRazyBox](https://merri.cx/qrazybox/) to recover what data remained which was only about half the URL. This was the first strange finding. The code was almost entirely padding! The error correction was set to low too! Why wasn't the error correction set higher if the space was all wasted? 

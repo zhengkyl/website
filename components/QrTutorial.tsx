@@ -114,7 +114,7 @@ export function QrTutorial() {
 
   useEffect(() => {
     if (initDone) {
-      render(false, prevSection.current !== section);
+      render(false, prevSection.current !== section || section === "finder");
       prevSection.current = section;
     }
   }, [finderShape, brap, invert, mirror, section]);
@@ -171,7 +171,7 @@ export function QrTutorial() {
     for (const [x, y] of [
       [margin, margin],
       [margin + qrWidth - 7, margin],
-      [margin, margin + qrWidth - 7],
+      [mirror ? margin + qrWidth - 7 : margin, margin + qrWidth - 7],
     ]) {
       switch (finderShape) {
         case "Perfect":
@@ -231,6 +231,7 @@ export function QrTutorial() {
 
     for (let y = 0; y < qrWidth; y++) {
       for (let x = 0; x < qrWidth; x++) {
+        if (matrix[y * qrWidth + x] & Module.FINDER) continue;
         let on;
         if (section === "mask" && matrix[y * qrWidth + x] & Module.DATA) {
           on = maskValue(mask, x, y);
@@ -344,7 +345,7 @@ export function QrTutorial() {
       className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] flex flex-col gap-4 sm:flex-row"
       ref={setupObserver}
     >
-      <div className="flex-1 z-10 sticky top-0 h-full py-4 px-2 mx-2 bg-gradient-to-b from-white from-95%">
+      <div className="flex-1 z-10 sticky top-0 sm:top-[calc(max(45vh-min(768px,50vw)/2,0px))] h-full py-4 px-2 mx-2 bg-gradient-to-b from-white from-95%">
         <div
           className="max-w-80% mx-auto sm:max-w-unset relative border"
           style={{
@@ -372,7 +373,7 @@ export function QrTutorial() {
       </div>
       <div
         ref={scrollHighlight}
-        className="flex-1 flex flex-col gap-32 py-32 scroll-highlight px-4"
+        className="flex-1 flex flex-col gap-32 pt-16 pb-[30%] scroll-highlight px-4"
       >
         <div ref={setupRegion} data-step="finder">
           <p>
