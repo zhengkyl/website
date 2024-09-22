@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import init, { ECL, generate, Mask, QrOptions, Version } from "fuqr";
+import init, { ECL, generate, Mask, Mode, QrOptions, Version } from "fuqr";
 
 let initDone = false;
 let initStarted = false;
@@ -12,6 +12,8 @@ export function QrTutorial() {
   const canvasA = useRef<HTMLCanvasElement>(null);
   const canvasB = useRef<HTMLCanvasElement>(null);
   const showA = useRef(false);
+  const svgOverlay = useRef<SVGSVGElement>(null);
+  const zigzag = useRef<SVGPolylineElement>(null);
 
   const [text, setText] = useState("hello there");
   const [version, setVersion] = useState(2);
@@ -22,8 +24,8 @@ export function QrTutorial() {
     useState<keyof typeof FinderShapes>("Perfect");
   const [brap, setBrap] = useState(false); // bottom right alignment pattern
   const [drawColor, setDrawColor] = useState(false);
-  const [drawPath, setDrawPath] = useState(false);
-  const [path, setPath] = useState("");
+  const [showZigzag, setShowZigzag] = useState(false);
+
   const [zRot, setZRot] = useState(0);
 
   const [invert, setInvert] = useState(false);
@@ -64,6 +66,7 @@ export function QrTutorial() {
         qrCode.current = generate(
           text,
           new QrOptions()
+            .mode(Mode.Byte)
             .min_ecl(ecl)
             .strict_ecl(true)
             .min_version(new Version(version))
@@ -87,6 +90,14 @@ export function QrTutorial() {
     const size = qrWidth + 2 * margin;
     ctx.canvas.width = size;
     ctx.canvas.height = size;
+    svgOverlay.current!.setAttribute("viewBox", `0 0 ${size} ${size}`);
+    console.log("here");
+    if (showZigzag) {
+      zigzag.current!.setAttribute(
+        "points",
+        getZigzagPoints(qrCode.current!.matrix, qrCode.current.version * 4 + 17)
+      );
+    }
 
     const focusON = "#7f1d1d";
     const focusOFF = "#fee2e2";
@@ -201,6 +212,7 @@ export function QrTutorial() {
             const module = matrix[y * qrWidth + x];
             if (module & Module.FINDER) continue;
             if (module & Module.DATA) {
+              continue;
               ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
             } else {
               if (!(module & Module.ON)) continue;
@@ -208,6 +220,60 @@ export function QrTutorial() {
             }
             ctx.fillRect(x + margin, y + margin, 1, 1);
           }
+        }
+
+        const headerEnd = headerLength(outVersion);
+        const eccEnd = (NUM_DATA_MODULES[outVersion] >> 3) * 8;
+        const paddingEnd = eccEnd - NUM_EC_CODEWORDS[outVersion][ecl] * 8;
+
+        const bytes = new TextEncoder().encode(text).length;
+        const dataEnd = headerEnd + bytes * 8;
+
+        let i = 0;
+        let start = qrWidth - 1;
+        let end = -1;
+        let inc = -1;
+
+        ctx.fillStyle = "red";
+        for (let x = qrWidth - 1; x > 0; x -= 2) {
+          if (x === 6) {
+            x -= 1;
+          }
+          for (let y = start; y !== end; y += inc) {
+            if (matrix[y * qrWidth + x] & Module.DATA) {
+              if (i === headerEnd) {
+                ctx.fillStyle = "orange";
+              }
+              if (i === dataEnd) {
+                ctx.fillStyle = "yellow";
+              } else if (i === paddingEnd) {
+                ctx.fillStyle = "green";
+              } else if (i === eccEnd) {
+                ctx.fillStyle = "blue";
+              } else {
+              }
+              ctx.fillRect(x + margin, y + margin, 1, 1);
+              i++;
+            }
+            if (matrix[y * qrWidth + x - 1] & Module.DATA) {
+              if (i === headerEnd) {
+                ctx.fillStyle = "orange";
+              }
+              if (i === dataEnd) {
+                ctx.fillStyle = "yellow";
+              } else if (i === paddingEnd) {
+                ctx.fillStyle = "green";
+              } else if (i === eccEnd) {
+                ctx.fillStyle = "blue";
+              } else {
+              }
+              ctx.fillRect(x - 1 + margin, y + margin, 1, 1);
+              i++;
+            }
+          }
+          start += inc * (qrWidth - 1);
+          end -= inc * (qrWidth + 1);
+          inc *= -1;
         }
         break;
       case "format":
@@ -311,9 +377,7 @@ export function QrTutorial() {
         <div
           className="max-w-80% mx-auto sm:max-w-unset relative border"
           style={{
-            transform: `rotateZ(${zRot}deg) rotateY(${
-              mirror ? 180 : 0
-            }deg)`,
+            transform: `rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
             filter: `invert(${invert ? 1 : 0})`,
           }}
         >
@@ -325,13 +389,18 @@ export function QrTutorial() {
             ref={canvasB}
             className="w-full pixelated absolute transition-opacity"
           />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 1 1`}>
-            <path
-              d={path}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1 1"
+            className="relative z-10"
+            ref={svgOverlay}
+          >
+            <polyline
+              ref={zigzag}
               fill="none"
               stroke="#f0f"
               strokeWidth="0.1"
-              transform="translate(0.5 0.5)"
+              transform="translate(1.5 1.5)"
             />
           </svg>
         </div>
@@ -422,14 +491,9 @@ export function QrTutorial() {
         <div ref={setupRegion} data-step="data">
           <div className="font-bold text-lg">Data</div>
           <p>
-            Almost all the remaining space is for the{" "}
-            <span className="font-bold">data</span>. It starts with a header
-            describing the encoding mode and the data length.
-          </p>
-          <p>
-            There are efficient encoding modes for numbers, alphanumeric
-            strings, and Japanese characters, but the only relevant mode for
-            URLs is Byte mode. This just means UTF-8.
+            The remaining space is for the{" "}
+            <span className="font-bold">data</span> (and some metadata which
+            will make more sense after).{" "}
           </p>
           <input
             className="border p-2"
@@ -437,6 +501,44 @@ export function QrTutorial() {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <p>
+            Surprisingly, it starts at the bottom right, and zigzags left and
+            right, up and down.
+          </p>
+          <label className="flex items-center">
+            <input
+              className="w-5 h-5 mr-1"
+              type="checkbox"
+              checked={showZigzag}
+              onChange={(e) => {
+                setShowZigzag(e.target.checked);
+                zigzag.current!.setAttribute(
+                  "points",
+                  e.target.checked
+                    ? getZigzagPoints(
+                        qrCode.current!.matrix,
+                        qrCode.current.version * 4 + 17
+                      )
+                    : ""
+                );
+              }}
+            />
+            Show zigzag pattern
+          </label>
+        </div>
+        <div ref={setupRegion} data-step="encoding">
+          <p>
+            It starts with a header describing the encoding mode and the data
+            length. There are efficient encoding modes for numbers, alphanumeric
+            strings, and Japanese characters*, but the only relevant mode for
+            URLs is Byte mode, which just means UTF-8.
+          </p>
+          <small>
+            *Most QR code generators don't support this, let alone QR code
+            scanners.
+          </small>
+        </div>
+        <div ref={setupRegion} data-step="ecl">
           <p>
             The header is followed by the actual data, padded to fill the
             capacity, and then error correction codewords fill the remaining
@@ -474,24 +576,7 @@ export function QrTutorial() {
               />
               Show byte boundaries
             </label>
-            <label className="flex items-center">
-              <input
-                className="w-5 h-5 mr-1"
-                type="checkbox"
-                checked={drawPath}
-                onChange={(e) => setDrawPath(e.target.checked)}
-              />
-              Show zigzag pattern
-            </label>
           </div>
-        </div>
-        <div ref={setupRegion} data-step="format">
-          <p>
-            <span className="font-bold">Format information</span> stores the
-            error correction level and the mask pattern applied to the data. One
-            copy is in the top left, and the other copy is split between the top
-            right and bottom left.
-          </p>
         </div>
         <div ref={setupRegion} data-step="mask">
           <p>
@@ -516,6 +601,14 @@ export function QrTutorial() {
             ))}
           </div>
         </div>
+        <div ref={setupRegion} data-step="format">
+          <p>
+            <span className="font-bold">Format information</span> stores the
+            error correction level and the mask pattern applied to the data. One
+            copy is in the top left, and the other copy is split between the top
+            right and bottom left.
+          </p>
+        </div>
         <div ref={setupRegion} data-step="version">
           <p>
             Only very large QR codes will have{" "}
@@ -525,13 +618,6 @@ export function QrTutorial() {
             between the finder patterns. One copy is in the top left, and the
             other copy is in the bottom left.
           </p>
-          {/* <input
-            value={version}
-            onChange={(e) => setVersion(e.target.valueAsNumber)}
-            type="range"
-            min="1"
-            max="40"
-          /> */}
         </div>
         <div ref={setupRegion} data-step="transformations">
           <div className="font-bold text-lg">Transformations</div>
@@ -572,6 +658,31 @@ export function QrTutorial() {
       </div>
     </div>
   );
+}
+
+function getZigzagPoints(matrix, qrWidth) {
+  let points = "";
+  let start = qrWidth - 1;
+  let end = -1;
+  let inc = -1;
+
+  for (let x = qrWidth - 1; x > 0; x -= 2) {
+    if (x === 6) {
+      x -= 1;
+    }
+    for (let y = start; y !== end; y += inc) {
+      if (matrix[y * qrWidth + x] & Module.DATA) {
+        points += `${x},${y} `;
+      }
+      if (matrix[y * qrWidth + x - 1] & Module.DATA) {
+        points += `${x - 1},${y} `;
+      }
+    }
+    start += inc * (qrWidth - 1);
+    end -= inc * (qrWidth + 1);
+    inc *= -1;
+  }
+  return points;
 }
 
 function renderFinder(ctx, finderShape, qrWidth) {
@@ -725,6 +836,10 @@ const Module = {
   VERSION: 1 << 6,
   MODIFIER: 1 << 7,
 };
+
+function headerLength(version) {
+  return 4 + (version < 10 ? 8 : 16);
+}
 
 const NUM_DATA_MODULES = [
   0, 208, 359, 567, 807, 1079, 1383, 1568, 1936, 2336, 2768, 3232, 3728, 4256,
