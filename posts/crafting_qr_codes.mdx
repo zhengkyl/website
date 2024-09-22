@@ -31,7 +31,7 @@ Suffice it to say, I've seen a few QR codes in my day to day.
 </div>
 }
 
-With how widespread they are in consumer facing spaces like advertising, it's also no suprise that companies would want to brand their QR codes. The most common practice is placing a logo in the center, which relies on error correction to recover the missing data. 
+With how widespread they are in consumer facing spaces like advertising, it's also no suprise that companies would want to brand their QR codes. The most common practice is placing a logo in the center, which works because QR codes have error correction built-in.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2">
@@ -42,7 +42,7 @@ With how widespread they are in consumer facing spaces like advertising, it's al
   </div>
 }
 
-Beyond simply placing a logo on top, there have been many attempts to create "artistic" QR codes. Creating images is a popular goal, whether by manipulating the appearance of pixels, darkening and lightening portions of the image, or some combination of techniques.
+Beyond simply placing a logo on top, there have also been many attempts to create "artistic" QR codes. Forming an image is the obvious thing to do, and there are various ways of combining the QR code pixels with an picture for a unique look.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -55,8 +55,8 @@ Beyond simply placing a logo on top, there have been many attempts to create "ar
       <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
     </div>
     <div>
-      <img src="image/bad_apple.jpg" alt="bad apple video qr code"/>
-      <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
+      <img src="image/qrpicture_awesome.png" alt="awesome face qr code"/>
+      <Sa href="https://github.com/xyzzy/qrpicture">QRpicture</Sa>
     </div>
     <div>
       <img src="image/overlay_burger_king.jpg" alt="burger king ad qr code"/>
@@ -65,7 +65,7 @@ Beyond simply placing a logo on top, there have been many attempts to create "ar
   </div>
 }
 
-While perhaps limited in stylistic range, these QR codes are trivial to make and the input image can easily be edited. This is in stark contrast to the labor intensive but fully bespoke QR codes made by human designers.
+While simple in theory, getting the perfect input image for a cohesive design may take some effort. An even more labor intensive approach is to have artists design fully bespoke QR codes from scratch.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -91,11 +91,13 @@ While perhaps limited in stylistic range, these QR codes are trivial to make and
 
 {
   <small className="text-stone-700">
-    There are many innovative Chinese examples, but I disagree with them aesthetically. I recommend using Pinterest to find them; they are impossible to find otherwise.
+    There are more amazing examples than I could possibly fit on one page. These artists' have many other works, and Pinterest is full of examples that are otherwise impossible to find.
   </small>
 }
 
-Of course, we musn't neglect to beat the dead elephant in this room, generative AI. The demos are impressive, and with carefully engineered prompts the results appear good. But I've no prompting expertise, so I generated naught but nightmares.
+Of course, these human-made QR code's aren't practical for anyone without lots of time or money since each new URL would require a redesign.
+
+The natural progression is beating the dead elephant in the room called generative AI. These AI QR codes promise beautiful and customizable designs at scale, and when using carefully engineered prompts the results appear good. But I've no prompting expertise, so I've generated naught but nightmares.
 
 {
   <div className="mx-auto -indent-2 text-sm leading-loose font-serif">
@@ -108,7 +110,9 @@ Of course, we musn't neglect to beat the dead elephant in this room, generative 
   </div>
 }
 
-[QRBTF](https://qrbtf.com) was created by the inventors of AI QR codes, but they originally created these parameterized styles which blew my mind.
+I'm more interested in programmatically generated QR codes anyways.
+
+Before they invented AI QR codes, the guys behind [QRBTF](https://qrbtf.com) also created these beautiful style options for their generator.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center">
@@ -123,7 +127,7 @@ Of course, we musn't neglect to beat the dead elephant in this room, generative 
   </div>
 }
 
-I find these way more interesting, and I gave a go at making my own QR code generator.
+To this day, I still haven't seen anyone else make QR codes like this. So I took it upon myself to make the QR code generator I wanted.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2">
@@ -138,15 +142,21 @@ I find these way more interesting, and I gave a go at making my own QR code gene
   </div>
 }
 
-The end result is https://qrframe.kylezhe.ng, which comes with presets inspired by patterns from the world around us and the techniques mentioned above. Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
+It's available at https://qrframe.kylezhe.ng, and it's a tool for crafting QR codes. It comes with presets for my original designs as well as shameless copies of existing artistic QR codes, but the built-in code editor lets you freely create new presets or modify existing ones. It's all just Javascript that generates an SVG or renders to an HTML canvas.
 
-The main feature is that you can freely create new presets or modify existing ones. It's all just code that generates an SVG or renders to an HTML canvas.
+Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
-Feel free to play with it, but in order to craft QR codes with intention, we need to learn how they work.
+Feel free to play with it, but in order to craft QR codes with intention, we first need to learn how they work.
 
 ## Anatomy of a QR Code
 
 <QrTutorial/>
+
+So basically, the finder pattern has to be somewhat precise, and everything else just needs to be dark or light.
+
+Unfortunately, there's one major gotcha we've gotta cover.
+
+The tradeoff with no longer using 3rd party scanners is that smartphone camera apps are much less aggressive at detecting or attempting to scan codes.
 
 A few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
@@ -165,7 +175,6 @@ A few years ago, I had the idea to draw QR codes using chalk and a stencil.
 
 This turned out to be impractical, but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
 
-The tradeoff with no longer using 3rd party scanners is that smartphone camera apps are much less aggressive at detecting or attempting to scan codes.
 
 In my experience, the key is **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete.
 
@@ -210,6 +219,10 @@ The low resolution black and white dithered effect is just a smart stylistic cho
     <p className="col-span-2">
       Other methods are available such as adjusting the input URL as in <a href="https://research.swtch.com/qr/draw">QArt Codes</a> and creating word clouds like in <a href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</a>. These are quite niche, but full of good ideas.
     </p>
+    <div>
+      <img src="image/bad_apple.jpg" alt="bad apple video qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
+    </div>
     <div className="font-thin text-xs text-center ">
       <img src="qart_mike.png" alt="mike wazowski qart code"/>
       Created using <Sa href="https://research.swtch.com/qr/draw">QArt Coder</Sa>
@@ -229,20 +242,6 @@ The low resolution black and white dithered effect is just a smart stylistic cho
 
 
 [vCode](https://github.com/ruitaocc/vCode)
-
-
-[QRpicture](https://github.com/xyzzy/qrpicture)
-
-
-{
-  <div className="grid cols-2 font-thin text-xs text-center">
-    <div>
-      <img src="qrpicture.gif" alt="animated qr picture"/>
-      Example from <Sa>https://github.com/xyzzy/qrpicture</Sa>
-    </div>
-
-  </div>
-}
 
 ## Tangents
 

@@ -3,75 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import init, { ECL, generate, Mask, QrOptions, Version } from "fuqr";
 
-const Module = {
-  ON: 1 << 0,
-  DATA: 1 << 1,
-  FINDER: 1 << 2,
-  ALIGNMENT: 1 << 3,
-  TIMING: 1 << 4,
-  FORMAT: 1 << 5,
-  VERSION: 1 << 6,
-  MODIFIER: 1 << 7,
-};
-
 let initDone = false;
 let initStarted = false;
-
-const FinderShapes = {
-  Perfect: () => (
-    <svg viewBox="-.05 -.05 7.1 7.1">
-      <path d="M0,0h7v7h-7z" fill="white" />
-      <path d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h3v3h-3z" fill="black" />
-      <path
-        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
-        stroke="gray"
-        strokeWidth="0.05"
-      />
-    </svg>
-  ),
-  OK: () => (
-    <svg viewBox="-.05 -.05 7.1 7.1">
-      <path d="M0,0h7v7h-7z" fill="white" />
-      <path
-        d="M3,0h1v1h-1zM0,3h1v1h-1zM6,3h1v1h-1zM3,6h1v1h-1zM3,2h1v1h1v1h-1v1h-1v-1h-1v-1h1z"
-        fill="black"
-      />
-      <path
-        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
-        stroke="gray"
-        strokeWidth="0.05"
-      />
-    </svg>
-  ),
-  Bad: () => (
-    <svg viewBox="-.05 -.05 7.1 7.1">
-      <path d="M0,0h7v7h-7z" fill="white" />
-      <path
-        d="M0,0h3v1h-2v2h-1zM7,0v3h-1v-2h-2v-1zM0,7v-3h1v2h2v1zM7,7h-3v-1h2v-2h1zM2,2h3v3h-3z"
-        fill="black"
-      />
-      <path
-        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
-        stroke="gray"
-        strokeWidth="0.05"
-      />
-    </svg>
-  ),
-  Bad2: () => (
-    <svg viewBox="-.05 -.05 7.1 7.1">
-      <path d="M0,0h7v7h-7z" fill="white" />
-      <path
-        d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h1v1h1v-1h1v1h-1v1h1v1h-1v-1h-1v1h-1v-1h1v-1h-1z"
-        fill="black"
-      />
-      <path
-        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
-        stroke="gray"
-        strokeWidth="0.05"
-      />
-    </svg>
-  ),
-};
 
 export function QrTutorial() {
   const scrollHighlight = useRef<HTMLDivElement>(null!);
@@ -92,9 +25,6 @@ export function QrTutorial() {
   const [drawPath, setDrawPath] = useState(false);
   const [path, setPath] = useState("");
   const [zRot, setZRot] = useState(0);
-  const [xRot, setXRot] = useState(0);
-  const [yRot, setYRot] = useState(0);
-  // const width = version * 4 + 17;
 
   const [invert, setInvert] = useState(false);
   const [mirror, setMirror] = useState(false);
@@ -117,19 +47,18 @@ export function QrTutorial() {
       render(false, prevSection.current !== section || section === "finder");
       prevSection.current = section;
     }
-  }, [finderShape, brap, invert, mirror, section]);
+  }, [finderShape, brap, section]);
 
   useEffect(() => {
     if (initDone) {
       render(true, false);
     }
-  }, [text, version, ecl, mask]);
+  }, [text, ecl, version, mask]);
 
   // todo return type from fuqr
   const qrCode = useRef<any>(null!);
 
   const render = (regenerate, animate) => {
-    console.log("rendder", "regen", regenerate, "animate", animate);
     if (regenerate) {
       try {
         qrCode.current = generate(
@@ -146,7 +75,6 @@ export function QrTutorial() {
       }
     }
     const { matrix, version: outVersion } = qrCode.current;
-
     if (animate) showA.current = !showA.current;
     const nextCanvas = (showA.current ? canvasA : canvasB).current!;
     const prevCanvas = (showA.current ? canvasB : canvasA).current!;
@@ -160,136 +88,172 @@ export function QrTutorial() {
     ctx.canvas.width = size;
     ctx.canvas.height = size;
 
-    const fgColor = invert ? "#fff" : "#000";
-    const bgColor = invert ? "#000" : "#fff";
+    const focusON = "#7f1d1d";
+    const focusOFF = "#fee2e2";
+
+    const fgColor = "#000";
+    const bgColor = "#fff";
+    const gray = "#ccc";
 
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, size, size);
 
-    ctx.fillStyle = fgColor;
-
-    for (const [x, y] of [
-      [margin, margin],
-      [margin + qrWidth - 7, margin],
-      [mirror ? margin + qrWidth - 7 : margin, margin + qrWidth - 7],
-    ]) {
-      switch (finderShape) {
-        case "Perfect":
-          ctx.fillRect(x, y, 7, 1);
-          for (let i = 1; i < 6; i++) {
-            ctx.fillRect(x, y + i, 1, 1);
-            ctx.fillRect(x + 6, y + i, 1, 1);
-          }
-          ctx.fillRect(x + 2, y + 2, 3, 1);
-          ctx.fillRect(x + 2, y + 3, 3, 1);
-          ctx.fillRect(x + 2, y + 4, 3, 1);
-          ctx.fillRect(x, y + 6, 7, 1);
-          break;
-        case "OK":
-          ctx.fillRect(x + 3, y, 1, 1);
-          ctx.fillRect(x + 3, y + 2, 1, 1);
-          ctx.fillRect(x, y + 3, 1, 1);
-          ctx.fillRect(x + 2, y + 3, 3, 1);
-          ctx.fillRect(x + 6, y + 3, 1, 1);
-          ctx.fillRect(x + 3, y + 4, 1, 1);
-          ctx.fillRect(x + 3, y + 6, 1, 1);
-          break;
-        case "Bad":
-          ctx.fillRect(x, y, 3, 1);
-          ctx.fillRect(x + 4, y, 3, 1);
-          for (let i = 1; i < 3; i++) {
-            ctx.fillRect(x, y + i, 1, 1);
-            ctx.fillRect(x + 6, y + i, 1, 1);
-          }
-          for (let i = 4; i < 6; i++) {
-            ctx.fillRect(x, y + i, 1, 1);
-            ctx.fillRect(x + 6, y + i, 1, 1);
-          }
-          ctx.fillRect(x + 2, y + 2, 3, 1);
-          ctx.fillRect(x + 2, y + 3, 3, 1);
-          ctx.fillRect(x + 2, y + 4, 3, 1);
-
-          ctx.fillRect(x, y + 6, 3, 1);
-          ctx.fillRect(x + 4, y + 6, 3, 1);
-          break;
-        case "Bad2":
-          ctx.fillRect(x, y, 7, 1);
-          for (let i = 1; i < 6; i++) {
-            ctx.fillRect(x, y + i, 1, 1);
-            ctx.fillRect(x + 6, y + i, 1, 1);
-          }
-          ctx.fillRect(x + 2, y + 2, 1, 1);
-          ctx.fillRect(x + 4, y + 2, 1, 1);
-          ctx.fillRect(x + 3, y + 3, 1, 1);
-          ctx.fillRect(x + 2, y + 4, 1, 1);
-          ctx.fillRect(x + 4, y + 4, 1, 1);
-
-          ctx.fillRect(x, y + 6, 7, 1);
-          break;
-      }
-    }
-
-    for (let y = 0; y < qrWidth; y++) {
-      for (let x = 0; x < qrWidth; x++) {
-        if (matrix[y * qrWidth + x] & Module.FINDER) continue;
-        let on;
-        if (section === "mask" && matrix[y * qrWidth + x] & Module.DATA) {
-          on = maskValue(mask, x, y);
+    switch (section) {
+      case "finder":
+        if (finderShape === "Perfect") {
+          ctx.fillStyle = focusOFF;
+          ctx.fillRect(margin, margin, 7, 7);
+          ctx.fillRect(margin + qrWidth - 7, margin, 7, 7);
+          ctx.fillRect(margin, margin + qrWidth - 7, 7, 7);
+          ctx.fillStyle = focusON;
+          renderFinder(ctx, finderShape, qrWidth);
+          ctx.fillStyle = gray;
         } else {
-          on = matrix[y * qrWidth + x] & Module.ON;
+          ctx.fillStyle = fgColor;
+          renderFinder(ctx, finderShape, qrWidth);
         }
-
-        if (!on) continue;
-
-        ctx.fillStyle = fgColor;
-        switch (section) {
-          case "finder":
-            if (!(matrix[y * qrWidth + x] & Module.FINDER)) {
-              if (finderShape === "Perfect") {
-                ctx.fillStyle = "#ccc";
-              }
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
+            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      case "alignment":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.ALIGNMENT) {
+              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
             } else {
-              continue;
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
             }
-            break;
-          case "alignment":
-            if (!(matrix[y * qrWidth + x] & Module.ALIGNMENT)) {
-              ctx.fillStyle = "#ccc";
-            }
-            break;
-          case "timing":
-            if (!(matrix[y * qrWidth + x] & Module.TIMING)) {
-              ctx.fillStyle = "#ccc";
-            }
-            break;
-          case "no-alignment-timing":
-            if (matrix[y * qrWidth + x] & Module.TIMING) {
-              continue;
-            }
-            if (matrix[y * qrWidth + x] & Module.ALIGNMENT) {
-              if (!brap || y < qrWidth - 9 || x < qrWidth - 9) {
-                continue;
-              }
-            }
-            break;
-          case "mask":
-            if (!(matrix[y * qrWidth + x] & Module.DATA)) {
-              ctx.fillStyle = "#ccc";
-            }
-            break;
-          case "version":
-            if (!(matrix[y * qrWidth + x] & Module.VERSION)) {
-              ctx.fillStyle = "#ccc";
-            }
-            break;
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
         }
-
-        if (mirror) {
-          ctx.fillRect(size - 1 - margin - x, y + margin, 1, 1);
-        } else {
-          ctx.fillRect(x + margin, y + margin, 1, 1);
+        break;
+      case "timing":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.TIMING) {
+              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
         }
-      }
+        break;
+      case "no-alignment-timing":
+        ctx.fillStyle = fgColor;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.TIMING) {
+              ctx.fillStyle = focusOFF;
+            } else if (
+              module & Module.ALIGNMENT &&
+              (!brap || x < qrWidth - 9 || y < qrWidth - 9)
+            ) {
+              ctx.fillStyle = focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = fgColor;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      case "mask":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.DATA) {
+              ctx.fillStyle = maskValue(mask, x, y) ? focusON : focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      case "data":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.DATA) {
+              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      case "format":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.FORMAT) {
+              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      case "version":
+        ctx.fillStyle = gray;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            const module = matrix[y * qrWidth + x];
+            if (module & Module.FINDER) continue;
+            if (module & Module.VERSION) {
+              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
+            } else {
+              if (!(module & Module.ON)) continue;
+              ctx.fillStyle = gray;
+            }
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
+        break;
+      default:
+        ctx.fillStyle = fgColor;
+        renderFinder(ctx, finderShape, qrWidth);
+        for (let y = 0; y < qrWidth; y++) {
+          for (let x = 0; x < qrWidth; x++) {
+            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
+            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
+            ctx.fillRect(x + margin, y + margin, 1, 1);
+          }
+        }
     }
 
     if (animate) {
@@ -304,12 +268,10 @@ export function QrTutorial() {
   const regions = useRef<HTMLDivElement[]>([]);
 
   const setupRegion = useCallback((e) => {
-    console.log("regin");
     regions.current.push(e);
   }, []);
 
   const setupObserver = useCallback(() => {
-    console.log("setupObserver");
     observer.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -349,7 +311,10 @@ export function QrTutorial() {
         <div
           className="max-w-80% mx-auto sm:max-w-unset relative border"
           style={{
-            transform: `rotateZ(${zRot}deg) rotateX(${xRot}deg) rotateY(${yRot}deg)`,
+            transform: `rotateZ(${zRot}deg) rotateY(${
+              mirror ? 180 : 0
+            }deg)`,
+            filter: `invert(${invert ? 1 : 0})`,
           }}
         >
           <canvas
@@ -378,34 +343,31 @@ export function QrTutorial() {
         <div ref={setupRegion} data-step="finder">
           <p>
             <span className="font-bold">Finder patterns</span> are the big
-            squares shapes in three corners and the only part of a QR code that
-            requires some precision. These are used to determine the code's
-            orientation, dimensions, perspective and more. The approximate ratio
-            of 1:1:3:1:1 black and white pixels through the vertical and
-            horizontal center is key.
+            squares shapes in three corners. These are used to determine the
+            code's orientation, dimensions, perspective and more. The ratio of
+            black and white pixels through the center is key (roughly
+            1:1:3:1:1), so the corners aren't essential.
           </p>
-          <div className="flex">
-            <div className="w-full flex border ">
-              {Object.keys(FinderShapes).map(
-                // @ts-expect-error fuck this shit
-                (key: keyof typeof FinderShapes) => (
-                  <label
-                    className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
-                    key={key}
-                  >
-                    <input
-                      type="radio"
-                      name="finder"
-                      value={key}
-                      checked={key === finderShape}
-                      onChange={() => setFinderShape(key)}
-                    />
-                    {FinderShapes[key]()}
-                    {key}
-                  </label>
-                )
-              )}
-            </div>
+          <div className="w-full flex border my-2">
+            {Object.keys(FinderShapes).map(
+              // @ts-expect-error fuck this shit
+              (key: keyof typeof FinderShapes) => (
+                <label
+                  className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
+                  key={key}
+                >
+                  <input
+                    type="radio"
+                    name="finder"
+                    value={key}
+                    checked={key === finderShape}
+                    onChange={() => setFinderShape(key)}
+                  />
+                  {FinderShapes[key]()}
+                  {key}
+                </label>
+              )
+            )}
           </div>
           <p>
             To aid detection, finder patterns need a separator or "quiet zone"
@@ -419,18 +381,25 @@ export function QrTutorial() {
             last corner, but the smallest QR code doesn't have any, while very
             large codes have multiple.
           </p>
+          <input
+            value={version}
+            onChange={(e) => setVersion(e.target.valueAsNumber)}
+            type="range"
+            min="1"
+            max="40"
+          />
         </div>
         <div ref={setupRegion} data-step="timing">
           <p>
             <span className="font-bold">Timing patterns</span> are the
             horizontal and vertical belts of alternating black and white pixels.
-            These help with aligning rows and columns while decoding.
+            These supposedly help with aligning rows and columns while decoding.
           </p>
         </div>
         <div ref={setupRegion} data-step="no-alignment-timing">
           <p>
             Unlike the finder patterns, the timing patterns and alignment
-            patterns are not strictly necessary. A QR code will{" "}
+            patterns are not strictly necessary in practice. A QR code will{" "}
             <span className="font-italic">mostly*</span> scan fine without them.
           </p>
           <small>
@@ -450,58 +419,10 @@ export function QrTutorial() {
             </label>
           </small>
         </div>
-        <div ref={setupRegion} data-step="format">
-          <p>
-            <span className="font-bold">Format information</span> stores the
-            error correction level and the mask pattern applied to the data. One
-            copy is in the top left, and the other copy is split between the top
-            right and bottom left.
-          </p>
-        </div>
-        <div ref={setupRegion} data-step="mask">
-          <p>
-            The mask is one of 8 patterns XOR-ed with the data to break up
-            undesirable pixel arrangements (like the finder pattern shape).
-          </p>
-          <div className="w-full flex border">
-            {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
-              <label
-                className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
-                key={key}
-              >
-                <input
-                  type="radio"
-                  name="mask"
-                  value={i}
-                  checked={i === mask}
-                  onChange={() => setMask(i)}
-                />
-                {key}
-              </label>
-            ))}
-          </div>
-        </div>
-        <div ref={setupRegion} data-step="version">
-          <p>
-            Only very large QR codes will have{" "}
-            <span className="font-bold">version information</span>. Version
-            means size, and it ranges from 1 - 40. Most QR codes fit in Versions
-            1 through 6, where size is just calculated using the distance
-            between the finder patterns. One copy is in the top left, and the
-            other copy is in the bottom left.
-          </p>
-          <input
-            value={version}
-            onChange={(e) => setVersion(e.target.valueAsNumber)}
-            type="range"
-            min="1"
-            max="40"
-          />
-        </div>
         <div ref={setupRegion} data-step="data">
           <div className="font-bold text-lg">Data</div>
           <p>
-            The remaining space is for the{" "}
+            Almost all the remaining space is for the{" "}
             <span className="font-bold">data</span>. It starts with a header
             describing the encoding mode and the data length.
           </p>
@@ -564,7 +485,55 @@ export function QrTutorial() {
             </label>
           </div>
         </div>
-        <div ref={setupRegion}>
+        <div ref={setupRegion} data-step="format">
+          <p>
+            <span className="font-bold">Format information</span> stores the
+            error correction level and the mask pattern applied to the data. One
+            copy is in the top left, and the other copy is split between the top
+            right and bottom left.
+          </p>
+        </div>
+        <div ref={setupRegion} data-step="mask">
+          <p>
+            The mask is one of 8 patterns XOR-ed with the data to break up
+            undesirable pixel arrangements (like the finder pattern shape).
+          </p>
+          <div className="w-full flex border">
+            {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
+              <label
+                className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
+                key={key}
+              >
+                <input
+                  type="radio"
+                  name="mask"
+                  value={i}
+                  checked={i === mask}
+                  onChange={() => setMask(i)}
+                />
+                {key}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div ref={setupRegion} data-step="version">
+          <p>
+            Only very large QR codes will have{" "}
+            <span className="font-bold">version information</span>. Version
+            means size, and it ranges from 1 - 40. Most QR codes fit in Versions
+            1 through 6, where size is just calculated using the distance
+            between the finder patterns. One copy is in the top left, and the
+            other copy is in the bottom left.
+          </p>
+          {/* <input
+            value={version}
+            onChange={(e) => setVersion(e.target.valueAsNumber)}
+            type="range"
+            min="1"
+            max="40"
+          /> */}
+        </div>
+        <div ref={setupRegion} data-step="transformations">
           <div className="font-bold text-lg">Transformations</div>
           <p>
             QR codes can be rotated, mirrored, and the "dark" and "light" pixels
@@ -605,6 +574,126 @@ export function QrTutorial() {
   );
 }
 
+function renderFinder(ctx, finderShape, qrWidth) {
+  const margin = 1;
+  for (const [x, y] of [
+    [margin, margin],
+    [margin + qrWidth - 7, margin],
+    [margin, margin + qrWidth - 7],
+  ]) {
+    switch (finderShape) {
+      case "Perfect":
+        ctx.fillRect(x, y, 7, 1);
+        for (let i = 1; i < 6; i++) {
+          ctx.fillRect(x, y + i, 1, 1);
+          ctx.fillRect(x + 6, y + i, 1, 1);
+        }
+        ctx.fillRect(x + 2, y + 2, 3, 1);
+        ctx.fillRect(x + 2, y + 3, 3, 1);
+        ctx.fillRect(x + 2, y + 4, 3, 1);
+        ctx.fillRect(x, y + 6, 7, 1);
+        break;
+      case "OK":
+        ctx.fillRect(x + 3, y, 1, 1);
+        ctx.fillRect(x + 3, y + 2, 1, 1);
+        ctx.fillRect(x, y + 3, 1, 1);
+        ctx.fillRect(x + 2, y + 3, 3, 1);
+        ctx.fillRect(x + 6, y + 3, 1, 1);
+        ctx.fillRect(x + 3, y + 4, 1, 1);
+        ctx.fillRect(x + 3, y + 6, 1, 1);
+        break;
+      case "Bad":
+        ctx.fillRect(x, y, 3, 1);
+        ctx.fillRect(x + 4, y, 3, 1);
+        for (let i = 1; i < 3; i++) {
+          ctx.fillRect(x, y + i, 1, 1);
+          ctx.fillRect(x + 6, y + i, 1, 1);
+        }
+        for (let i = 4; i < 6; i++) {
+          ctx.fillRect(x, y + i, 1, 1);
+          ctx.fillRect(x + 6, y + i, 1, 1);
+        }
+        ctx.fillRect(x + 2, y + 2, 3, 1);
+        ctx.fillRect(x + 2, y + 3, 3, 1);
+        ctx.fillRect(x + 2, y + 4, 3, 1);
+
+        ctx.fillRect(x, y + 6, 3, 1);
+        ctx.fillRect(x + 4, y + 6, 3, 1);
+        break;
+      case "Bad2":
+        ctx.fillRect(x, y, 7, 1);
+        for (let i = 1; i < 6; i++) {
+          ctx.fillRect(x, y + i, 1, 1);
+          ctx.fillRect(x + 6, y + i, 1, 1);
+        }
+        ctx.fillRect(x + 2, y + 2, 1, 1);
+        ctx.fillRect(x + 4, y + 2, 1, 1);
+        ctx.fillRect(x + 3, y + 3, 1, 1);
+        ctx.fillRect(x + 2, y + 4, 1, 1);
+        ctx.fillRect(x + 4, y + 4, 1, 1);
+
+        ctx.fillRect(x, y + 6, 7, 1);
+        break;
+    }
+  }
+}
+
+const FinderShapes = {
+  Perfect: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h3v3h-3z" fill="black" />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  OK: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M3,0h1v1h-1zM0,3h1v1h-1zM6,3h1v1h-1zM3,6h1v1h-1zM3,2h1v1h1v1h-1v1h-1v-1h-1v-1h1z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  Bad: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M0,0h3v1h-2v2h-1zM7,0v3h-1v-2h-2v-1zM0,7v-3h1v2h2v1zM7,7h-3v-1h2v-2h1zM2,2h3v3h-3z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+  Bad2: () => (
+    <svg viewBox="-.05 -.05 7.1 7.1">
+      <path d="M0,0h7v7h-7z" fill="white" />
+      <path
+        d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h1v1h1v-1h1v1h-1v1h1v1h-1v-1h-1v1h-1v-1h1v-1h-1z"
+        fill="black"
+      />
+      <path
+        d="M0,0h7M0,1h7M0,2h7M0,3h7M0,4h7M0,5h7M0,6h7M0,7v7M0,0v7M1,0v7M2,0v7M3,0v7M4,0v7M5,0v7M6,0v7M7,0v7"
+        stroke="gray"
+        strokeWidth="0.05"
+      />
+    </svg>
+  ),
+};
+
 function maskValue(mask, x, y) {
   switch (mask) {
     case 0:
@@ -625,3 +714,65 @@ function maskValue(mask, x, y) {
       return (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
   }
 }
+
+const Module = {
+  ON: 1 << 0,
+  DATA: 1 << 1,
+  FINDER: 1 << 2,
+  ALIGNMENT: 1 << 3,
+  TIMING: 1 << 4,
+  FORMAT: 1 << 5,
+  VERSION: 1 << 6,
+  MODIFIER: 1 << 7,
+};
+
+const NUM_DATA_MODULES = [
+  0, 208, 359, 567, 807, 1079, 1383, 1568, 1936, 2336, 2768, 3232, 3728, 4256,
+  4651, 5243, 5867, 6523, 7211, 7931, 8683, 9252, 10068, 10916, 11796, 12708,
+  13652, 14628, 15371, 16411, 17483, 18587, 19723, 20891, 22091, 23008, 24272,
+  25568, 26896, 28256, 29648,
+];
+
+const NUM_EC_CODEWORDS = [
+  [0, 0, 0, 0],
+  [7, 10, 13, 17],
+  [10, 16, 22, 28],
+  [15, 26, 36, 44],
+  [20, 36, 52, 64],
+  [26, 48, 72, 88],
+  [36, 64, 96, 112],
+  [40, 72, 108, 130],
+  [48, 88, 132, 156],
+  [60, 110, 160, 192],
+  [72, 130, 192, 224],
+  [80, 150, 224, 264],
+  [96, 176, 260, 308],
+  [104, 198, 288, 352],
+  [120, 216, 320, 384],
+  [132, 240, 360, 432],
+  [144, 280, 408, 480],
+  [168, 308, 448, 532],
+  [180, 338, 504, 588],
+  [196, 364, 546, 650],
+  [224, 416, 600, 700],
+  [224, 442, 644, 750],
+  [252, 476, 690, 816],
+  [270, 504, 750, 900],
+  [300, 560, 810, 960],
+  [312, 588, 870, 1050],
+  [336, 644, 952, 1110],
+  [360, 700, 1020, 1200],
+  [390, 728, 1050, 1260],
+  [420, 784, 1140, 1350],
+  [450, 812, 1200, 1440],
+  [480, 868, 1290, 1530],
+  [510, 924, 1350, 1620],
+  [540, 980, 1440, 1710],
+  [570, 1036, 1530, 1800],
+  [570, 1064, 1590, 1890],
+  [600, 1120, 1680, 1980],
+  [630, 1204, 1770, 2100],
+  [660, 1260, 1860, 2220],
+  [720, 1316, 1950, 2310],
+  [750, 1372, 2040, 2430],
+];

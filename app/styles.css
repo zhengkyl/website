@@ -16,7 +16,8 @@ body {
 .scroll-highlight {
   position: relative;
 }
-.scroll-highlight::before {
+/* ::before causes scroll issues in ff when scale changes */
+.scroll-highlight::after {
   content: "";
   position: absolute;
   top: 0;
