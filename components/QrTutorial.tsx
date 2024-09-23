@@ -1,19 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import init, { ECL, generate, Mask, Mode, QrOptions, Version } from "fuqr";
+import init, { ECL, Mask } from "fuqr";
+import { PALETTE, QrCanvas } from "./QrCanvas";
+import { Sa } from "./mdx";
 
-let initDone = false;
 let initStarted = false;
 
 export function QrTutorial() {
   const scrollHighlight = useRef<HTMLDivElement>(null!);
-
-  const canvasA = useRef<HTMLCanvasElement>(null);
-  const canvasB = useRef<HTMLCanvasElement>(null);
-  const showA = useRef(false);
-  const svgOverlay = useRef<SVGSVGElement>(null);
-  const zigzag = useRef<SVGPolylineElement>(null);
+  const [section, setSection] = useState("");
 
   const [text, setText] = useState("hello there");
   const [version, setVersion] = useState(2);
@@ -23,312 +19,23 @@ export function QrTutorial() {
   const [finderShape, setFinderShape] =
     useState<keyof typeof FinderShapes>("Perfect");
   const [brap, setBrap] = useState(false); // bottom right alignment pattern
-  const [drawColor, setDrawColor] = useState(false);
-  const [showZigzag, setShowZigzag] = useState(false);
+  const [showZigzag, setShowZigzag] = useState(true);
+  const [showBytes, setShowBytes] = useState(false);
 
   const [zRot, setZRot] = useState(0);
-
   const [invert, setInvert] = useState(false);
   const [mirror, setMirror] = useState(false);
 
-  const [section, setSection] = useState("");
-  const prevSection = useRef(section);
+  const [initDone, setInitDone] = useState(false);
 
   useEffect(() => {
     if (!initStarted) {
       initStarted = true;
       init().then(() => {
-        initDone = true;
-        render(true, false);
+        setInitDone(true);
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (initDone) {
-      render(false, prevSection.current !== section || section === "finder");
-      prevSection.current = section;
-    }
-  }, [finderShape, brap, section]);
-
-  useEffect(() => {
-    if (initDone) {
-      render(true, false);
-    }
-  }, [text, ecl, version, mask]);
-
-  // todo return type from fuqr
-  const qrCode = useRef<any>(null!);
-
-  const render = (regenerate, animate) => {
-    if (regenerate) {
-      try {
-        qrCode.current = generate(
-          text,
-          new QrOptions()
-            .mode(Mode.Byte)
-            .min_ecl(ecl)
-            .strict_ecl(true)
-            .min_version(new Version(version))
-            .mask(mask)
-        );
-      } catch (e) {
-        console.error("Exceeded max capacity, fool");
-        return;
-      }
-    }
-    const { matrix, version: outVersion } = qrCode.current;
-    if (animate) showA.current = !showA.current;
-    const nextCanvas = (showA.current ? canvasA : canvasB).current!;
-    const prevCanvas = (showA.current ? canvasB : canvasA).current!;
-    prevCanvas.style.zIndex = "-1";
-    nextCanvas.style.zIndex = "1";
-
-    const ctx = nextCanvas.getContext("2d")!;
-    const margin = 1;
-    const qrWidth = outVersion * 4 + 17;
-    const size = qrWidth + 2 * margin;
-    ctx.canvas.width = size;
-    ctx.canvas.height = size;
-    svgOverlay.current!.setAttribute("viewBox", `0 0 ${size} ${size}`);
-    console.log("here");
-    if (showZigzag) {
-      zigzag.current!.setAttribute(
-        "points",
-        getZigzagPoints(qrCode.current!.matrix, qrCode.current.version * 4 + 17)
-      );
-    }
-
-    const focusON = "#7f1d1d";
-    const focusOFF = "#fee2e2";
-
-    const fgColor = "#000";
-    const bgColor = "#fff";
-    const gray = "#ccc";
-
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, size, size);
-
-    switch (section) {
-      case "finder":
-        if (finderShape === "Perfect") {
-          ctx.fillStyle = focusOFF;
-          ctx.fillRect(margin, margin, 7, 7);
-          ctx.fillRect(margin + qrWidth - 7, margin, 7, 7);
-          ctx.fillRect(margin, margin + qrWidth - 7, 7, 7);
-          ctx.fillStyle = focusON;
-          renderFinder(ctx, finderShape, qrWidth);
-          ctx.fillStyle = gray;
-        } else {
-          ctx.fillStyle = fgColor;
-          renderFinder(ctx, finderShape, qrWidth);
-        }
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
-            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "alignment":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.ALIGNMENT) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "timing":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.TIMING) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "no-alignment-timing":
-        ctx.fillStyle = fgColor;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.TIMING) {
-              ctx.fillStyle = focusOFF;
-            } else if (
-              module & Module.ALIGNMENT &&
-              (!brap || x < qrWidth - 9 || y < qrWidth - 9)
-            ) {
-              ctx.fillStyle = focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = fgColor;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "mask":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) {
-              ctx.fillStyle = maskValue(mask, x, y) ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "data":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) {
-              continue;
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-
-        const headerEnd = headerLength(outVersion);
-        const eccEnd = (NUM_DATA_MODULES[outVersion] >> 3) * 8;
-        const paddingEnd = eccEnd - NUM_EC_CODEWORDS[outVersion][ecl] * 8;
-
-        const bytes = new TextEncoder().encode(text).length;
-        const dataEnd = headerEnd + bytes * 8;
-
-        let i = 0;
-        let start = qrWidth - 1;
-        let end = -1;
-        let inc = -1;
-
-        ctx.fillStyle = "red";
-        for (let x = qrWidth - 1; x > 0; x -= 2) {
-          if (x === 6) {
-            x -= 1;
-          }
-          for (let y = start; y !== end; y += inc) {
-            if (matrix[y * qrWidth + x] & Module.DATA) {
-              if (i === headerEnd) {
-                ctx.fillStyle = "orange";
-              }
-              if (i === dataEnd) {
-                ctx.fillStyle = "yellow";
-              } else if (i === paddingEnd) {
-                ctx.fillStyle = "green";
-              } else if (i === eccEnd) {
-                ctx.fillStyle = "blue";
-              } else {
-              }
-              ctx.fillRect(x + margin, y + margin, 1, 1);
-              i++;
-            }
-            if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-              if (i === headerEnd) {
-                ctx.fillStyle = "orange";
-              }
-              if (i === dataEnd) {
-                ctx.fillStyle = "yellow";
-              } else if (i === paddingEnd) {
-                ctx.fillStyle = "green";
-              } else if (i === eccEnd) {
-                ctx.fillStyle = "blue";
-              } else {
-              }
-              ctx.fillRect(x - 1 + margin, y + margin, 1, 1);
-              i++;
-            }
-          }
-          start += inc * (qrWidth - 1);
-          end -= inc * (qrWidth + 1);
-          inc *= -1;
-        }
-        break;
-      case "format":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.FORMAT) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "version":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.VERSION) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      default:
-        ctx.fillStyle = fgColor;
-        renderFinder(ctx, finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
-            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-    }
-
-    if (animate) {
-      nextCanvas.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration: 100,
-        easing: "ease-out",
-      });
-    }
-  };
 
   const observer = useRef<IntersectionObserver>(null!);
   const regions = useRef<HTMLDivElement[]>([]);
@@ -367,6 +74,7 @@ export function QrTutorial() {
 
     regions.current.forEach((e) => observer.current.observe(e));
   }, []);
+
   // ugly parent max-w instead of child max-w makes padding easier
   return (
     <div
@@ -375,34 +83,55 @@ export function QrTutorial() {
     >
       <div className="flex-1 z-10 sticky top-0 sm:top-[calc(max(45vh-min(768px,50vw)/2,0px))] h-full py-4 px-2 mx-2 bg-gradient-to-b from-white from-95%">
         <div
-          className="max-w-80% mx-auto sm:max-w-unset relative border"
+          className="max-w-[30vh] sm:max-w-unset mx-auto relative border"
           style={{
             transform: `rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
             filter: `invert(${invert ? 1 : 0})`,
           }}
         >
-          <canvas
-            ref={canvasA}
-            className="w-full pixelated absolute transition-opacity"
+          <QrCanvas
+            initDone={initDone}
+            section={section}
+            text={text}
+            version={version}
+            ecl={ecl}
+            mask={mask}
+            finderShape={finderShape}
+            brap={brap}
+            showZigzag={showZigzag}
+            showBytes={showBytes}
+            setVersion={setVersion}
           />
-          <canvas
-            ref={canvasB}
-            className="w-full pixelated absolute transition-opacity"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1 1"
-            className="relative z-10"
-            ref={svgOverlay}
-          >
-            <polyline
-              ref={zigzag}
-              fill="none"
-              stroke="#f0f"
-              strokeWidth="0.1"
-              transform="translate(1.5 1.5)"
-            />
-          </svg>
+        </div>
+        <div
+          className={`flex-wrap justify-center gap-x-4 gap-y-2 py-2 transition-opacity text-sm sm:text-base ${
+            section === "codewords" ||
+            section === "breakdown" ||
+            section === "encoding"
+              ? "flex"
+              : "hidden"
+          }`}
+        >
+          {section !== "codewords" && (
+            <div className="flex gap-1 items-center">
+              <div className="w-5 h-5" style={{ background: PALETTE[3] }}></div>
+              Header
+            </div>
+          )}
+          <div className="flex gap-1 items-center">
+            <div className="w-5 h-5" style={{ background: PALETTE[2] }}></div>
+            Data
+          </div>
+          {section !== "codewords" && (
+            <div className="flex gap-1 items-center">
+              <div className="w-5 h-5" style={{ background: PALETTE[0] }}></div>
+              Unused capacity
+            </div>
+          )}
+          <div className="flex gap-1 items-center">
+            <div className="w-5 h-5" style={{ background: PALETTE[1] }}></div>
+            Error correction
+          </div>
         </div>
       </div>
       <div
@@ -450,13 +179,17 @@ export function QrTutorial() {
             last corner, but the smallest QR code doesn't have any, while very
             large codes have multiple.
           </p>
-          <input
-            value={version}
-            onChange={(e) => setVersion(e.target.valueAsNumber)}
-            type="range"
-            min="1"
-            max="40"
-          />
+          <label className="flex flex-col gap-1 p-2 border my-2">
+            <div>Size</div>
+            <input
+              className="block w-full"
+              value={version}
+              onChange={(e) => setVersion(e.target.valueAsNumber)}
+              type="range"
+              min="1"
+              max="40"
+            />
+          </label>
         </div>
         <div ref={setupRegion} data-step="timing">
           <p>
@@ -465,86 +198,119 @@ export function QrTutorial() {
             These supposedly help with aligning rows and columns while decoding.
           </p>
         </div>
-        <div ref={setupRegion} data-step="no-alignment-timing">
+        <div
+          ref={setupRegion}
+          data-step="no-alignment-timing"
+          className="flex flex-col gap-2"
+        >
           <p>
             Unlike the finder patterns, the timing patterns and alignment
             patterns are not strictly necessary in practice. A QR code will{" "}
             <span className="font-italic">mostly*</span> scan fine without them.
           </p>
-          <small>
-            *I suspect the timing pattern is actually useless, while{" "}
-            <a href="https://github.com/zxing/zxing/blob/474f4bb5a0c5ca0f200df4a8cafc1b99c8f24397/core/src/main/java/com/google/zxing/qrcode/detector/AlignmentPatternFinder.java#L30">
-              the bottom right alignment pattern does help
-            </a>
-            .
-            <label className="flex items-center">
+          <p>
+            <small className="block">
+              *
+              <Sa href="https://github.com/zxing/zxing/blob/474f4bb5a0c5ca0f200df4a8cafc1b99c8f24397/core/src/main/java/com/google/zxing/qrcode/detector/AlignmentPatternFinder.java#L30">
+                The bottom right alignment pattern does help
+              </Sa>
+              , especially for larger sizes, while the timing pattern seems to
+              be completely useless.
+            </small>
+            <label className="flex items-center gap-1 w-fit">
               <input
-                className="w-4 h-4 mr-1"
+                className="w-5 h-5"
                 type="checkbox"
                 checked={brap}
                 onChange={(e) => setBrap(e.target.checked)}
               />
               Enable bottom right alignment pattern
             </label>
-          </small>
+          </p>
+        </div>
+        <div ref={setupRegion} data-step="format">
+          <p>
+            <span className="font-bold">Format information</span> stores the
+            error correction level and the mask pattern applied to the data
+            (explained below). One copy is in the top right, and the other copy
+            is split between the top right and bottom left.
+          </p>
+        </div>
+        <div ref={setupRegion} data-step="version">
+          <p>
+            Very large QR codes will have a section for{" "}
+            <span className="font-bold">version information</span>. Version
+            means size, and it ranges from 1–40. One copy is in the top right,
+            and the other copy is in the bottom left.
+          </p>
+          <label className="flex flex-col gap-1 p-2 border my-2">
+            <div>Version {version}</div>
+            <input
+              className="block w-full"
+              value={version}
+              onChange={(e) => setVersion(e.target.valueAsNumber)}
+              type="range"
+              min="1"
+              max="40"
+            />
+          </label>
+          <p>
+            For smaller codes, size can be accurately calculated using the
+            distance between the finder patterns.
+          </p>
         </div>
         <div ref={setupRegion} data-step="data">
-          <div className="font-bold text-lg">Data</div>
           <p>
             The remaining space is for the{" "}
-            <span className="font-bold">data</span> (and some metadata which
-            will make more sense after).{" "}
+            <span className="font-bold">data</span>.
           </p>
           <input
-            className="border p-2"
+            className="block border p-2 my-2"
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+        </div>
+        <div
+          ref={setupRegion}
+          data-step="zigzag"
+          className="flex flex-col gap-2"
+        >
           <p>
-            Surprisingly, it starts at the bottom right, and zigzags left and
-            right, up and down.
+            Perhaps surprisingly, it starts at the bottom right and zigzags up
+            and down, from the right to the left.
           </p>
-          <label className="flex items-center">
+          <label className="flex items-center gap-1 self-start">
             <input
-              className="w-5 h-5 mr-1"
+              className="w-5 h-5"
               type="checkbox"
               checked={showZigzag}
-              onChange={(e) => {
-                setShowZigzag(e.target.checked);
-                zigzag.current!.setAttribute(
-                  "points",
-                  e.target.checked
-                    ? getZigzagPoints(
-                        qrCode.current!.matrix,
-                        qrCode.current.version * 4 + 17
-                      )
-                    : ""
-                );
-              }}
+              onChange={(e) => setShowZigzag(e.target.checked)}
             />
-            Show zigzag pattern
+            Show zigzag
+          </label>
+          <p>
+            The bits are organized in blocks of 8 (aka bytes), so the last few
+            pixels will be unused if the number of data pixels isn't divisible
+            by 8.
+          </p>
+          <label className="flex items-center gap-1 self-start">
+            <input
+              className="w-5 h-5"
+              type="checkbox"
+              checked={showBytes}
+              onChange={(e) => setShowBytes(e.target.checked)}
+            />
+            Show byte boundaries
           </label>
         </div>
-        <div ref={setupRegion} data-step="encoding">
+        <div ref={setupRegion} data-step="codewords">
           <p>
-            It starts with a header describing the encoding mode and the data
-            length. There are efficient encoding modes for numbers, alphanumeric
-            strings, and Japanese characters*, but the only relevant mode for
-            URLs is Byte mode, which just means UTF-8.
+            There are 4 levels of error correction which allow roughly 7%, 15%,
+            25%, or 30% of all the bytes to be misdecoded. See how increasing
+            the error correction also reduces the data capacity.
           </p>
-          <small>
-            *Most QR code generators don't support this, let alone QR code
-            scanners.
-          </small>
-        </div>
-        <div ref={setupRegion} data-step="ecl">
-          <p>
-            The header is followed by the actual data, padded to fill the
-            capacity, and then error correction codewords fill the remaining
-            space.
-          </p>
-          <div className="w-full flex border ">
+          <div className="w-full flex border my-2">
             {["Low", "Medium", "Quartile", "High"].map((key, i) => (
               <label
                 className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
@@ -552,7 +318,7 @@ export function QrTutorial() {
               >
                 <input
                   type="radio"
-                  name="ecl"
+                  name="ecl1"
                   value={i}
                   checked={i === ecl}
                   onChange={() => setECL(i)}
@@ -561,29 +327,52 @@ export function QrTutorial() {
               </label>
             ))}
           </div>
+        </div>
+        <div ref={setupRegion} data-step="breakdown">
+          <p>
+            If you further break down the data, you'll see it starts with a
+            header and is padded to fill the unused capacity. You can play
+            around with the error correction level, input text, and version
+            (size) to see how the space is used.
+          </p>
+          <input
+            className="block border p-2 my-2"
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <label className="flex flex-col gap-1 p-2 border my-2">
+            <div>Version {version}</div>
+            <input
+              className="block w-full"
+              value={version}
+              onChange={(e) => setVersion(e.target.valueAsNumber)}
+              type="range"
+              min="1"
+              max="40"
+            />
+          </label>
+        </div>
+        <div ref={setupRegion} data-step="encoding">
+          <p>
+            The data header describes the encoding mode and the data length.
+            There are efficient encoding modes for numbers and alphanumeric
+            text*, but the only relevant mode for URLs is Byte mode, which just
+            means UTF-8.
+          </p>
           <small>
-            You'll often see figures like 7%, 15%, 25%, 30%, but those are just
-            lower bounds. Real error tolerance may be 3–5% higher. //TODO do
-            math to prove this
+            *More encoding modes are specified, but most QR code generators
+            don't support them, let alone QR code scanners. Also, alphanumeric
+            mode can encode URLs, but it only has uppercase characters.
           </small>
-          <div>
-            <label className="flex items-center">
-              <input
-                className="w-5 h-5 mr-1"
-                type="checkbox"
-                checked={drawColor}
-                onChange={(e) => setDrawColor(e.target.checked)}
-              />
-              Show byte boundaries
-            </label>
-          </div>
         </div>
         <div ref={setupRegion} data-step="mask">
           <p>
-            The mask is one of 8 patterns XOR-ed with the data to break up
-            undesirable pixel arrangements (like the finder pattern shape).
+            Finally, the <span className="font-bold">mask</span> is one of 8
+            patterns XOR-ed with the data to break up undesirable pixel
+            arrangements (like the finder pattern shape).
           </p>
-          <div className="w-full flex border">
+          <div className="w-full flex border my-2">
             {Array.from({ length: 8 }, (_, i) => i).map((key, i) => (
               <label
                 className="flex-1 flex flex-col items-center gap-2 border p-2 cursor-pointer"
@@ -601,33 +390,16 @@ export function QrTutorial() {
             ))}
           </div>
         </div>
-        <div ref={setupRegion} data-step="format">
-          <p>
-            <span className="font-bold">Format information</span> stores the
-            error correction level and the mask pattern applied to the data. One
-            copy is in the top left, and the other copy is split between the top
-            right and bottom left.
-          </p>
-        </div>
-        <div ref={setupRegion} data-step="version">
-          <p>
-            Only very large QR codes will have{" "}
-            <span className="font-bold">version information</span>. Version
-            means size, and it ranges from 1 - 40. Most QR codes fit in Versions
-            1 through 6, where size is just calculated using the distance
-            between the finder patterns. One copy is in the top left, and the
-            other copy is in the bottom left.
-          </p>
-        </div>
-        <div ref={setupRegion} data-step="transformations">
-          <div className="font-bold text-lg">Transformations</div>
+        <div ref={setupRegion} data-step="miscellaneous" className="flex flex-col gap-2">
+          <div className="font-bold text-lg">Miscellaneous</div>
           <p>
             QR codes can be rotated, mirrored, and the "dark" and "light" pixels
             can be inverted.
           </p>
-          <label>
-            Rotation
+          <label className="flex flex-col gap-1 p-2 border my-2">
+            <div>Rotation {zRot}°</div>
             <input
+              className="block w-full"
               value={zRot}
               onChange={(e) => setZRot(e.target.valueAsNumber)}
               type="range"
@@ -636,18 +408,18 @@ export function QrTutorial() {
               max="180"
             />
           </label>
-          <label className="flex items-center">
+          <label className="flex items-center gap-1">
             <input
-              className="w-5 h-5 mr-1"
+              className="w-5 h-5"
               type="checkbox"
               checked={mirror}
               onChange={(e) => setMirror(e.target.checked)}
             />
             Mirror
           </label>
-          <label className="flex items-center">
+          <label className="flex items-center gap-1">
             <input
-              className="w-5 h-5 mr-1"
+              className="w-5 h-5"
               type="checkbox"
               checked={invert}
               onChange={(e) => setInvert(e.target.checked)}
@@ -658,95 +430,6 @@ export function QrTutorial() {
       </div>
     </div>
   );
-}
-
-function getZigzagPoints(matrix, qrWidth) {
-  let points = "";
-  let start = qrWidth - 1;
-  let end = -1;
-  let inc = -1;
-
-  for (let x = qrWidth - 1; x > 0; x -= 2) {
-    if (x === 6) {
-      x -= 1;
-    }
-    for (let y = start; y !== end; y += inc) {
-      if (matrix[y * qrWidth + x] & Module.DATA) {
-        points += `${x},${y} `;
-      }
-      if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-        points += `${x - 1},${y} `;
-      }
-    }
-    start += inc * (qrWidth - 1);
-    end -= inc * (qrWidth + 1);
-    inc *= -1;
-  }
-  return points;
-}
-
-function renderFinder(ctx, finderShape, qrWidth) {
-  const margin = 1;
-  for (const [x, y] of [
-    [margin, margin],
-    [margin + qrWidth - 7, margin],
-    [margin, margin + qrWidth - 7],
-  ]) {
-    switch (finderShape) {
-      case "Perfect":
-        ctx.fillRect(x, y, 7, 1);
-        for (let i = 1; i < 6; i++) {
-          ctx.fillRect(x, y + i, 1, 1);
-          ctx.fillRect(x + 6, y + i, 1, 1);
-        }
-        ctx.fillRect(x + 2, y + 2, 3, 1);
-        ctx.fillRect(x + 2, y + 3, 3, 1);
-        ctx.fillRect(x + 2, y + 4, 3, 1);
-        ctx.fillRect(x, y + 6, 7, 1);
-        break;
-      case "OK":
-        ctx.fillRect(x + 3, y, 1, 1);
-        ctx.fillRect(x + 3, y + 2, 1, 1);
-        ctx.fillRect(x, y + 3, 1, 1);
-        ctx.fillRect(x + 2, y + 3, 3, 1);
-        ctx.fillRect(x + 6, y + 3, 1, 1);
-        ctx.fillRect(x + 3, y + 4, 1, 1);
-        ctx.fillRect(x + 3, y + 6, 1, 1);
-        break;
-      case "Bad":
-        ctx.fillRect(x, y, 3, 1);
-        ctx.fillRect(x + 4, y, 3, 1);
-        for (let i = 1; i < 3; i++) {
-          ctx.fillRect(x, y + i, 1, 1);
-          ctx.fillRect(x + 6, y + i, 1, 1);
-        }
-        for (let i = 4; i < 6; i++) {
-          ctx.fillRect(x, y + i, 1, 1);
-          ctx.fillRect(x + 6, y + i, 1, 1);
-        }
-        ctx.fillRect(x + 2, y + 2, 3, 1);
-        ctx.fillRect(x + 2, y + 3, 3, 1);
-        ctx.fillRect(x + 2, y + 4, 3, 1);
-
-        ctx.fillRect(x, y + 6, 3, 1);
-        ctx.fillRect(x + 4, y + 6, 3, 1);
-        break;
-      case "Bad2":
-        ctx.fillRect(x, y, 7, 1);
-        for (let i = 1; i < 6; i++) {
-          ctx.fillRect(x, y + i, 1, 1);
-          ctx.fillRect(x + 6, y + i, 1, 1);
-        }
-        ctx.fillRect(x + 2, y + 2, 1, 1);
-        ctx.fillRect(x + 4, y + 2, 1, 1);
-        ctx.fillRect(x + 3, y + 3, 1, 1);
-        ctx.fillRect(x + 2, y + 4, 1, 1);
-        ctx.fillRect(x + 4, y + 4, 1, 1);
-
-        ctx.fillRect(x, y + 6, 7, 1);
-        break;
-    }
-  }
 }
 
 const FinderShapes = {
@@ -804,90 +487,3 @@ const FinderShapes = {
     </svg>
   ),
 };
-
-function maskValue(mask, x, y) {
-  switch (mask) {
-    case 0:
-      return (y + x) % 2 === 0;
-    case 1:
-      return y % 2 === 0;
-    case 2:
-      return x % 3 === 0;
-    case 3:
-      return (y + x) % 3 === 0;
-    case 4:
-      return (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0;
-    case 5:
-      return ((y * x) % 2) + ((y * x) % 3) === 0;
-    case 6:
-      return (((y * x) % 2) + ((y * x) % 3)) % 2 === 0;
-    case 7:
-      return (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
-  }
-}
-
-const Module = {
-  ON: 1 << 0,
-  DATA: 1 << 1,
-  FINDER: 1 << 2,
-  ALIGNMENT: 1 << 3,
-  TIMING: 1 << 4,
-  FORMAT: 1 << 5,
-  VERSION: 1 << 6,
-  MODIFIER: 1 << 7,
-};
-
-function headerLength(version) {
-  return 4 + (version < 10 ? 8 : 16);
-}
-
-const NUM_DATA_MODULES = [
-  0, 208, 359, 567, 807, 1079, 1383, 1568, 1936, 2336, 2768, 3232, 3728, 4256,
-  4651, 5243, 5867, 6523, 7211, 7931, 8683, 9252, 10068, 10916, 11796, 12708,
-  13652, 14628, 15371, 16411, 17483, 18587, 19723, 20891, 22091, 23008, 24272,
-  25568, 26896, 28256, 29648,
-];
-
-const NUM_EC_CODEWORDS = [
-  [0, 0, 0, 0],
-  [7, 10, 13, 17],
-  [10, 16, 22, 28],
-  [15, 26, 36, 44],
-  [20, 36, 52, 64],
-  [26, 48, 72, 88],
-  [36, 64, 96, 112],
-  [40, 72, 108, 130],
-  [48, 88, 132, 156],
-  [60, 110, 160, 192],
-  [72, 130, 192, 224],
-  [80, 150, 224, 264],
-  [96, 176, 260, 308],
-  [104, 198, 288, 352],
-  [120, 216, 320, 384],
-  [132, 240, 360, 432],
-  [144, 280, 408, 480],
-  [168, 308, 448, 532],
-  [180, 338, 504, 588],
-  [196, 364, 546, 650],
-  [224, 416, 600, 700],
-  [224, 442, 644, 750],
-  [252, 476, 690, 816],
-  [270, 504, 750, 900],
-  [300, 560, 810, 960],
-  [312, 588, 870, 1050],
-  [336, 644, 952, 1110],
-  [360, 700, 1020, 1200],
-  [390, 728, 1050, 1260],
-  [420, 784, 1140, 1350],
-  [450, 812, 1200, 1440],
-  [480, 868, 1290, 1530],
-  [510, 924, 1350, 1620],
-  [540, 980, 1440, 1710],
-  [570, 1036, 1530, 1800],
-  [570, 1064, 1590, 1890],
-  [600, 1120, 1680, 1980],
-  [630, 1204, 1770, 2100],
-  [660, 1260, 1860, 2220],
-  [720, 1316, 1950, 2310],
-  [750, 1372, 2040, 2430],
-];
