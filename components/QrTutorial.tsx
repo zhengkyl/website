@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import init, { ECL, Mask } from "fuqr";
+import init, { generate, QrOptions, Mode, Version, ECL, Mask } from "fuqr";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
 
@@ -23,6 +23,7 @@ export function QrTutorial() {
   const [showBytes, setShowBytes] = useState(false);
 
   const [zRot, setZRot] = useState(0);
+  const [perspective, setPerspective] = useState(false);
   const [invert, setInvert] = useState(false);
   const [mirror, setMirror] = useState(false);
 
@@ -75,9 +76,44 @@ export function QrTutorial() {
     regions.current.forEach((e) => observer.current.observe(e));
   }, []);
 
-  // ugly parent max-w instead of child max-w makes padding easier
+  const angleRad = (zRot * Math.PI) / 180;
+  const scale = perspective
+    ? 1
+    : 1 / (Math.abs(Math.cos(angleRad)) + Math.abs(Math.sin(angleRad)));
+
+  // todo type from fuqr
+  const qrCode = useRef<any>(null!);
+  const prevText = useRef(text);
+
+  if (
+    initDone &&
+    (qrCode.current == null ||
+      text !== prevText.current ||
+      version !== qrCode.current.version ||
+      ecl !== qrCode.current.ecl ||
+      mask !== qrCode.current.mask)
+  ) {
+    try {
+      qrCode.current = generate(
+        text,
+        new QrOptions()
+          .mode(Mode.Byte)
+          .min_ecl(ecl)
+          .strict_ecl(true)
+          .min_version(new Version(version))
+          .mask(mask)
+      );
+      prevText.current = text;
+      setVersion(qrCode.current.version);
+    } catch (e) {
+      console.error("Exceeded max capacity, fool");
+      return;
+    }
+  }
+
   return (
     <div
+      // ugly parent max-w instead of child max-w makes padding easier
       className="w-screen max-w-[1536px] ml-[calc(50%-min(768px,50vw))] flex flex-col gap-4 sm:flex-row"
       ref={setupObserver}
     >
@@ -85,22 +121,25 @@ export function QrTutorial() {
         <div
           className="max-w-[30vh] sm:max-w-unset mx-auto relative border"
           style={{
-            transform: `rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
+            transform: `${
+              perspective
+                ? "scale(0.7) perspective(150vmin) rotateX(45deg)"
+                : ""
+            } rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
             filter: `invert(${invert ? 1 : 0})`,
+            scale,
+            transitionProperty: "transform, scale",
+            transitionDuration: "300ms",
+            transitionTimingFunction: "ease-out",
           }}
         >
           <QrCanvas
-            initDone={initDone}
             section={section}
-            text={text}
-            version={version}
-            ecl={ecl}
-            mask={mask}
+            qrCode={qrCode.current}
             finderShape={finderShape}
             brap={brap}
             showZigzag={showZigzag}
             showBytes={showBytes}
-            setVersion={setVersion}
           />
         </div>
         <div
@@ -114,22 +153,46 @@ export function QrTutorial() {
         >
           {section !== "codewords" && (
             <div className="flex gap-1 items-center">
-              <div className="w-5 h-5" style={{ background: PALETTE[3] }}></div>
+              <div
+                className="w-5 h-5"
+                style={{
+                  background: PALETTE[3],
+                  filter: `invert(${invert ? 1 : 0})`,
+                }}
+              ></div>
               Header
             </div>
           )}
           <div className="flex gap-1 items-center">
-            <div className="w-5 h-5" style={{ background: PALETTE[2] }}></div>
+            <div
+              className="w-5 h-5"
+              style={{
+                background: PALETTE[2],
+                filter: `invert(${invert ? 1 : 0})`,
+              }}
+            ></div>
             Data
           </div>
           {section !== "codewords" && (
             <div className="flex gap-1 items-center">
-              <div className="w-5 h-5" style={{ background: PALETTE[0] }}></div>
+              <div
+                className="w-5 h-5"
+                style={{
+                  background: PALETTE[0],
+                  filter: `invert(${invert ? 1 : 0})`,
+                }}
+              ></div>
               Unused capacity
             </div>
           )}
           <div className="flex gap-1 items-center">
-            <div className="w-5 h-5" style={{ background: PALETTE[1] }}></div>
+            <div
+              className="w-5 h-5"
+              style={{
+                background: PALETTE[1],
+                filter: `invert(${invert ? 1 : 0})`,
+              }}
+            ></div>
             Error correction
           </div>
         </div>
@@ -255,7 +318,7 @@ export function QrTutorial() {
             />
           </label>
           <p>
-            For smaller codes, size can be accurately calculated using the
+            For smaller codes, size can be accurately calculated just using the
             distance between the finder patterns.
           </p>
         </div>
@@ -265,7 +328,7 @@ export function QrTutorial() {
             <span className="font-bold">data</span>.
           </p>
           <input
-            className="block border p-2 my-2"
+            className="block border w-full p-2 my-2"
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -332,15 +395,9 @@ export function QrTutorial() {
           <p>
             If you further break down the data, you'll see it starts with a
             header and is padded to fill the unused capacity. You can play
-            around with the error correction level, input text, and version
-            (size) to see how the space is used.
+            around with the error correction level, version (size), and input
+            text to see how the space is used.
           </p>
-          <input
-            className="block border p-2 my-2"
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
           <label className="flex flex-col gap-1 p-2 border my-2">
             <div>Version {version}</div>
             <input
@@ -352,6 +409,12 @@ export function QrTutorial() {
               max="40"
             />
           </label>
+          <input
+            className="block border w-full p-2 my-2"
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
         </div>
         <div ref={setupRegion} data-step="encoding">
           <p>
@@ -390,7 +453,11 @@ export function QrTutorial() {
             ))}
           </div>
         </div>
-        <div ref={setupRegion} data-step="miscellaneous" className="flex flex-col gap-2">
+        <div
+          ref={setupRegion}
+          data-step="miscellaneous"
+          className="flex flex-col gap-2"
+        >
           <div className="font-bold text-lg">Miscellaneous</div>
           <p>
             QR codes can be rotated, mirrored, and the "dark" and "light" pixels
@@ -407,6 +474,15 @@ export function QrTutorial() {
               min="-180"
               max="180"
             />
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              className="w-5 h-5"
+              type="checkbox"
+              checked={perspective}
+              onChange={(e) => setPerspective(e.target.checked)}
+            />
+            Perspective
           </label>
           <label className="flex items-center gap-1">
             <input

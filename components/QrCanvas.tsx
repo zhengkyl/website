@@ -1,75 +1,42 @@
-import { generate, QrOptions, Mode, Version, type ECL, type Mask } from "fuqr";
 import { useRef } from "react";
 
 type Props = {
-  initDone: boolean;
   section: string;
-  text: string;
-  version: number;
-  ecl: ECL;
-  mask: Mask;
   finderShape: string;
   brap: boolean;
   showZigzag: boolean;
   showBytes: boolean;
-  setVersion: (v: number) => void;
+  qrCode: any;
 };
 
 const margin = 1;
 
-export const PALETTE = ["#ffe7e6", "#f1b858", "#21a0c0", "#580352"];
+export const PALETTE = ["#ffe7e6", "#f1b858", "#21a0c0", "#6d034e"];
 
 export function QrCanvas(props: Props) {
   const canvasA = useRef<HTMLCanvasElement>(null);
   const canvasB = useRef<HTMLCanvasElement>(null);
   const showA = useRef(false);
-  // todo return type from fuqr
-  const qrCode = useRef<any>(null!);
 
   const prevSection = useRef(props.section);
-  const prevVersion = useRef(props.version);
-
   let size = 1;
 
-  if (props.initDone) {
-    if (
-      qrCode.current == null ||
-      props.version !== prevVersion.current ||
-      props.text !== qrCode.current.text ||
-      props.ecl !== qrCode.current.ecl ||
-      props.mask !== qrCode.current.mask
-    ) {
-      try {
-        qrCode.current = generate(
-          props.text,
-          new QrOptions()
-            .mode(Mode.Byte)
-            .min_ecl(props.ecl)
-            .strict_ecl(true)
-            .min_version(new Version(props.version))
-            .mask(props.mask)
-        );
-      } catch (e) {
-        console.error("Exceeded max capacity, fool");
-        return;
-      }
-    }
+  if (props.qrCode != null) {
     const animate =
       props.section !== prevSection.current || props.section === "finder";
 
     prevSection.current = props.section;
-    prevVersion.current = props.version;
 
-    // TODO This isn't pure!!!!!!
+    // NOTE this isn't pure!!!, but works in prod so idc
     if (animate) showA.current = !showA.current;
     const nextCanvas = (showA.current ? canvasA : canvasB).current!;
     const prevCanvas = (showA.current ? canvasB : canvasA).current!;
     prevCanvas.style.zIndex = "-1";
     nextCanvas.style.zIndex = "1";
 
-    const { matrix, version: outVersion } = qrCode.current;
+    const { matrix, version, ecl, mask, text } = props.qrCode;
     const ctx = nextCanvas.getContext("2d")!;
-    const qrWidth = outVersion * 4 + 17;
+    const qrWidth = version * 4 + 17;
 
     size = qrWidth + 2 * margin;
     ctx.canvas.width = size;
@@ -227,7 +194,7 @@ export function QrCanvas(props: Props) {
           }
         }
 
-        const eccEnd = (NUM_DATA_MODULES[outVersion] >> 3) * 8;
+        const eccEnd = (NUM_DATA_MODULES[version] >> 3) * 8;
 
         let i = 0;
         let start = qrWidth - 1;
@@ -236,7 +203,6 @@ export function QrCanvas(props: Props) {
 
         const colors = props.showBytes ? PALETTE : [focusOFF];
         const endColor = "black";
-
         ctx.fillStyle = colors[0];
         for (let x = qrWidth - 1; x > 0; x -= 2) {
           if (x === 6) {
@@ -287,11 +253,11 @@ export function QrCanvas(props: Props) {
           }
         }
 
-        const headerEnd = headerLength(outVersion);
-        const eccEnd = (NUM_DATA_MODULES[outVersion] >> 3) * 8;
-        const paddingEnd = eccEnd - NUM_EC_CODEWORDS[outVersion][props.ecl] * 8;
+        const headerEnd = headerLength(version);
+        const eccEnd = (NUM_DATA_MODULES[version] >> 3) * 8;
+        const paddingEnd = eccEnd - NUM_EC_CODEWORDS[version][ecl] * 8;
 
-        const bytes = new TextEncoder().encode(props.text).length;
+        const bytes = new TextEncoder().encode(text).length;
         const dataEnd = headerEnd + bytes * 8;
 
         let i = 0;
@@ -303,7 +269,6 @@ export function QrCanvas(props: Props) {
           props.section === "codewords"
             ? [PALETTE[2], PALETTE[2], PALETTE[2], PALETTE[1], "black"]
             : [PALETTE[3], PALETTE[2], PALETTE[0], PALETTE[1], "black"];
-
         ctx.fillStyle = colors[0];
         for (let x = qrWidth - 1; x > 0; x -= 2) {
           if (x === 6) {
@@ -352,7 +317,7 @@ export function QrCanvas(props: Props) {
             const module = matrix[y * qrWidth + x];
             if (module & Module.FINDER) continue;
             if (module & Module.DATA) {
-              ctx.fillStyle = maskValue(props.mask, x, y) ? focusON : focusOFF;
+              ctx.fillStyle = maskValue(mask, x, y) ? focusON : focusOFF;
             } else {
               if (!(module & Module.ON)) continue;
               ctx.fillStyle = gray;
@@ -401,10 +366,10 @@ export function QrCanvas(props: Props) {
       >
         <polyline
           points={
-            props.section === "zigzag"
+            props.qrCode && props.section === "zigzag"
               ? getZigzagPoints(
-                  qrCode.current!.matrix,
-                  qrCode.current.version * 4 + 17
+                  props.qrCode.matrix,
+                  props.qrCode.version * 4 + 17
                 )
               : ""
           }
@@ -459,7 +424,6 @@ function renderFinder(ctx, finderShape, qrWidth) {
         ctx.fillRect(x + 2, y + 2, 3, 1);
         ctx.fillRect(x + 2, y + 3, 3, 1);
         ctx.fillRect(x + 2, y + 4, 3, 1);
-
         ctx.fillRect(x, y + 6, 3, 1);
         ctx.fillRect(x + 4, y + 6, 3, 1);
         break;
@@ -474,7 +438,6 @@ function renderFinder(ctx, finderShape, qrWidth) {
         ctx.fillRect(x + 3, y + 3, 1, 1);
         ctx.fillRect(x + 2, y + 4, 1, 1);
         ctx.fillRect(x + 4, y + 4, 1, 1);
-
         ctx.fillRect(x, y + 6, 7, 1);
         break;
     }

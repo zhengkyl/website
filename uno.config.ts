@@ -10,7 +10,7 @@ export default defineConfig({
       "mdx-components.tsx",
     ],
   },
-  blocklist: ["my", "me", "h2", "b"],
+  blocklist: ["my", "me", "h2", "b", "transform", "filter"],
   rules: [["pixelated", { "image-rendering": "pixelated" }]],
   transformers: [transformerVariantGroup()],
   presets: [presetWind()],
