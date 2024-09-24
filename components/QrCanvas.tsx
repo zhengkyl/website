@@ -6,6 +6,7 @@ type Props = {
   brap: boolean;
   showZigzag: boolean;
   showBytes: boolean;
+  text: string;
   qrCode: any;
 };
 
@@ -34,7 +35,7 @@ export function QrCanvas(props: Props) {
     prevCanvas.style.zIndex = "-1";
     nextCanvas.style.zIndex = "1";
 
-    const { matrix, version, ecl, mask, text } = props.qrCode;
+    const { matrix, version, ecl, mask } = props.qrCode;
     const ctx = nextCanvas.getContext("2d")!;
     const qrWidth = version * 4 + 17;
 
@@ -257,7 +258,7 @@ export function QrCanvas(props: Props) {
         const eccEnd = (NUM_DATA_MODULES[version] >> 3) * 8;
         const paddingEnd = eccEnd - NUM_EC_CODEWORDS[version][ecl] * 8;
 
-        const bytes = new TextEncoder().encode(text).length;
+        const bytes = new TextEncoder().encode(props.text).length;
         const dataEnd = headerEnd + bytes * 8;
 
         let i = 0;

@@ -1,13 +1,13 @@
 ---
 posted: 2023-8-4
-desc: Learning Go in the worst way possible
+desc: Learning Go in Javascript rehab
 image: menu.png
 ---
 
 import { Gol } from "../components/Gol"
-import { Card, Link } from "../components/mdx"
+import { Link } from "../components/mdx"
 
-<Gol width={30} height={60} />
+<Gol width={30} height={60}>
 
 I made Conway's Game of Life, except it's **multiplayer**, runs in the **terminal**, and accessible via **ssh**.
 
@@ -17,9 +17,11 @@ ssh gol.kylezhe.ng
 
 ![multiplayer game of life](multiplayer.gif)
 
-<Card>
-  <Link title="Code">{"https://github.com/zhengkyl/gol"}</Link>
-</Card>
+{
+	<div className="border p-4">
+  	<Link title="Code">{"https://github.com/zhengkyl/gol"}</Link>
+  </div>
+}
 
 ## The Idea
 
@@ -39,21 +41,23 @@ Not many people showed up, and I think only 1 person actually coded the program 
 
 Talking while typing was hard even though I was very familiar with the code, and the whole experience just wasn't very engaging. People typed along or watched without absorbing much, and I just ended up talking to myself.
 
-At the end, when someone asked what they could actually use Go for, I struggled to give a suggestion outside of "make a web server". Turns out, I'm not an expert in Go (or actual usecases).
+At the end, when someone asked what they could actually use Go for, I struggled to give a suggestion outside of "make a web server". Turns out, I'm not an expert in Go (or useful code).
 
 Ultimately, I think the code was still too complicated for the given time and the end result was too niche.
 
 This was a ~~canon event~~ learning experience.
 
 <details>
-<summary className="font-light italic text-stone-500 text-xl">Learn more about the workshop</summary>
-
-<Card>
-  <Link title="Event Post">
-    {"https://events.purduehackers.com/go-game-of-life-workshop"}
-  </Link>
-  <Link title="Code">{"https://github.com/zhengkyl/gol/tree/workshop"}</Link>
-</Card>
+<summary className="font-light italic text-stone-500 text-xl py-2">Learn more about the workshop</summary>
+<div className="flex flex-col gap-4">
+{
+	<div className="border p-4">
+		<Link title="Event Post">
+			{"https://events.purduehackers.com/go-game-of-life-workshop"}
+		</Link>
+		<Link title="Code">{"https://github.com/zhengkyl/gol/tree/workshop"}</Link>
+  </div>
+}
 
 Here is a super brief rundown of all the logic needed for Conway's Game of Life.
 
@@ -107,10 +111,11 @@ func NextBoard(board [][]bool) [][]bool {
 }
 ```
 
-You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending implementations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
+You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending optimizations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
 
 The code was **waaaaaaaay** more than fast enough. I guess the real premature optimization was the advancements in hardware made along the way.
 
+</div>
 </details>
 
 ## SSH & Multiplayer
@@ -136,21 +141,19 @@ Here is a diagram of the [complexity demon](https://grugbrain.dev/) I summoned. 
 
 ![complexity demon data flow](chart.png)
 
-<Card className="flex flex-col gap-2">
-
+<div className="flex flex-col gap-4 border p-4">
 `manager` controls the creation and joining and leaving of game lobbies.
 
 `player` represents one connected user, which their own goroutine handling input and displaying the board. They send commands to a `lobby` and update their `playerState`.
 
 `lobby` runs one Game of Life board and sends updates to all players.
+</div>
 
-</Card>
-
-I'm not proud of it, so I'll save you any further details, but I'm 100% sure I solved 90% of the possible game breaking bugs with careful usage of a few mutexes.
+I'm not proud of it, so I'll save you any further details, but I'm 100% sure I solved 90% of the possible game breaking bugs with the careful usage of a few mutexes.
 
 ## Everything Else
 
-Although the game board has a fixed size, I decided to make it tile infinitely to fill terminals of any size and allow player movement. This was hard, but only in the way math is.
+Although the game board has a fixed size, I decided to make it tile infinitely to fill terminals of any size and allow seamless player movement. This was hard, but only in the way math is.
 
 ![testing tiling and movement](dev_tiling.gif)
 
@@ -173,3 +176,5 @@ These two projects gave me a taste of Go, even if they are somewhat niche projec
 Thanks to [@purduehackers](https://www.purduehackers.com) and [@matthiewstanciu](https://www.matthewstanciu.com) for the idea and motivation and fun times!
 
 ![original workshop idea dm](msg.png)
+
+</Gol>

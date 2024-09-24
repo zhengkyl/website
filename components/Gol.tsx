@@ -10,7 +10,7 @@ function newBoard(width, height) {
 function randomize(board) {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
-      board[i][j] = Math.random() > 0.9 ? true : false;
+      board[i][j] = Math.random() > 0.8 ? true : false;
     }
   }
   return board;
@@ -51,10 +51,10 @@ function nextBoard(prevBoard) {
 
 function Button(props) {
   const { className, ...rest } = props;
-  return <button className={`rounded-md border p-2 ${className}`} {...rest} />;
+  return <button className={`border p-2 ${className}`} {...rest} />;
 }
 
-export function Gol({ width, height }) {
+export function Gol({ width, height, children }) {
   const bigScreen = useMediaQuery("(min-width: 1024px)");
   const [showControls, setShowControls] = useState(false)
 
@@ -123,7 +123,7 @@ export function Gol({ width, height }) {
   return (
     <>
       {bigScreen && showControls && (
-        <div className="fixed top-4 left-4 !m-0 flex flex-col gap-2 bg-stone-50 p-2 border rounded shadow-2xl">
+        <div className="fixed z-10 top-4 left-4 flex flex-col gap-2 bg-stone-50 p-2 border shadow-2xl">
           <Button
             title={playing ? "Pause background" : "Unpause background"}
             className="px-2"
@@ -139,7 +139,7 @@ export function Gol({ width, height }) {
             {playing ? <Pause /> : <Play viewBox="0 0 22 24" />}
           </Button>
           <input
-            className="p-2 w-10 h-10 border rounded-md bg-transparent cursor-pointer"
+            className="p-2 w-10 h-10 border bg-transparent cursor-pointer"
             title="Change cell color"
             type="color"
             defaultValue="#fda4af"
@@ -174,7 +174,7 @@ export function Gol({ width, height }) {
         ref={canvasRef}
         width={width}
         height={height}
-        className="absolute w-screen top-0 left-0 -z-50 opacity-25 !m-0 pixelated"
+        className="absolute w-screen top-0 left-0 opacity-25 pixelated"
         onMouseDown={(e) => {
           spawning.current = true;
           spawn(e);
@@ -183,6 +183,9 @@ export function Gol({ width, height }) {
         onMouseLeave={() => (spawning.current = false)}
         onMouseMove={spawn}
       ></canvas>
+      <div className="z-10 flex flex-col gap-4">
+        {children}
+      </div>
     </>
   );
 }

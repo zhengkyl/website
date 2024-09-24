@@ -47,14 +47,6 @@ export function Sa(props) {
   );
 }
 
-export function Card(props) {
-  return (
-    <div className={`rounded border p-4 my-4 ${props.className}`}>
-      {props.children}
-    </div>
-  );
-}
-
 export function Link(props) {
   return (
     <div>

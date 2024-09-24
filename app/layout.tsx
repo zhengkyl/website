@@ -16,7 +16,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <head></head>
       <body>
         <div className="px-4 py-16 m-auto max-w-screen-md">
-          <Header className="pb-8" />
+          <Header className="pb-8 z-10 relative" />
           <main>{children}</main>
         </div>
       </body>

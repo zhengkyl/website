@@ -135,6 +135,7 @@ export function QrTutorial() {
         >
           <QrCanvas
             section={section}
+            text={text}
             qrCode={qrCode.current}
             finderShape={finderShape}
             brap={brap}
@@ -426,7 +427,8 @@ export function QrTutorial() {
           <small>
             *More encoding modes are specified, but most QR code generators
             don't support them, let alone QR code scanners. Also, alphanumeric
-            mode can encode URLs, but it only has uppercase characters.
+            mode can encode URLs, but it only supports uppercase characters, so
+            no one uses it.
           </small>
         </div>
         <div ref={setupRegion} data-step="mask">

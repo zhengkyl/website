@@ -5,13 +5,6 @@ import remarkGfm from "remark-gfm";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["mdx", "ts", "tsx", "js", "jsx"],
-  redirects: () => [
-    {
-      source: "/posts/illegal_qr_codes",
-      destination: "/posts/crafting_qr_codes",
-      permanent: true,
-    },
-  ],
 };
 
 const withMDX = createMDX({
@@ -30,31 +23,35 @@ const withMDX = createMDX({
 
           const slug = dirs[dirs.length - 1].slice(0, -4);
 
-          const visit = (node) => {
+          const visitJsx = (node) => {
             if (node.type !== "JSXElement") return;
-
             for (const child of node.children) {
-              visit(child);
+              visitJsx(child);
             }
 
             if (node.openingElement.name.name !== "img") return;
-
             for (const attr of node.openingElement.attributes) {
               if (attr.name.name !== "src") continue;
               attr.value.value = `/posts/${slug}/${attr.value.value}`;
             }
           };
 
-          for (const node of tree.children) {
-            if (node.type === "mdxFlowExpression") {
-              visit(node.data.estree.body[0].expression);
-            } else if (node.type === "paragraph") {
-              for (const child of node.children) {
-                if (child.type !== "image") continue;
-                child.url = `/posts/${slug}/${child.url}`;
+          const visitMdx = (node) => {
+            if (node.type === "image") {
+              node.url = `/posts/${slug}/${node.url}`;
+            }
+
+            if (node.children == null) return;
+            for (const child of node.children) {
+              if (child.type === "mdxFlowExpression") {
+                visitJsx(child.data.estree.body[0].expression);
+              } else {
+                visitMdx(child);
               }
             }
-          }
+          };
+
+          visitMdx(tree);
         };
       },
       (_options) => {

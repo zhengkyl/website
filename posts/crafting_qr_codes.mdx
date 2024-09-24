@@ -1,6 +1,6 @@
 ---
 posted: 2024-9-12
-desc: How they work and how to make them pretty
+desc: How they work and how to make 'em pretty
 image: crafting.jpg
 ---
 
@@ -19,12 +19,12 @@ Suffice it to say, I've seen a few QR codes in my day to day.
 {
 <div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-xs text-center">
   <div className="font-semibold text-lg">Me Writing this Blog Post</div>
-  <img src="train_escape.jpg" alt="me escaping from a train full of salarymen with qr code faces"/>
+  <img src="escape.jpg" alt="me escaping from a train full of salarymen with qr code faces"/>
   <span>
   <Sa href="https://www.flickr.com/photos/19736899@N04/2046534730">Original photo</Sa> by <Sa href="https://www.flickr.com/people/hern42/">Arnaud DG</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
   </span>
   <div className="font-semibold text-lg">The Observable Universe</div>
-  <img src="rush_hour.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
+  <img src="station.jpg" alt="rush hour in train station where salarymen have qr code faces"/>
   <span>
     <Sa href="https://commons.wikimedia.org/wiki/File:Just_going_to_work_(3509126762).jpg">Original photo</Sa> by <Sa href="https://www.flickr.com/people/erikjohansson78/">erikjohansson</Sa>, <Sa href="https://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</Sa>
   </span>
@@ -148,11 +148,13 @@ Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
 Feel free to play with it, but in order to craft QR codes with intention, we first need to learn how they work.
 
-## QR Code Overview
+## The Anatomy of a QR Code
 
 <QrTutorial/>
 
-So yeah I lied, all you needed to know is that the finder pattern has to exist, and everything else just needs to be dark or light enough.
+## Making Artistic QR Codes
+
+Put simply, the finder patterns must be the right shape, while the rest of the QR code just needs to be dark or light enough in the right place.
 
 Unfortunately, there's one major gotcha we've gotta cover.
 
@@ -164,11 +166,11 @@ A few years ago, I had the idea to draw QR codes using chalk and a stencil.
   <div className="grid cols-2 gap-4 font-thin text-xs text-center">
     <div>
       <img src="stencil_1.jpg" alt="bad qr code stencil"/>
-      My terrible first attempt
+      Poorly handdrawn finder patterns
     </div>
     <div>
       <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
-      Improved but still nearly unscannable
+      Terrible contrast
     </div>
   </div>
 }
