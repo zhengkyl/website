@@ -42,7 +42,7 @@ With how widespread they are in consumer facing spaces like advertising, it's al
   </div>
 }
 
-Beyond simply placing a logo on top, there have also been many attempts to create "artistic" QR codes. Forming an image is the obvious thing to do, and there are various ways of combining the QR code pixels with an picture for a unique look.
+Beyond simply placing a logo on top, there have also been many attempts to create "artistic" QR codes. Making a picture is the obvious thing to do, and there are various ways of combining the QR code pixels with an image for a unique look.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
@@ -152,129 +152,131 @@ Feel free to play with it, but in order to craft QR codes with intention, we fir
 
 <QrTutorial/>
 
-## Making Artistic QR Codes
+Here's all you need to remember: the **finder patterns must be the right _shape_**, and the rest of the QR code just needs to be dark or light enough in the right *place*.
 
-Put simply, the finder patterns must be the right shape, while the rest of the QR code just needs to be dark or light enough in the right place.
+That's 80% of making artistic QR codes, but unfortunately there's one major gotcha we've gotta cover.
 
-Unfortunately, there's one major gotcha we've gotta cover.
+## Convenience at a Cost
 
-The tradeoff with no longer using 3rd party scanners is that smartphone camera apps are much less aggressive at detecting or attempting to scan codes.
-
-A few years ago, I had the idea to draw QR codes using chalk and a stencil.
+Can you tell what I did wrong with these QR codes I drew using chalk?
 
 {
   <div className="grid cols-2 gap-4 font-thin text-xs text-center">
     <div>
       <img src="stencil_1.jpg" alt="bad qr code stencil"/>
-      Poorly handdrawn finder patterns
+      Attempt 1 (terrible)
     </div>
     <div>
       <img src="stencil_2.jpg" alt="slightly better qr code stencil"/>
-      Terrible contrast
+      Attempt 2 (still unscannable)
     </div>
   </div>
 }
 
-This turned out to be impractical, but the biggest issue was that the end result couldn't be scanned *by the default camera app*.
+The first one is janky, but I was legitimately confused why my second attempt failed.
 
+Computer vision is commonly used in code scanners nowadays, but the tradeoff of non-dedicated scanners (like the default smartphone camera app) is that they are less sensitive and much pickier about what they recognize.
 
-In my experience, the key is **solid colors** and **high contrast**, and my chalk didn't contrast enough against or completely cover the gray concrete.
+{
+  <div className="grid cols-1 sm:cols-2 gap-2 pixelated">
+    <div>
+      The upside is that you can probably scan this barcode too.
+    </div>
+    <div className="font-thin text-xs text-center ">
+      <img src="barcode.png" alt="normal barcode"/>
+      Created using <Sa href="https://barcode.tec-it.com/en/UPCA">TEC-IT Barcode Generator</Sa>
+    </div>
+  </div>
+}
 
-For QR codes with a lot of "texture", moving farther away can help, but that is the exact opposite response people have to a code not scanning.
+I'm no expert in this domain, and computer vision is somewhat of a black box anyway, so the only way I know to tell if a QR code will scan is to try scanning it.
 
-## Prior work
+This process is just unintuitive. For instance, when a code doesn't scan immediately, I've found moving farther *away* to help the most.
 
-The part where it turns a camera image into a grid of binary pixels, 
+In my experience, **solid colors** and **high contrast** are good indicators, but once a QR code strays from black and white pixels, its fate is in the hands of God.
 
-Basically, if a space is dark enough or light enough, it will be decoded properly.
+## Shoulders of Giants
 
-One strategy, possibly popularized by the [Halftone QR Codes](https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes) paper, involves replacing each QR code pixel with a 3x3 grid of pixels that best match the image while still decoding as the correct color.
+Thankfully, QR codes are turning 30, and they spent their twenties experimenting.
+
+We can learn from all these image-based techniques as they answer the question: 
+
+How do you make each pixel decode correctly while still preserving the larger image?
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
     <div>
-      <img src="halftone.png" alt="halftone mike wazowski qr code"/>
+      <img src="mike/halftone.png" alt="mike wazowski halftone qr code"/>
       Created using <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes"><span className="whitespace-pre">Halftone QR Codes, 2013</span></Sa>
     </div>
     <div>
-      <img src="amzqr_mike.jpg" alt="color image qr code"/>
+      <img src="mike/amzqr.jpg" alt="mike wazowski amzing qr code"/>
       Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
     </div>
     <div>
-      <img src="visualead_mike.jpg" alt="visualead qr code"/>
+      <img src="mike/visualead.jpg" alt="mike wazowski visualead qr code"/>
       Created using <Sa href="https://github.com/x-hw/amazing-qr">Visualead</Sa>
     </div>
     <div>
-      <img src="qrpicture.jpg" alt="mike wazowski qr picture"/>
-      Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
+      <img src="overlay_bad_apple.jpg" alt="overlay bad apple video qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
     </div>
   </div>
 }
 
-Generally, as long as the center of each QR code pixel is correct, it can be decoded correctly. In other words, this approach is basically equivalent to overlaying the correct center pixels on top of a image. 
+The low resolution black and white dithered effect is just a smart stylistic choice that hides the data as noise.
 
-The low resolution black and white dithered effect is just a smart stylistic choice that hides the data as noise. There are many implementations online [^1] as well as a version of [Bad Apple](https://www.youtube.com/watch?v=tPYUdjptMpk).
-
+These techniques modify the QR code data itself.
 
 {
-  <div className="grid cols-2 sm:cols-4 pixelated">
-    <p className="col-span-2">
-      Other methods are available such as adjusting the input URL as in <a href="https://research.swtch.com/qr/draw">QArt Codes</a> and creating word clouds like in <a href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</a>. These are quite niche, but full of good ideas.
-    </p>
-    <div>
-      <img src="image/bad_apple.jpg" alt="bad apple video qr code"/>
-      <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
-    </div>
+  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
     <div className="font-thin text-xs text-center ">
-      <img src="qart_mike.png" alt="mike wazowski qart code"/>
+      <img src="mike/qart.png" alt="mike wazowski qart code"/>
       Created using <Sa href="https://research.swtch.com/qr/draw">QArt Coder</Sa>
     </div>
     <div className="font-thin text-xs text-center ">
-      <img src="micro_mike.png" alt="mike wazowski micrography qr"/>
-      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes</Sa>
+      <img src="mike/myqrart.svg" alt="mike wazowski my qr art code"/>
+      Created using <Sa href="https://my-qr.art/">MY-QR.ART</Sa>
+    </div>
+    <div>
+      <img src="mike/qrpicture.jpg" alt="mike wazowski qr picture"/>
+      Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
+    </div>
+    <div>
+      <img src="reverse_bad_apple.jpg" alt="reverse bad apple video qr code"/>
+      <Sa href="https://www.youtube.com/watch?v=dWkTWwRKUZ4">Bad Apple!! on a QR Code Generator</Sa>
     </div>
   </div>
 }
 
-[^1]: [Lachlan Arthur](https://github.com/lachlanarthur)'s [original JSFiddle implementaion](https://jsfiddle.net/lachlan/r8qWV/) 
+## Fin
 
-    [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://github.com/nythrox/halftone-qrcode)
-
-    [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone).
-
-
-[vCode](https://github.com/ruitaocc/vCode)
+I don't know how to finish this blog post. I'll write this later.
 
 ## Tangents
 
-Tangent -> Creating QR code that matches a string
-https://marienraat.nl/hacking-qr-codes.html
-There's a 100 page PDF describing the QR code standard (ISO/IEC 18004) in detail, but here's the truth.
+Here are some QR code thoughts which I had to get off my mind.
 
-A QR code is whatever a QR code scanner can scan.
+1. There are only 3 encoding modes!
+    - The QR code standard lists encoding modes that are not relevant to ordinary users. Every QR code explainer mentions Kanji mode, a legacy mode using a legacy character encoding for Japanese, when it just isn't supported by most generators or scanners. Ditto for Structured append, ECI, and FNC1 encoding modes.
+2. The mask selection step is deeply unserious.
+    - The best mask is chosen by scoring the masked data, but the scoring conditions are arbitrary, and all 8 masks will work just fine anyway.
+    - This interative step by step walkthrough showcases this in Steps 7 and 8. Choose the worst mask and see that it doesn't matter.
+    - https://www.nayuki.io/page/creating-a-qr-code-step-by-step
+3. I found a lot of things that didn't fit anywhere, but I don't want to lose the links.
+    - https://www.thonky.com/qr-code-tutorial is a great resource and helped me understand the error correction math.
+    - [Lachlan Arthur](https://github.com/lachlanarthur)'s [JSFiddle implementation](https://jsfiddle.net/lachlan/r8qWV/) of a halftone generator seemed to spark a lot of inspiration.
+        - [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://nythrox.github.io/halftone-qrcode)
+        - [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone)
+    - [vCode](https://github.com/ruitaocc/vCode) seems like a cool halftone generator, but it's a 9 year old iOS app, so it's basically lost media.
+    - [segno](https://github.com/heuer/segno) is probably the only QR code generator that supports Kanji mode.
+    - <p>[QRazyBox](https://merri.cx/qrazybox/) is a super cool QR code recovery tool that I used to decode this book cover. <img src="/posts/crafting_qr_codes/sf_book.jpg" alt="qr code on book cover"/> [original stock image from 2011](https://www.istockphoto.com/vector/qr-code-gm156283521-15512938).</p>
+    - I've found two 3d galleries of QR code art. If I had a nickel...
+        - https://www.qrmosaics.art/3d-gallery
+        - https://www.ineoscan.com/qrcodefactory1
 
-Here are some undocumented behaviors I discovered while making [a simple QR code generator](https://github.com/fuqr).
-
-- UTF-8 is implicitly supported when using the byte encoding mode.
-- Kanji, Structured append, EC1, and FNC1 encoding modes aren't relevant for normal use. Scanners might not even support them (I can't find generators that support them either).
-
-
-I found this book in a random library I stopped in. Too much of the QR code was missing for it to scan, but I thought it might contain an Easter egg. I used [QRazyBox](https://merri.cx/qrazybox/) to recover what data remained which was only about half the URL. This was the first strange finding. The code was almost entirely padding! The error correction was set to low too! Why wasn't the error correction set higher if the space was all wasted? 
-
-![qr code on book cover](sf_book.jpg)
-
-Using an ASCII chart to decode some partially obscured bytes, I figured out it pointed to an iStockphoto page, but unfortunately iStockphoto had changed their URL structure. I had what looked like half a username, but there was no way to search for users. With no other option, I brute-forced all 80,000 possible QR codes and compared the error correction pixels to find a match. I was shocked to find nothing. In a desperate last try, I checked for near matches and finally found the matching username which led me to the [original stock image from 2011](https://www.istockphoto.com/vector/qr-code-gm156283521-15512938).
-
-It turns out the QR code incorrectly has a last byte filled with 1s instead of 0s.
-
-Why was this used for the book cover? The book came out in 2021. Did the designer just have it on hand? Even though they could just get a QR code from anywhere? I guess it didn't matter, because who would notice? Kind of an anticlimax, but my takeaway is that damaged QR codes are probably all decodable with effort.
-
-[^1]: My reference.
-
-Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity, to varying success[^scannable-codes].
-
-[^scannable-codes]: Tiktok and Snapchat have already replaced their custom codes with stylized QR codes.
+4. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity, to varying success.
 
 ![four proprietary scan codes](four_horsemen.png)
 
-Notice how they're all mostly gimmicks since they can only be scanned with a specific app (or device).
+Tiktok and Snapchat have already replaced their custom codes with stylized QR codes.

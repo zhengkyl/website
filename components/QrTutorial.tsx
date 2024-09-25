@@ -416,19 +416,21 @@ export function QrTutorial() {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <small>
+            The header isn't a multiple of 8 bits, so the data isn't byte aligned. For
+            higher versions ({">"}5), the data is interleaved, which makes everything weird.
+          </small>
         </div>
         <div ref={setupRegion} data-step="encoding">
           <p>
             The data header describes the encoding mode and the data length.
             There are efficient encoding modes for numbers and alphanumeric
-            text*, but the only relevant mode for URLs is Byte mode, which just
+            text, but the only relevant mode for URLs is Byte mode*, which just
             means UTF-8.
           </p>
           <small>
-            *More encoding modes are specified, but most QR code generators
-            don't support them, let alone QR code scanners. Also, alphanumeric
-            mode can encode URLs, but it only supports uppercase characters, so
-            no one uses it.
+            *Alphanumeric mode can encode URLs, but it only supports uppercase
+            characters, so no one uses it.
           </small>
         </div>
         <div ref={setupRegion} data-step="mask">

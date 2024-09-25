@@ -254,12 +254,50 @@ export function QrCanvas(props: Props) {
           }
         }
 
-        const headerEnd = headerLength(version);
-        const eccEnd = (NUM_DATA_MODULES[version] >> 3) * 8;
-        const paddingEnd = eccEnd - NUM_EC_CODEWORDS[version][ecl] * 8;
+        // -- This section copied from fuqr -- //
 
-        const bytes = new TextEncoder().encode(props.text).length;
-        const dataEnd = headerEnd + bytes * 8;
+        const codewords = NUM_DATA_MODULES[version] >> 3;
+        const remainder_bits = NUM_DATA_MODULES[version] % 8;
+
+        const num_ec_codewords = NUM_EC_CODEWORDS[version][ecl];
+        const num_data_codewords = codewords - num_ec_codewords;
+
+        const blocks = NUM_BLOCKS[version][ecl];
+        const group_2_blocks = codewords % blocks;
+        const group_1_blocks = blocks - group_2_blocks;
+
+        const data_per_g1_block = Math.floor(num_data_codewords / blocks);
+        const data_per_g2_block = data_per_g1_block + 1;
+
+        const final_sequence = Array.from({
+          length: codewords + Math.floor((remainder_bits + 7) / 8),
+        }).fill(0) as number[];
+
+        for (let i = 0; i < group_1_blocks * data_per_g1_block; i++) {
+          let col = i % data_per_g1_block;
+          let row = Math.floor(i / data_per_g1_block);
+          final_sequence[col * blocks + row] = i;
+        }
+        for (let i = 0; i < group_2_blocks * data_per_g2_block; i++) {
+          let col = i % data_per_g2_block;
+          let row = Math.floor(i / data_per_g2_block);
+
+          // 0 iff last column, else group_1_blocks
+          let row_offset =
+            (1 - Math.floor(col / (data_per_g2_block - 1))) * group_1_blocks;
+          final_sequence[col * blocks + row + row_offset] =
+            i + group_1_blocks * data_per_g1_block;
+        }
+
+        // -- END SECTION COPIED FROM FUQR -- //
+
+        const headerBits = headerBitLen(version);
+        // const headerLength = dataStart / 8;
+
+        const remainderStart = codewords * 8;
+        const eccStart = remainderStart - NUM_EC_CODEWORDS[version][ecl] * 8;
+
+        const textBits = new TextEncoder().encode(props.text).length * 8;
 
         let i = 0;
         let start = qrWidth - 1;
@@ -270,36 +308,48 @@ export function QrCanvas(props: Props) {
           props.section === "codewords"
             ? [PALETTE[2], PALETTE[2], PALETTE[2], PALETTE[1], "black"]
             : [PALETTE[3], PALETTE[2], PALETTE[0], PALETTE[1], "black"];
-        ctx.fillStyle = colors[0];
+
         for (let x = qrWidth - 1; x > 0; x -= 2) {
           if (x === 6) {
             x -= 1;
           }
           for (let y = start; y !== end; y += inc) {
             if (matrix[y * qrWidth + x] & Module.DATA) {
-              if (i === headerEnd) {
-                ctx.fillStyle = colors[1];
-              }
-              if (i === dataEnd) {
-                ctx.fillStyle = colors[2];
-              } else if (i === paddingEnd) {
-                ctx.fillStyle = colors[3];
-              } else if (i === eccEnd) {
+              if (i >= remainderStart) {
                 ctx.fillStyle = colors[4];
+              } else if (i >= eccStart) {
+                ctx.fillStyle = colors[3];
+              } else {
+                const seqIndex = Math.floor(i / 8);
+                const seqPos = i % 8;
+                const dataIndex = final_sequence[seqIndex] * 8 + seqPos;
+                if (dataIndex >= textBits + headerBits) {
+                  ctx.fillStyle = colors[2];
+                } else if (dataIndex >= headerBits) {
+                  ctx.fillStyle = colors[1];
+                } else {
+                  ctx.fillStyle = colors[0];
+                }
               }
               ctx.fillRect(x + margin, y + margin, 1, 1);
               i++;
             }
             if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-              if (i === headerEnd) {
-                ctx.fillStyle = colors[1];
-              }
-              if (i === dataEnd) {
-                ctx.fillStyle = colors[2];
-              } else if (i === paddingEnd) {
-                ctx.fillStyle = colors[3];
-              } else if (i === eccEnd) {
+              if (i >= remainderStart) {
                 ctx.fillStyle = colors[4];
+              } else if (i >= eccStart) {
+                ctx.fillStyle = colors[3];
+              } else {
+                const seqIndex = Math.floor(i / 8);
+                const seqPos = i % 8;
+                const dataIndex = final_sequence[seqIndex] * 8 + seqPos;
+                if (dataIndex >= textBits + headerBits) {
+                  ctx.fillStyle = colors[2];
+                } else if (dataIndex >= headerBits) {
+                  ctx.fillStyle = colors[1];
+                } else {
+                  ctx.fillStyle = colors[0];
+                }
               }
               ctx.fillRect(x - 1 + margin, y + margin, 1, 1);
               i++;
@@ -502,7 +552,7 @@ const Module = {
   MODIFIER: 1 << 7,
 };
 
-function headerLength(version) {
+function headerBitLen(version) {
   return 4 + (version < 10 ? 8 : 16);
 }
 
@@ -555,4 +605,48 @@ const NUM_EC_CODEWORDS = [
   [660, 1260, 1860, 2220],
   [720, 1316, 1950, 2310],
   [750, 1372, 2040, 2430],
+];
+
+const NUM_BLOCKS = [
+  [0, 0, 0, 0],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 2, 2],
+  [1, 2, 2, 4],
+  [1, 2, 4, 4],
+  [2, 4, 4, 4],
+  [2, 4, 6, 5],
+  [2, 4, 6, 6],
+  [2, 5, 8, 8],
+  [4, 5, 8, 8],
+  [4, 5, 8, 11],
+  [4, 8, 10, 11],
+  [4, 9, 12, 16],
+  [4, 9, 16, 16],
+  [6, 10, 12, 18],
+  [6, 10, 17, 16],
+  [6, 11, 16, 19],
+  [6, 13, 18, 21],
+  [7, 14, 21, 25],
+  [8, 16, 20, 25],
+  [8, 17, 23, 25],
+  [9, 17, 23, 34],
+  [9, 18, 25, 30],
+  [10, 20, 27, 32],
+  [12, 21, 29, 35],
+  [12, 23, 34, 37],
+  [12, 25, 34, 40],
+  [13, 26, 35, 42],
+  [14, 28, 38, 45],
+  [15, 29, 40, 48],
+  [16, 31, 43, 51],
+  [17, 33, 45, 54],
+  [18, 35, 48, 57],
+  [19, 37, 51, 60],
+  [19, 38, 53, 63],
+  [20, 40, 56, 66],
+  [21, 43, 59, 70],
+  [22, 45, 62, 74],
+  [24, 47, 65, 77],
+  [25, 49, 68, 81],
 ];
