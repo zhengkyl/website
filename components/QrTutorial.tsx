@@ -423,7 +423,7 @@ export function QrTutorial() {
         </div>
         <div ref={setupRegion} data-step="encoding">
           <p>
-            The data header describes the encoding mode and the data length.
+            The data header describes the encoding mode and the character count.
             There are efficient encoding modes for numbers and alphanumeric
             text, but the only relevant mode for URLs is Byte mode*, which just
             means UTF-8.

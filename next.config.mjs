@@ -40,6 +40,12 @@ const withMDX = createMDX({
             if (node.type === "image") {
               node.url = `/posts/${slug}/${node.url}`;
             }
+            if (node.name === "img") {
+              for (const attr of node.attributes) {
+                if (attr.name !== "src") continue;
+                attr.value = `/posts/${slug}/${attr.value}`
+              }
+            }
 
             if (node.children == null) return;
             for (const child of node.children) {

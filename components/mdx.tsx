@@ -55,3 +55,7 @@ export function Link(props) {
     </div>
   );
 }
+
+export function Code(props) {
+  return <code className="bg-gray-100 px-1">{props.children}</code>;
+}

@@ -1,11 +1,10 @@
 ---
 posted: 2024-9-12
-desc: How they work and how to make 'em pretty
+desc: The dangers of unemployment
 image: crafting.jpg
 ---
 
-import { Sa } from "../components/mdx"
-import init from "fuqr"
+import { Code, Sa } from "../components/mdx"
 import { QrTutorial } from "../components/QrTutorial"
 
 QR codes have invaded our world.
@@ -146,7 +145,7 @@ It's available at https://qrframe.kylezhe.ng, and it's a tool for crafting QR co
 
 Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
-Feel free to play with it, but in order to craft QR codes with intention, we first need to learn how they work.
+Feel free to play with it, but if you have the time, I'd like to share with you everything I learned about QR codes along the way.
 
 ## The Anatomy of a QR Code
 
@@ -191,92 +190,176 @@ Computer vision is commonly used in code scanners nowadays, but the tradeoff of 
 
 I'm no expert in this domain, and computer vision is somewhat of a black box anyway, so the only way I know to tell if a QR code will scan is to try scanning it.
 
-This process is just unintuitive. For instance, when a code doesn't scan immediately, I've found moving farther *away* to help the most.
+And when a code doesn't scan immediately, I've found moving farther *away* tends to help.
 
 In my experience, **solid colors** and **high contrast** are good indicators, but once a QR code strays from black and white pixels, its fate is in the hands of God.
 
-## Shoulders of Giants
+With that in mind, let's cover existing ways people have successfully created artistic codes.
 
-Thankfully, QR codes are turning 30, and they spent their twenties experimenting.
+## Image Techniques
 
-We can learn from all these image-based techniques as they answer the question: 
+There is a wide breadth and depth of research into creating images with QR codes, so I'll only briefly cover these two made-up categories.
 
-How do you make each pixel decode correctly while still preserving the larger image?
+### Dot overlay
 
 {
-  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
-    <div>
-      <img src="mike/halftone.png" alt="mike wazowski halftone qr code"/>
-      Created using <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes"><span className="whitespace-pre">Halftone QR Codes, 2013</span></Sa>
-    </div>
-    <div>
+  <div className="grid cols-1 sm:cols-4 gap-2 pixelated py-2">
+    <div className=" font-thin text-xs text-center">
       <img src="mike/amzqr.jpg" alt="mike wazowski amzing qr code"/>
       Created using <Sa href="https://github.com/x-hw/amazing-qr">Amazing-QR</Sa>
     </div>
-    <div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      In the simplest case, you can just place dots over the center of each pixel. A dot at least 1/3 the width and height of a pixel is usually enough for it to decode properly.
+    </p>
+    <div className=" font-thin text-xs text-center">
       <img src="mike/visualead.jpg" alt="mike wazowski visualead qr code"/>
       Created using <Sa href="https://github.com/x-hw/amazing-qr">Visualead</Sa>
     </div>
-    <div>
-      <img src="overlay_bad_apple.jpg" alt="overlay bad apple video qr code"/>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      In addition to a center dot, you can partially lighten or darken the entirety of each pixel.
+    </p>
+    <div className=" font-thin text-xs text-center">
+      <img src="mike/halftone.png" alt="mike wazowski halftone qr code"/>
+      Created using <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/Halftone_QRCodes">Halftone QR Codes, 2013</Sa>
+    </div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      By downscaling the image or using pixel art, the center dot can be hidden in plain sight. Dithering and limiting the color palette (quantization) both increase noise which also provides more camouflage.
+    </p>
+    <div className="font-thin text-xs text-center">
+      <img src="mike/micrography.png" alt="mike wazowski micrography qr code"/>
+      Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes, 2019</Sa>
+    </div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      The most unique technique I've seen involves generating word clouds. In this case, the overlay dots are used in an intermediate step to inform a text deforming algorithm.
+    </p>
+    <div className="font-thin text-xs text-center">
+      <img src="image/overlay_bad_apple.jpg" alt="overlay bad apple video qr code"/>
       <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
     </div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      The natural progression to animation is simple, since the same dot overlay can be drawn on each frame.
+    </p>
   </div>
 }
 
-The low resolution black and white dithered effect is just a smart stylistic choice that hides the data as noise.
+### Reverse-engineered
 
-These techniques modify the QR code data itself.
+These techniques start with the desired output and modify the input data to match. These are basically incompatible with a normal QR code generator and require deep custom logic.
 
 {
-  <div className="grid cols-2 sm:cols-4 gap-2 font-thin text-xs text-center pixelated">
-    <div className="font-thin text-xs text-center ">
+  <div className="grid cols-1 sm:cols-4 gap-2 pixelated py-2">
+    <div className="font-thin text-xs text-center">
       <img src="mike/qart.png" alt="mike wazowski qart code"/>
       Created using <Sa href="https://research.swtch.com/qr/draw">QArt Coder</Sa>
     </div>
-    <div className="font-thin text-xs text-center ">
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      URLs can have anchors like <Code>test.com#anchor</Code>. Usually, this scrolls to a specific part of a page, but an invalid anchor is just ignored. The math used to manipulate pixels with these anchors is covered in <a href="https://research.swtch.com/qart">QArt Codes</a>.
+    </p>
+    <div className="font-thin text-xs text-center">
       <img src="mike/myqrart.svg" alt="mike wazowski my qr art code"/>
       Created using <Sa href="https://my-qr.art/">MY-QR.ART</Sa>
     </div>
-    <div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      This site lets you draw the desired output data, which can be directly decoded to get the corresponding input text. The data starts with the url to a link redirect service and the random characters that follow act as a unique key. For details, see <a href="https://marienraat.nl/hacking-qr-codes.html">Hacking QR code design</a>.
+    </p>
+    <div className="font-thin text-xs text-center">
       <img src="mike/qrpicture.jpg" alt="mike wazowski qr picture"/>
       Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
-    <div>
-      <img src="reverse_bad_apple.jpg" alt="reverse bad apple video qr code"/>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      This is similar to the previous technique, except that the character count indicator included in the header is set to exclude everything after the desired URL. In other words, they are manipulating the data padding. This is very sophisticated, but I don't understand it fully. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See the HN post</a>.
+    </p>
+    <div className="font-thin text-xs text-center">
+      <img src="image/reverse_bad_apple.jpg" alt="reverse bad apple video qr code"/>
       <Sa href="https://www.youtube.com/watch?v=dWkTWwRKUZ4">Bad Apple!! on a QR Code Generator</Sa>
+    </div>
+    <p className="sm:col-span-3 pb-8 sm:py-2">
+      Reverse engineering the data for every "frame" is a bit more difficult, and the QR code is unlikely to be scannable.
+    </p>
+  </div>
+}
+
+## Non-Image Techniques
+
+This is where I'll cover the strategies I've used.
+
+### Forgery
+
+{
+  <div className="grid cols-4 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="nonimage/coupland.jpg" alt="douglas coupland qr code"/>
+      <Sa href="https://coupland.com">Douglas Coupland</Sa> <span className="whitespace-pre">QR Boogie-Woogie No. 5</span>
+    </div>
+    <div>
+      <img src="qrframe/coupland.png" alt="coupland forgery"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+    </div>
+    <div>
+      <img src="nonimage/qrarts.jpg" alt="qrarts qr code"/>
+      <Sa href="https://web.archive.org/web/20140103162236/http://qrarts.com/">QrArts</Sa>
+    </div>
+    <div>
+      <img src="qrframe/qrarts.png" alt="qrarts forgery"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
     </div>
   </div>
 }
 
-## Fin
+https://www.youtube.com/watch?v=iX7iGd36NEg
 
-I don't know how to finish this blog post. I'll write this later.
+### Touching grass
+
+{
+  <div className="grid cols-4 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="nonimage/waves.jpg" alt="beach"/>
+    </div>
+    <div>
+      <img src="nonimage/waves.gif" alt="animated waves qr code"/>
+      Created using <Sa href="https://github.com/zhengkyl/fuqr">fuqr</Sa>
+    </div>
+    <div>
+      <img src="nonimage/mosaic.jpg" alt="elephant mosaic"/>
+      <Sa href="https://web.archive.org/web/20140103162236/http://qrarts.com/">QrArts</Sa>
+    </div>
+    <div>
+      <img src="qrframe/mosaic.svg" alt="mosaic qr code"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+    </div>
+  </div>
+}
+
+## Thanks for reading!
+
+I hope you learned something interesting, even if there aren't too many useful applications for artistic QR codes.  
+
+If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try.
+
+Goodbye!
 
 ## Tangents
 
-Here are some QR code thoughts which I had to get off my mind.
+Here are some QR code thoughts I had to get off my mind.
 
-1. There are only 3 encoding modes!
-    - The QR code standard lists encoding modes that are not relevant to ordinary users. Every QR code explainer mentions Kanji mode, a legacy mode using a legacy character encoding for Japanese, when it just isn't supported by most generators or scanners. Ditto for Structured append, ECI, and FNC1 encoding modes.
-2. The mask selection step is deeply unserious.
+1. **There are only 3 encoding modes.**
+    - The QR code standard lists encoding modes that are not relevant to ordinary users which is fine, but every QR code explainer mentions Kanji mode, a legacy mode using a legacy character encoding for Japanese, when it just isn't supported by generators or scanners in normal use. I'm sure some Japanese company uses them, but that doesn't make it relevant. Ditto for Structured append, ECI, and FNC1 encoding modes.
+2. **The mask selection step is deeply unserious.**
     - The best mask is chosen by scoring the masked data, but the scoring conditions are arbitrary, and all 8 masks will work just fine anyway.
     - This interative step by step walkthrough showcases this in Steps 7 and 8. Choose the worst mask and see that it doesn't matter.
     - https://www.nayuki.io/page/creating-a-qr-code-step-by-step
-3. I found a lot of things that didn't fit anywhere, but I don't want to lose the links.
+3. Proprietary scannable codes are kinda funny. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes. ![four proprietary scan codes](four_horsemen.png)
+4. Here are links I don't want to lose.
     - https://www.thonky.com/qr-code-tutorial is a great resource and helped me understand the error correction math.
     - [Lachlan Arthur](https://github.com/lachlanarthur)'s [JSFiddle implementation](https://jsfiddle.net/lachlan/r8qWV/) of a halftone generator seemed to spark a lot of inspiration.
         - [Jason Butler](https://github.com/nythrox)'s [Halftone QR Code Generator](https://nythrox.github.io/halftone-qrcode)
         - [Roman Tsukanov](https://github.com/gentlecat)'s [Halftone QR Code Generator](https://qr.roman.zone)
     - [vCode](https://github.com/ruitaocc/vCode) seems like a cool halftone generator, but it's a 9 year old iOS app, so it's basically lost media.
     - [segno](https://github.com/heuer/segno) is probably the only QR code generator that supports Kanji mode.
-    - <p>[QRazyBox](https://merri.cx/qrazybox/) is a super cool QR code recovery tool that I used to decode this book cover. <img src="/posts/crafting_qr_codes/sf_book.jpg" alt="qr code on book cover"/> [original stock image from 2011](https://www.istockphoto.com/vector/qr-code-gm156283521-15512938).</p>
     - I've found two 3d galleries of QR code art. If I had a nickel...
         - https://www.qrmosaics.art/3d-gallery
         - https://www.ineoscan.com/qrcodefactory1
+    - [QRazyBox](https://merri.cx/qrazybox/) is a super cool QR code recovery tool that I used to decode this book cover and find the [original stock image from 2011](https://www.istockphoto.com/vector/qr-code-gm156283521-15512938).
+    <img src="sf_book.jpg" alt="qr code on book cover" className="m-auto"/> 
 
-4. Some companies have even gone so far as to develop proprietary scannable codes to maintain their brand identity, to varying success.
 
-![four proprietary scan codes](four_horsemen.png)
-
-Tiktok and Snapchat have already replaced their custom codes with stylized QR codes.
