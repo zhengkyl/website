@@ -296,7 +296,7 @@ export function QrTutorial() {
           <p>
             <span className="font-bold">Format information</span> stores the
             error correction level and the mask pattern applied to the data
-            (explained below). One copy is in the top right, and the other copy
+            (explained below). One copy is in the top left, and the other copy
             is split between the top right and bottom left.
           </p>
         </div>
@@ -417,8 +417,9 @@ export function QrTutorial() {
             onChange={(e) => setText(e.target.value)}
           />
           <small>
-            The header isn't a multiple of 8 bits, so the data isn't byte aligned. For
-            higher versions ({">"}5), the data is interleaved, which makes everything weird.
+            THIS IS PROBABLY NOT BUGGED. At the certain size, the data bytes are
+            interleaved so they are not placed contiguously. Also, the header
+            isn't a multiple of 8 bits, so the data isn't byte aligned.
           </small>
         </div>
         <div ref={setupRegion} data-step="encoding">
