@@ -5,7 +5,8 @@ import init, { generate, QrOptions, Mode, Version, ECL, Mask } from "fuqr";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
 
-let initStarted = false;
+let globalInitStarted = false;
+let globalInitDone = false;
 
 export function QrTutorial() {
   const scrollHighlight = useRef<HTMLDivElement>(null!);
@@ -30,11 +31,18 @@ export function QrTutorial() {
   const [initDone, setInitDone] = useState(false);
 
   useEffect(() => {
-    if (!initStarted) {
-      initStarted = true;
+    // we need globals to track init status after unmounting
+    // but the first render sets up refs, which we NEED in QrCanvas
+    // so we always setInitDone() and do everything on second render
+
+    if (!globalInitStarted) {
+      globalInitStarted = true;
       init().then(() => {
         setInitDone(true);
+        globalInitDone = true;
       });
+    } else if (globalInitDone) {
+      setInitDone(true)
     }
   }, []);
 
