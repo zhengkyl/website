@@ -42,7 +42,7 @@ export function QrTutorial() {
         globalInitDone = true;
       });
     } else if (globalInitDone) {
-      setInitDone(true)
+      setInitDone(true);
     }
   }, []);
 
@@ -425,9 +425,10 @@ export function QrTutorial() {
             onChange={(e) => setText(e.target.value)}
           />
           <small>
-            THIS MAY LOOK VERY WEIRD. At the certain size, the data bytes are
-            interleaved so they are not placed contiguously. Also, the header
-            isn't a multiple of 8 bits, so the data isn't byte aligned.
+            THIS MAY LOOK VERY WEIRD. After the certain size, the data bytes are
+            interleaved so they are spread throughout the space rather than
+            placed continguously. Also, the header isn't a multiple of 8 bits,
+            so the data isn't byte aligned.
           </small>
         </div>
         <div ref={setupRegion} data-step="encoding">

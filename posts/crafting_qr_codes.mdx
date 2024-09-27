@@ -126,7 +126,7 @@ Before they invented AI QR codes, the guys behind [QRBTF](https://qrbtf.com) als
   </div>
 }
 
-To this day, I still haven't seen anyone else make QR codes like this. So I made some myself.
+To this day, I still haven't seen anyone else make QR codes like this. I wanted more, so I made my own generator.
 
 {
   <div className="grid cols-2 sm:cols-4 gap-2">
@@ -141,7 +141,7 @@ To this day, I still haven't seen anyone else make QR codes like this. So I made
   </div>
 }
 
-The generator is available at https://qrframe.kylezhe.ng, but it's more of a tool for crafting QR codes. It comes with presets that are simple to modify or create from scratch, because it's just Javascript that generates an SVG or renders to an HTML canvas.
+It's available at https://qrframe.kylezhe.ng, but it's more of a tool for crafting QR codes. It comes with presets that are simple to modify or create from scratch, because it's just Javascript that generates an SVG or renders to an HTML canvas.
 
 Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
@@ -198,7 +198,7 @@ With that in mind, let's cover existing ways people have successfully created ar
 
 ## Image Techniques
 
-There is a wide breadth and depth of research into creating images with QR codes, so I'll only briefly cover these two made-up categories.
+There is a wide breadth and depth of research into creating images with QR codes, so I'll only briefly cover these two categories I came up with.
 
 ### Dot overlay
 
@@ -237,7 +237,7 @@ There is a wide breadth and depth of research into creating images with QR codes
       <Sa href="https://www.youtube.com/watch?v=tPYUdjptMpk">Bad Apple but it is played with QR code</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      The natural progression to animation is simple, since the same dot overlay can be drawn on each frame.
+      The jump to animation is simple, since the same dot overlay can be drawn on each frame. This example changes over time to display the lyrics though.
     </p>
   </div>
 }
@@ -274,7 +274,7 @@ These techniques start with the desired output and modify the input data to matc
       <Sa href="https://www.youtube.com/watch?v=dWkTWwRKUZ4">Bad Apple!! on a QR Code Generator</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      In terms of animation, reverse-engineering the data for every "frame" is a bit more tedious, and the QR code is unlikely to be scannable.
+      In terms of animation, reverse-engineering the data for every "frame" is a bit more tedious, and the QR code is unlikely to be scannable. See their <a href="https://www.youtube.com/watch?v=R4p2OcRmTg4">behind the scenes video</a> to see how they approached it.
     </p>
   </div>
 }
@@ -315,7 +315,7 @@ Theft is the best type of complement... or something like that. Often times huma
   </div>
 }
 
-However, not all that glitters is a scannable QR code. The original design is sick, but the gap between dots is somewhat problematic. Scanning from a distance works, but for my recreation I opted to fill the gaps with a gray shadow. This is admittedly much less cool, but many such compromises are inevitable.
+However, not all that glitters is a scannable QR code. The original design is slick, but the gap between dots is somewhat problematic. Scanning from a distance works, but for my recreation I opted to fill the gaps with a gray shadow. This is admittedly much less cool, but many such compromises are inevitable.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -370,7 +370,13 @@ Congratulations, you now know too much about QR codes!
 
 I hope you learned something interesting, even if it's not useful.
 
-If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try. 
+If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try.
+
+Once again, my code is available at [`qrframe`](https://github.com/zhengkyl/qrframe).
+
+If you're on the fence then please know, I knew much less than you do now when I started working on [`fuqr`](https://github.com/zhengkyl/fuqr), my QR code generator in Rust that started it all (i use windows btw).
+
+You can do it if you try, but also your time is precious.
 
 See ya! 🫡 
 
