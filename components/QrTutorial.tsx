@@ -425,7 +425,7 @@ export function QrTutorial() {
             onChange={(e) => setText(e.target.value)}
           />
           <small>
-            THIS IS PROBABLY NOT BUGGED. At the certain size, the data bytes are
+            THIS MAY LOOK VERY WEIRD. At the certain size, the data bytes are
             interleaved so they are not placed contiguously. Also, the header
             isn't a multiple of 8 bits, so the data isn't byte aligned.
           </small>

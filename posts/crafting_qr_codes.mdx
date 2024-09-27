@@ -96,7 +96,7 @@ While these might require some upfront technical work, it's trivial to change th
 
 Obviously, human-made QR code's aren't practical for anyone without lots of time or money since each new URL would require a redesign.
 
-The natural progression impels beating the dead elephant in the room called generative AI. These AI QR codes promise beautiful and customizable designs at scale, and when using carefully engineered prompts the results appear good. But I've no prompting expertise, so I've generated naught but nightmares.
+The natural progression is beating the dead elephant in the room called generative AI. These AI QR codes promise beautiful and customizable designs at scale, and when using carefully engineered prompts the results appear good. But I've no prompting expertise, so I've generated naught but nightmares.
 
 {
   <div className="mx-auto -indent-2 text-sm leading-loose font-serif">
@@ -192,9 +192,9 @@ I'm no expert in this domain, and computer vision is somewhat of a black box any
 
 And when a code doesn't scan immediately, I've found moving farther *away* tends to help.
 
-In my experience, **solid colors** and **high contrast** are good indicators and what my chalk drawing lacked, but once a QR code strays from black and white pixels, its fate is partially in the hands of God.
+In my experience, **solid colors** and **high contrast** are good indicators (and what my chalk drawing lacked), but once a QR code strays from black and white pixels, its fate is partially in the hands of God.
 
-With that in mind, let's cover existing ways people have successfully created artistic codes.
+With that in mind, let's cover existing ways people have successfully created artistic codes programmatically.
 
 ## Image Techniques
 
@@ -230,7 +230,7 @@ There is a wide breadth and depth of research into creating images with QR codes
       Example from <Sa href="https://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/MQRC">Micrography QR Codes, 2019</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      The most unique technique I've seen involves generating word clouds. In this case, the overlay dots are used in an intermediate step to inform a text deforming algorithm.
+      The most unique technique I've seen involves generating word clouds. In this case, the overlay dots are used in an intermediate step to drive a text deforming algorithm.
     </p>
     <div className="font-thin text-xs text-center">
       <img src="image/overlay_bad_apple.jpg" alt="overlay bad apple video qr code"/>
@@ -260,14 +260,14 @@ These techniques start with the desired output and modify the input data to matc
       Created using <Sa href="https://my-qr.art/">MY-QR.ART</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      This site lets you draw the desired output data, which can be directly interpreted as the input text. The data starts with the url to a link redirect service and the random characters that follow act as a unique key. For details, see <a href="https://marienraat.nl/hacking-qr-codes.html">Hacking QR code design</a>.
+      This site lets you draw the desired output data, which can be directly interpreted as part of the input text. The first half of the text is the url to a link redirect service and the random characters that follow act as a unique key. For details, see <a href="https://marienraat.nl/hacking-qr-codes.html">Hacking QR code design</a>.
     </p>
     <div className="font-thin text-xs text-center">
       <img src="mike/qrpicture.jpg" alt="mike wazowski qr picture"/>
       Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      This is similar to the previous technique, except that the character count indicator included in the header is set to exclude everything after the desired URL. In other words, they are changing the padding bytes. There's more, but I don't understand it fully. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See the HN post</a>.
+      Here, the data pixels match an image, except that the character count indicator included in the header excludes everything after the desired text data. In other words, they are changing the padding bytes. There's more, but I don't understand it fully. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See the HN post</a>.
     </p>
     <div className="font-thin text-xs text-center">
       <img src="image/reverse_bad_apple.jpg" alt="reverse bad apple video qr code"/>
@@ -280,6 +280,8 @@ These techniques start with the desired output and modify the input data to matc
 }
 
 ## Non-Image Techniques
+
+Since there aren't too many examples of these, I'll be showing my own work and giving my thoughts.
 
 While each unique design will have unique challenges, hopefully these examples can give you some some idea of steps you can take.
 
@@ -315,6 +317,21 @@ Theft is the best type of complement... or something like that. Often times huma
 
 However, not all that glitters is a scannable QR code. The original design is sick, but the gap between dots is somewhat problematic. Scanning from a distance works, but for my recreation I opted to fill the gaps with a gray shadow. This is admittedly much less cool, but many such compromises are inevitable.
 
+{
+  <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="nonimage/qrbtf.svg" alt="a2c qrbtf code"/>
+      <Sa href="https://qrbtf.com/en/style/a2c">QRBTF A2C Style</Sa>
+    </div>
+    <div>
+      <img src="qrframe/qrbtf.svg" alt="a2c qrbtf forgery"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+    </div>
+  </div>
+}
+
+In the best case scenario, you can copy the code directly. This style option, along with many others, is found in the [`react-qrbtf`](https://github.com/CPunisher/react-qrbtf) repository under the MIT license. Building on top of existing code is a great way to make a new design, so feel free to use my code in the [`qrframe`](https://github.com/zhengkyl/qrframe) repository as well. The psychological damage you'll suffer is cost enough.
+
 ### Touching grass
 
 {
@@ -330,7 +347,7 @@ However, not all that glitters is a scannable QR code. The original design is si
   </div>
 }
 
-While it had nothing to do with this mosaic in particular, exposure to all types of art is probably the best source of creative energy. If there's a lesson to be learned here, it's that rules are made to be respectfully broken. You CAN mess with the finder patterns, but notice how the cross shape is completely preserved in two of them.
+While it had nothing to do with this mosaic in particular, exposure to all types of art is probably the best source of creative energy. The design is quite simple, but I love its character. If there's a lesson to be learned here, it's that rules are made to be respectfully broken. You CAN mess with the finder patterns, but notice how the cross shape is completely preserved in two of them.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -345,16 +362,17 @@ While it had nothing to do with this mosaic in particular, exposure to all types
   </div>
 }
 
-Animation is generally a bad idea, since you want every frame to be scannable. But the call of the sea is unrelenting. In this example, each pixel only changes in scale, and the center 1/3 of each pixel is always the correct color like in the dot overlay technique. And that's the final lesson, that none of these techniques are mutually exclusive.
+Animation is generally a bad idea since you want every frame to be scannable. But the call of the sea is unrelenting. In this example, each pixel only changes in scale, and the center 1/3 of each pixel is always the correct color like in the dot overlay technique. And that's the final lesson, that none of these techniques are mutually exclusive.
 
+Congratulations, you now know too much about QR codes!
 
 ## Thanks for reading!
 
-I hope you learned something interesting, even if there aren't too many useful applications for artistic QR codes.
+I hope you learned something interesting, even if it's not useful.
 
 If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try. 
 
-Goodbye!
+See ya! 🫡 
 
 <h2 className="text-xl font-bold pt-32">Random Tangents</h2>
 
