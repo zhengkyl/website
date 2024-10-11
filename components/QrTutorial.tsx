@@ -379,7 +379,7 @@ export function QrTutorial() {
         <div ref={setupRegion} data-step="codewords">
           <p>
             There are 4 levels of error correction which allow roughly 7%, 15%,
-            25%, or 30% of all the bytes to be misdecoded. See how increasing
+            25%, or 30% of all the bytes to be recovered. See how increasing
             the error correction also reduces the data capacity.
           </p>
           <div className="w-full flex border my-2">
