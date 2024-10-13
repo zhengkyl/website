@@ -267,7 +267,8 @@ These techniques start with the desired output and modify the input data to matc
       Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      Here, the data pixels match an image, except that the character count indicator included in the header excludes everything after the desired text data. In other words, they are changing the padding bytes. There's more, but I don't understand it fully. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See the HN post</a>.
+      Here, the data pixels match an image, but they are not part of the decoded message. In other words, they are changing the padding bytes. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See their HN post</a>. <br/> (EDIT: This padding manipulation method was first described in <a href="https://www.ieice.org/publications/conferences/summary.php?id=FIT0000009019&expandable=2&ConfCd=F&session_num=4V&lecture_number=O-006&year=2011&conf_type=F">Expansion of Image Displayable Area in Design QR Code
+and Its Applications, 2011</a>.)
     </p>
     <div className="font-thin text-xs text-center">
       <img src="image/reverse_bad_apple.jpg" alt="reverse bad apple video qr code"/>
