@@ -1,0 +1,47 @@
+---
+posted: 2025-7-22
+desc: People love to hate Tailwind, nobody loves being concise
+---
+
+All styling solutions have tradeoffs, and I like the tradeoffs Tailwind makes. Here are the pros and cons in order of importance to me.
+
+## Pros
+
+- It colocates styles with the element I'm styling.
+
+- I don't need to come up with class names for arbitrary elements which might be temporary.
+
+- Instead of choosing from infinite numbers or colors, I can pick `sm`, `md`, `lg`, and `red-500`.
+
+## Cons
+
+- Classes don't override nicely. You have to add more specificity or merge classes at runtime 🤮. 
+
+- It bloats the markup.
+
+- I have to remember a new name for CSS properties I already know.
+
+- I still need some regular CSS, whether it's as an arbitrary class in brackets or just in a CSS file
+
+- It requires an extra step to generate the CSS files.
+
+## Why Tailwind
+
+Splitting styles and markup (context switching) and coming up with names (notoriously hard) are by far the biggest problems which every other styling solution has.
+
+Composing styles without using `tw-merge` is annoying but can be done. The other cons are trivial.
+
+Ergo rex.
+
+
+<div class="rounded-lg border p-4 bg-gray-100 mt-64">
+A few more thoughts.
+
+- [UnoCSS](https://unocss.dev) is a better implementation of Tailwind for JS projects, and it also has a better VSCode extension.
+  - You can group variants with parentheses like `hover:(bg-red-600 text-white font-bold)`
+  - The extension underlines valid classes 
+
+- AI is bad at styling so it's not important that it's best at Tailwind.
+
+- I'm not convinced Tailwind classes meaningfully affect load times. Either way, CSS in JS (derogatory) probably has the best case for minimizing bundle size. See Facebook's [StyleX](https://stylexjs.com/).
+</div>
