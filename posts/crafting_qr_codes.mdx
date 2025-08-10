@@ -267,7 +267,7 @@ These techniques start with the desired output and modify the input data to matc
       Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      Here, the data pixels match an image, but they are not part of the decoded message. In other words, they are changing the padding bytes. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See their HN post</a>. <br/> (EDIT: This padding manipulation method was first described in <a href="https://www.ieice.org/publications/conferences/summary.php?id=FIT0000009019&expandable=2&ConfCd=F&session_num=4V&lecture_number=O-006&year=2011&conf_type=F">Expansion of Image Displayable Area in Design QR Code
+      Here, the data pixels match an image, but they are not part of the decoded message. In other words, they are changing the padding bytes. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See their HN post</a>. <br/> (This padding manipulation method was first described in <a href="https://www.ieice.org/publications/conferences/summary.php?id=FIT0000009019&expandable=2&ConfCd=F&session_num=4V&lecture_number=O-006&year=2011&conf_type=F">Expansion of Image Displayable Area in Design QR Code
 and Its Applications, 2011</a>.)
     </p>
     <div className="font-thin text-xs text-center">
@@ -393,7 +393,7 @@ Here are some QR code thoughts I had to get off my mind.
     - The best mask is chosen by scoring the masked data, but the scoring conditions are arbitrary, and all 8 masks will work just fine anyway.
     - This interative step by step walkthrough showcases this in Steps 7 and 8. Choose the worst mask and see that it doesn't matter.
     - https://www.nayuki.io/page/creating-a-qr-code-step-by-step
-3. Proprietary scannable codes are kinda funny. Tiktok and Snapchat have already replaced their custom codes with stylized QR codes. ![four proprietary scan codes](four_horsemen.png)
+3. Proprietary scannable codes are kinda funny. Tiktok, Snapchat, and Instagram have already replaced their custom codes (TikCode, Snapcode, Nametag, respectively) with stylized QR codes. ![four proprietary scan codes](four_horsemen.png)
 4. Here are links I don't want to lose.
     - https://www.thonky.com/qr-code-tutorial is a great resource and helped me understand the error correction math.
     - [segno](https://github.com/heuer/segno) is probably the only QR code generator that supports Kanji mode.

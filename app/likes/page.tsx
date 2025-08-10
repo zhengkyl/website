@@ -1,7 +1,5 @@
 import Review from "../../components/Review";
-import Song from "../../components/Song";
 import { getMovieReviews } from "../../lib/server/review";
-import { getPreviousSongs } from "../../lib/server/spotify";
 
 export default async function Page() {
   const previousReviews = await getMovieReviews({
@@ -11,8 +9,6 @@ export default async function Page() {
     sort_by: "created_at.desc",
     user_id: 1,
   });
-
-  const previousSongs = await getPreviousSongs({ limit: 1 });
 
   return (
     <>
@@ -30,21 +26,6 @@ export default async function Page() {
         </ul>
       ) : (
         <div className="text-rose-600">error loading movies...</div>
-      )}
-      <h2 className="font-playfair font-black text-3xl mt-12">songs</h2>
-      <h3 className="font-light italic text-stone-500 text-xl my-2">
-        recently played
-      </h3>
-      {previousSongs.length ? (
-        <ul>
-          {previousSongs.map((song) => (
-            <li key={song.link}>
-              <Song {...song} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="text-rose-600">error loading songs...</div>
       )}
     </>
   );

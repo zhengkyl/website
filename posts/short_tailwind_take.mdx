@@ -1,37 +1,27 @@
 ---
 posted: 2025-7-22
-desc: People love to hate Tailwind, nobody loves being concise
+desc: Few word why Tailwind not bad
 ---
 
-All styling solutions have tradeoffs, and I like the tradeoffs Tailwind makes. Here are the pros and cons in order of importance to me.
+**TLDR**: Other styling solutions split styles and markup (requiring frequent context switching) and force you to come up with names (the hardest problem in computer science).
 
-## Pros
+All styling solutions have tradeoffs, and I like the tradeoffs Tailwind makes.
 
-- It colocates styles with the element I'm styling.
+## Tradeoffs
 
-- I don't need to come up with class names for arbitrary elements which might be temporary.
+- It colocates styles with the element I'm styling, which bloats the markup.
 
-- Instead of choosing from infinite numbers or colors, I can pick `sm`, `md`, `lg`, and `red-500`.
+- I don't need to come up with class names, but I do have to remember new names for CSS properties I already know.
 
-## Cons
+- Instead of choosing from infinite numbers or colors, I can pick `sm`, `md`, `lg`, and `red-500`, but Tailwind classes aren't exhaustive and sometimes I need to write custom classes or straight up raw CSS.
 
-- Classes don't override nicely. You have to add more specificity or merge classes at runtime 🤮. 
+So much gained for so little. It's nearly a perfect solution.
 
-- It bloats the markup.
+## One true drawback
 
-- I have to remember a new name for CSS properties I already know.
+Unfortunately, classes don't compose nicely. It seems like common practice to merge classes at runtime 🤮, but with great effort, this can be done using specificity, data attributes, and CSS variables instead.
 
-- I still need some regular CSS, whether it's as an arbitrary class in brackets or just in a CSS file
-
-- It requires an extra step to generate the CSS files.
-
-## Why Tailwind
-
-Splitting styles and markup (context switching) and coming up with names (notoriously hard) are by far the biggest problems which every other styling solution has.
-
-Composing styles without using `tw-merge` is annoying but can be done. The other cons are trivial.
-
-Ergo rex.
+Still, nothing else comes close. ~~Tailwind~~ UnoCSS with Tailwind preset it is.
 
 
 <div class="rounded-lg border p-4 bg-gray-100 mt-64">
@@ -44,4 +34,6 @@ A few more thoughts.
 - AI is bad at styling so it's not important that it's best at Tailwind.
 
 - I'm not convinced Tailwind classes meaningfully affect load times. Either way, CSS in JS (derogatory) probably has the best case for minimizing bundle size. See Facebook's [StyleX](https://stylexjs.com/).
+
+- If I read another long ass essay about Tailwind from a non-frontend dev. 
 </div>
