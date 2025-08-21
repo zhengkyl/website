@@ -19,9 +19,25 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {props.children}
       </pre>
     ),
-    h2: (props) => <h2 {...props} className="text-xl font-bold pt-4" />,
-    h3: (props) => <h3 {...props} className="text-lg font-bold pt-2" />,
-    ol: (props) => <ol className="ps-4 list-decimal flex flex-col gap-2">{props.children}</ol>,
+    h2: (props) => (
+      <h2
+        id={(props.children as string).toLowerCase().replaceAll(" ", "-")}
+        {...props}
+        className="text-xl font-bold pt-4"
+      />
+    ),
+    h3: (props) => (
+      <h3
+        id={(props.children as string).toLowerCase().replaceAll(" ", "-")}
+        {...props}
+        className="text-lg font-bold pt-2"
+      />
+    ),
+    ol: (props) => (
+      <ol className="ps-4 list-decimal flex flex-col gap-2">
+        {props.children}
+      </ol>
+    ),
     ul: (props) => <ul className="ps-4 list-circle">{props.children}</ul>,
   };
 }

@@ -198,9 +198,9 @@ With that in mind, let's cover existing ways people have successfully created ar
 
 ## Image Techniques
 
-There is a wide breadth and depth of research into creating images with QR codes, so I'll only briefly cover these two categories I came up with.
+There is a wide breadth and depth of research into recreating images with QR codes, but they can be broadly categorized into the following categories.
 
-### Dot overlay
+### Overlaying data
 
 {
   <div className="grid cols-1 sm:cols-4 gap-2 pixelated py-2">
@@ -242,7 +242,7 @@ There is a wide breadth and depth of research into creating images with QR codes
   </div>
 }
 
-### Reverse-engineering
+### Reverse-engineering data
 
 These techniques start with the desired output and modify the input data to match. These are basically incompatible with a normal QR code generator and require deep custom logic.
 
@@ -280,7 +280,20 @@ and Its Applications, 2011</a>.)
   </div>
 }
 
-(EDIT: I ended up making my own reverse-engineered Bad Apple. Here's the [scannable](https://youtu.be/8HG8HJ7tbO8) and [unscannable](https://youtu.be/1ems029Rln4) version.)
+I ended up making my own reverse-engineered Bad Apple with the goal of making it somewhat scannable in realtime. Adding a noisy pattern makes it much more likely to be detected. The source code is an example in [zhengkyl/fuqr](https://github.com/zhengkyl/fuqr).
+
+{
+<div className="grid cols-2 gap-2">
+  <div className="font-thin text-xs text-center">
+    <img src="image/unscannable_bad_apple.png" alt="unscannable bad apple video qr code"/>
+    <Sa href="https://youtu.be/1ems029Rln4">Bad Apple but it's an unscannable QR code</Sa>
+  </div>
+  <div className="font-thin text-xs text-center">
+    <img src="image/scannable_bad_apple.png" alt="scannable bad apple video qr code"/>
+    <Sa href="https://youtu.be/8HG8HJ7tbO8">Bad Apple but it's a scannable QR code</Sa>
+  </div>
+</div>
+}
 
 ## Non-Image Techniques
 
