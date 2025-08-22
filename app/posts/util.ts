@@ -19,6 +19,7 @@ export async function getPostDetails() {
         posted: new Date(frontmatter.posted),
         desc: frontmatter.desc,
         image: frontmatter.image,
+        tags: frontmatter.tags.split(","),
       };
     })
   );

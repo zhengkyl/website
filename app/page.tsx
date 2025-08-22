@@ -9,7 +9,7 @@ import reviewsImg from "../public/images/reviews.png";
 import { getPostDetails } from "./posts/util";
 
 export default async function HomePage() {
-  const recentPosts = (await getPostDetails()).slice(0, 2);
+  const recentPosts = (await getPostDetails()).slice(0, 3);
 
   return (
     <>
@@ -44,12 +44,26 @@ export default async function HomePage() {
             <h3 className="font-bold font-mono group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
               {post.slug.replaceAll("_", " ")}
             </h3>
-            <h4 className="font-light italic text-stone-500">{post.desc}</h4>
+            <div className="flex flex-wrap gap-2 items-center text-stone-500">
+              <h4 className="font-light italic pr-1">{post.desc}</h4>
+              {post.tags.map((tag) => {
+                return (
+                  <div
+                    className="border-stone-400 border text-xs px-1 data-[interactive=true]:text-orange data-[high-effort=true]:text-purple"
+                    data-interactive={tag === "interactive"}
+                    data-high-effort={tag === "high effort"}
+                    key={tag}
+                  >
+                    {tag}
+                  </div>
+                );
+              })}
+            </div>
           </Link>
         ))}
         <Link href="/posts" className="underline text-blue-600">
           see all posts
-        </Link>{" "}
+        </Link>
       </div>
       <h2 className="text-2xl font-bold mt-4 mb-2 font-mono">projects</h2>
       <div className="flex flex-col gap-8">
