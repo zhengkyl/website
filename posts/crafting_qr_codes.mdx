@@ -1,5 +1,6 @@
 ---
 posted: 2024-9-27
+edited: 2025-8-22
 desc: How they work and how to make 'em pretty
 image: crafting.jpg
 tags: high effort,interactive
@@ -13,8 +14,6 @@ QR codes have invaded our world.
 Their prolific penetration is no surprise. They store information efficiently, scan fast and reliably, and now that QR code scanning is built-in on most phone cameras, there is nothing that even comes close to their convenience.
 
 They are simply irreplaceable to *anyone looking to share a URL* (read: everyone).
-
-Suffice it to say, I've seen a few QR codes in my day to day.
 
 {
 <div className="grid rows-[min-content_1fr_min-content] cols-2 grid-flow-col gap-x-4 font-thin text-xs text-center">
@@ -97,7 +96,7 @@ While these might require some upfront technical work, it's trivial to change th
 
 Obviously, human-made QR code's aren't practical for anyone without lots of time or money since each new URL would require a redesign.
 
-The natural progression is beating the dead elephant in the room called generative AI. These AI QR codes promise beautiful and customizable designs at scale, and when using carefully engineered prompts the results appear good. But I've no prompting expertise, so I've generated naught but nightmares.
+The natural progression is beating the dead elephant in the room called generative AI. These AI QR codes promise beautiful and customizable designs at scale. I recommend reading [the creators' showcase blog post](https://latentcat.com/en/blog/qrcode-controlnet) and [Stable Diffusion QR Code 101](https://antfu.me/posts/ai-qrcode-101) for a detailed explaination. I'll omit showing examples here—visit the links if you're interested—and I'll leave a poem in their place.
 
 {
   <div className="mx-auto -indent-2 text-sm leading-loose font-serif">
@@ -110,7 +109,7 @@ The natural progression is beating the dead elephant in the room called generati
   </div>
 }
 
-I'm more interested in programmatically generated QR codes anyways.
+I'm more interested in programmatically generated QR codes.
 
 Before they invented AI QR codes, the guys behind [QRBTF](https://qrbtf.com) also created these beautiful style options for their generator.
 
@@ -175,7 +174,7 @@ Can you tell what I did wrong with these QR codes I drew using chalk?
 
 The first one is janky, but I was legitimately confused why my second attempt failed.
 
-Computer vision is commonly used in code scanners nowadays, but the tradeoff of non-dedicated scanners (like the default smartphone camera app) is that they are less sensitive and much pickier about what they recognize.
+Computer vision is commonly used in code scanners nowadays, but the tradeoff of non-dedicated scanners (like the default smartphone camera app) is that they need to first detect a QR code before any scanning occurs. This ends up being much pickier than dumb scanners which constantly try to decode what they see.
 
 {
   <div className="grid cols-1 sm:cols-2 gap-2 pixelated">
@@ -189,9 +188,7 @@ Computer vision is commonly used in code scanners nowadays, but the tradeoff of 
   </div>
 }
 
-I'm no expert in this domain, and computer vision is somewhat of a black box anyway, so the only way I know to tell if a QR code will scan is to try scanning it.
-
-And when a code doesn't scan immediately, I've found moving farther *away* tends to help.
+I'm no expert in this domain, and computer vision is somewhat of a black box anyway, so the only way I know to tell if a QR code will scan is to try scanning it, and moving closer or farther can sometimes help. 
 
 In my experience, **solid colors** and **high contrast** are good indicators (and what my chalk drawing lacked), but once a QR code strays from black and white pixels, its fate is partially in the hands of God.
 
@@ -281,7 +278,7 @@ and Its Applications, 2011</a>.)
   </div>
 }
 
-I ended up making my own reverse-engineered Bad Apple with the goal of making it somewhat scannable in realtime. Adding a noisy pattern makes it much more likely to be detected. The source code is an example in [zhengkyl/fuqr](https://github.com/zhengkyl/fuqr).
+I ended up making my own reverse-engineered Bad Apple with the goal of making it somewhat scannable in realtime. Adding a noisy pattern makes it much more likely to be detected. The source code is an example in [`fuqr`](https://github.com/zhengkyl/fuqr).
 
 {
 <div className="grid cols-2 gap-2">
@@ -317,7 +314,7 @@ While each unique design will have unique challenges, hopefully these examples c
   </div>
 }
 
-Theft is the best type of complement... or something like that. Often times human-made designs are possible to implement using code. Here, Douglas Coupland has replaced 2x2 squares of black and white with a corresponding dark or light colored square. Not only is this easy to code, it demonstrates a common tactic of replacing *groups* of pixels with a larger design element. See [Vancouver Codes (2012)](https://www.youtube.com/watch?v=iX7iGd36NEg) for more examples of his work.
+Good artists copy. Often times human-made designs are possible to implement using code. Here, Douglas Coupland has replaced 2x2 squares of black and white with a corresponding dark or light colored square. Not only is this easy to code, it demonstrates a common tactic of replacing *groups* of pixels with a larger design element. See [Vancouver Codes (2012)](https://www.youtube.com/watch?v=iX7iGd36NEg) for more examples of his work.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -332,7 +329,7 @@ Theft is the best type of complement... or something like that. Often times huma
   </div>
 }
 
-However, not all that glitters is a scannable QR code. The original design is slick, but the gap between dots is somewhat problematic. Scanning from a distance works, but for my recreation I opted to fill the gaps with a gray shadow. This is admittedly much less cool, but many such compromises are inevitable.
+Great artists steal. The original design is slick, but not all that glitters is a scannable QR code. When things don't scan, experience tells us that we need **solid colors** and **higher contrast**. I opted to increase the dot size and density, especially for the finder patterns, and I filled the gap between dots with a dark shadow. This is less pretty, but a necessary compromise.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -347,9 +344,24 @@ However, not all that glitters is a scannable QR code. The original design is sl
   </div>
 }
 
-In the best case scenario, you can copy the code directly. This style option, along with many others, is found in the [`react-qrbtf`](https://github.com/CPunisher/react-qrbtf) repository under the MIT license. Building on top of existing code is a great way to make a new design, so feel free to use my code in the [`qrframe`](https://github.com/zhengkyl/qrframe) repository as well. The psychological damage you'll suffer is cost enough.
+Great programmers steal by copying code. This QR code style option, along with many others, is found in the [`react-qrbtf`](https://github.com/CPunisher/react-qrbtf) repository under the MIT license. Building on top of existing code is a great way to make a new design, so feel free to use my code in the [`qrframe`](https://github.com/zhengkyl/qrframe) repository as well. The psychological damage you'll suffer is cost enough.
 
 ### Touching grass
+
+{
+  <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
+    <div>
+      <img src="stencil_0.jpg" alt="badly drawing qr code with chalk"/>
+      Pathetic human attempt
+    </div>
+    <div>
+      <img src="qrframe/chalk.jpg" alt="chalk qr code using roughjs"/>
+      Created using <Sa href="https://qrframe.kylezhe.ng">qrframe</Sa>
+    </div>
+  </div>
+}
+
+Of course I had to digitally create what I failed to do in real life. With the help of [`roughjs`](https://roughjs.com/), making hand-drawn SVGs is quite simple. Playing with the fill and roughness parameters really helped me understand where the line between undetectable and reliably scannable is. My manual drawing was not even close. I cannot overemphasize **solid colors** and **high contrast**.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -364,7 +376,7 @@ In the best case scenario, you can copy the code directly. This style option, al
   </div>
 }
 
-While it had nothing to do with this mosaic in particular, exposure to all types of art is probably the best source of creative energy. The design is quite simple, but I love its character. If there's a lesson to be learned here, it's that rules are made to be respectfully broken. You CAN mess with the finder patterns, but notice how the cross shape is completely preserved in two of them.
+Exposure to all types of art is probably the best source of creative energy. The design is quite simple, but the effect is mighty like the elephant. If there's a lesson to be learned here, it's that rules are made to be respectfully broken. You CAN mess with the finder patterns, but notice how the cross shape is completely preserved in two of them.
 
 {
   <div className="grid cols-2 gap-2 font-thin text-xs text-center pixelated">
@@ -389,9 +401,7 @@ I hope you learned something interesting, even if it's not useful.
 
 If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try.
 
-Once again, my code is available at [`qrframe`](https://github.com/zhengkyl/qrframe).
-
-If you're on the fence then please know, I knew much less than you do now when I started working on [`fuqr`](https://github.com/zhengkyl/fuqr), my QR code generator in Rust that started it all (i use windows btw).
+The editor and rendering source code is available at [`qrframe`](https://github.com/zhengkyl/qrframe) while the QR code generator written in Rust that powers it is available at [`fuqr`](https://github.com/zhengkyl/fuqr).
 
 You can do it if you try, but also your time is precious.
 
@@ -401,8 +411,14 @@ See ya! 🫡
 
 Here are some QR code thoughts I had to get off my mind.
 
-1. **There are only 3 encoding modes.**
-    - The QR code standard lists encoding modes that are not relevant to ordinary users which is fine, but every QR code explainer mentions Kanji mode, a legacy mode using a legacy character encoding for Japanese, when it just isn't supported by generators or scanners in normal use. I'm sure some Japanese company uses them, but that doesn't make it relevant. Ditto for Structured append, ECI, and FNC1 encoding modes.
+1. **There are ~~many~~, there are ~~4~~, there is 1 encoding mode.**
+    - The QR code standard doesn't reflect reality. I'm sure there are standards compliant generators and scanners, probably in some legacy systems of some Japanese enterprise that still uses fax machines and pagers.
+    - Alphanumeric and Numeric mode are supported b/c they are dead simple to implement, but nobody uses this.
+    - Nobody supports extensions like Structured append, ECI, and FNC1 encoding modes.
+    - Nobody supports Kanji mode
+    - Nobody assumes byte mode is ISO 8859-1
+    - Everybody just assumes UTF-8. It's identical for ASCII (all URLs) and the default encoding for most systems.
+
 2. **The mask selection step is deeply unserious.**
     - The best mask is chosen by scoring the masked data, but the scoring conditions are arbitrary, and all 8 masks will work just fine anyway.
     - This interative step by step walkthrough showcases this in Steps 7 and 8. Choose the worst mask and see that it doesn't matter.
