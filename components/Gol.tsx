@@ -59,7 +59,7 @@ export function Gol({ width, height, children }) {
   const [showControls, setShowControls] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestFrame = useRef<number>();
+  const requestFrame = useRef<number>(0);
   const prevTime = useRef(0);
   const spawning = useRef(false);
   const color = useRef("#fda4af80");

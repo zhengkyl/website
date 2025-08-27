@@ -1,13 +1,14 @@
-import { ReactNode } from "react";
 import Header from "@/components/Header";
+import { ReactNode } from "react";
 
 import "./styles.css";
 
 export const metadata = {
-  title:{
+  metadataBase: new URL("https://kylezhe.ng"),
+  title: {
     default: "kyle zheng",
     template: "%s | kyle zheng",
-  }
+  },
 };
 
 export default function SiteLayout({ children }: { children: ReactNode }) {

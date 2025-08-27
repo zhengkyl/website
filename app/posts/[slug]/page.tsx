@@ -1,6 +1,7 @@
-import { getPostSlugs } from "../util";
+import { getPostDetails } from "../util";
 
-export async function generateMetadata({ params: { slug } }) {
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
   // destructure triggers unsupported server component error
   const frontmatter = (await import(`/posts/${slug}.mdx`)).frontmatter;
   return {
@@ -15,11 +16,8 @@ export async function generateMetadata({ params: { slug } }) {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return await Promise.all(
-    getPostSlugs().map(async (slug) => {
-      return { slug };
-    })
-  );
+  const posts = await getPostDetails();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 const dateOptions = {
@@ -30,7 +28,8 @@ const dateOptions = {
 
 const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
 
-export default async function Page({ params: { slug } }) {
+export default async function Page({ params }) {
+  const { slug } = await params;
   // Webpack can't load arbitrary dynamic paths, must have string literal parts
   // https://github.com/webpack/webpack/issues/6680#issuecomment-370800037
   const { default: MdxContent, frontmatter } = await import(

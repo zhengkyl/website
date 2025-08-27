@@ -9,32 +9,32 @@
     "start": "next start"
   },
   "dependencies": {
-    "@babel/core": "^7.25.2",
-    "@mdx-js/loader": "^3.0.1",
-    "@mdx-js/react": "^3.0.1",
-    "@next/mdx": "^14.2.9",
+    "@babel/core": "^7.28.3",
+    "@mdx-js/loader": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
+    "@next/mdx": "^15.5.2",
     "@types/mdx": "^2.0.13",
-    "esbuild": "^0.14.54",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.9",
-    "fuqr": "^0.0.7",
-    "lucide-react": "^0.263.1",
-    "next": "^14.2.9",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "esbuild": "^0.25.9",
+    "eslint": "^9.34.0",
+    "eslint-config-next": "^15.5.2",
+    "fuqr": "^1.0.0",
+    "lucide-react": "^0.542.0",
+    "next": "^15.5.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "remark-frontmatter": "^5.0.0",
-    "remark-gfm": "^4.0.0",
-    "sharp": "^0.33.5",
-    "usehooks-ts": "^2.16.0"
+    "remark-gfm": "^4.0.1",
+    "sharp": "^0.34.3",
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
-    "@types/node": "^18.19.50",
-    "@types/react": "^18.3.5",
-    "@unocss/postcss": "^0.62.4",
-    "@unocss/webpack": "^0.62.4",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.11",
+    "@unocss/postcss": "^66.4.2",
+    "@unocss/webpack": "^66.4.2",
     "babel-plugin-inline-react-svg": "^2.0.2",
-    "typescript": "^5.6.2",
-    "unocss": "^0.62.4"
+    "typescript": "^5.9.2",
+    "unocss": "^66.4.2"
   },
-  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
 }

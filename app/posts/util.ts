@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export function getPostSlugs() {
+function getPostSlugs() {
   const fileNames = fs.readdirSync("posts");
 
   return fileNames.map((fileName) => {
@@ -14,6 +14,11 @@ export async function getPostDetails() {
     getPostSlugs().map(async (slug) => {
       const { frontmatter } = await import(`posts/${slug}.mdx`);
 
+      // Skip posts without posted frontmatter
+      if (!frontmatter?.posted) {
+        return null;
+      }
+
       return {
         slug,
         posted: new Date(frontmatter.posted),
@@ -24,7 +29,8 @@ export async function getPostDetails() {
     })
   );
 
-  // sort reverse chronological
-  details.sort((a, b) => (b.posted < a.posted ? -1 : 1));
-  return details;
+  // Filter out null entries and sort reverse chronological
+  const validDetails = details.filter((d) => d != null);
+  validDetails.sort((a, b) => (b.posted < a.posted ? -1 : 1));
+  return validDetails;
 }

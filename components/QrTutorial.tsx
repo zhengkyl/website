@@ -1,7 +1,7 @@
 "use client";
 
+import init, { ECL, generate, Mask, Mode, QrOptions, Version } from "fuqr";
 import { useCallback, useEffect, useRef, useState } from "react";
-import init, { generate, QrOptions, Mode, Version, ECL, Mask } from "fuqr";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
 
@@ -49,11 +49,18 @@ export function QrTutorial() {
   const observer = useRef<IntersectionObserver>(null!);
   const regions = useRef<HTMLDivElement[]>([]);
 
-  const setupRegion = useCallback((e) => {
-    regions.current.push(e);
+  const setupRegion = useCallback((r) => {
+    if (r == null) return;
+    // gross but no reasonable choice w/ react 19
+    if (regions.current.includes(r)) return;
+    regions.current.push(r);
   }, []);
 
-  const setupObserver = useCallback(() => {
+  const setupObserver = useCallback((r) => {
+    if (r == null) observer.current.disconnect();
+
+    if (observer.current) return;
+
     observer.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -379,8 +386,8 @@ export function QrTutorial() {
         <div ref={setupRegion} data-step="codewords">
           <p>
             There are 4 levels of error correction which allow roughly 7%, 15%,
-            25%, or 30% of all the bytes to be recovered. See how increasing
-            the error correction also reduces the data capacity.
+            25%, or 30% of all the bytes to be recovered. See how increasing the
+            error correction also reduces the data capacity.
           </p>
           <div className="w-full flex border my-2">
             {["Low", "Medium", "Quartile", "High"].map((key, i) => (
