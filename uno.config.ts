@@ -1,4 +1,4 @@
-import { defineConfig, presetWind, transformerVariantGroup } from "unocss";
+import { defineConfig, presetWind3, transformerVariantGroup } from "unocss";
 
 export default defineConfig({
   content: {
@@ -16,5 +16,5 @@ export default defineConfig({
     // ["list-circle", { "list-style-type": "circle" }],
   ],
   transformers: [transformerVariantGroup()],
-  presets: [presetWind()],
+  presets: [presetWind3()],
 });
