@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import { Book } from "./book";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "draws",
 };
 
@@ -9,10 +10,14 @@ export default function Page() {
     <>
       <div>
         <p>
-          I saw my friend's art progress after one year and thought "I can get that good in one year?".
+          I saw my friend's art progress after one year and thought,{" "}
+          <span className="italic">could I get that good in one year?</span>
+          <br />
+          Yes and no.
         </p>
         <p className="my-8 mb-16">
-          Below are digital recreations of my sketchbooks. I picked out some pages I like, with a few stinkers sprinkled in for contrast.
+          Below are partial digital recreations of my sketchbooks. Click to flip
+          the pages.
         </p>
       </div>
       <div className="flex flex-col gap-8">
@@ -21,10 +26,7 @@ export default function Page() {
           date="JAN '24 - APR '24"
           pages="104 pages 5x8.25in"
         >
-          <p>
-            This is a nice sketchbook, but buying it was a zero interest rate
-            phenomenon.
-          </p>
+          <p>Luxurious, but not worth it for pen/pencil sketches.</p>
           <Book
             numSheets={6}
             pagesDir="/images/moleskine"
@@ -36,7 +38,7 @@ export default function Page() {
           date="JUN - DEC '23"
           pages="368 pages 5.4x7.7in"
         >
-          <p>This makes for a terrible sketchbook, perfect for terrible art.</p>
+          <p>This should not be used as a sketchbook.</p>
           <Book
             numSheets={7}
             sheetOffsetK={1 / 100}
@@ -50,7 +52,7 @@ export default function Page() {
           date="FEB - MAY '23"
           pages="128 pages 5.6x8.25in"
         >
-          <p>My favorite and first real sketchbook.</p>
+          <p>Good, cheap, and available at the University Bookstore</p>
           <Book
             numSheets={5}
             sheetOffsetK={1 / 120}

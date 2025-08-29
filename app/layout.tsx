@@ -1,9 +1,10 @@
 import Header from "@/components/Header";
+import type { Metadata } from "next";
 import { ReactNode } from "react";
 
 import "./styles.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL("https://kylezhe.ng"),
   title: {
     default: "kyle zheng",
@@ -17,7 +18,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <head></head>
       <body>
         <div className="px-4 py-16 m-auto max-w-screen-md">
-          <Header className="pb-8 z-10 relative" />
+          <Header className="z-10 relative" />
           <main>{children}</main>
         </div>
       </body>

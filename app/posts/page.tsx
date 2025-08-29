@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getPostDetails } from "./util";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "posts",
 };
 
@@ -10,6 +11,7 @@ export default async function Page() {
 
   return (
     <div>
+      <p>Some things I've written.</p>
       <ul>
         {posts.map((post) => (
           <Link href={`/posts/${post.slug}`} key={post.slug}>

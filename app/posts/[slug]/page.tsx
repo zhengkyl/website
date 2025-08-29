@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import { getPostDetails } from "../util";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }): Promise<Metadata> {
   const { slug } = await params;
   // destructure triggers unsupported server component error
   const frontmatter = (await import(`/posts/${slug}.mdx`)).frontmatter;
@@ -37,8 +38,16 @@ export default async function Page({ params }) {
   );
   return (
     <>
-      <div className="font-light italic text-stone-500 text-xl pb-4">
-        {dateFormat.format(Date.parse(frontmatter.posted))}
+      <h3 className="text-xl font-light italic text-stone-500">
+        {frontmatter.desc}
+      </h3>
+      <div className="text-right text-sm text-stone-500 pb-4">
+        <div>Posted {dateFormat.format(Date.parse(frontmatter.posted))}</div>
+        {frontmatter.edited && (
+          <div>
+            Last edited {dateFormat.format(Date.parse(frontmatter.edited))}
+          </div>
+        )}
       </div>
       <article className="flex flex-col gap-4">
         <MdxContent />

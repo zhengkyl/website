@@ -235,6 +235,13 @@ export default async function HomePage() {
           </a>
         </h3>
       </div>
+      <h2 className="text-2xl font-bold mt-4 mb-2 font-mono">other</h2>
+      <div>
+        kyle{" "}
+        <Link href="/draws" className="underline text-blue-600">
+          draws
+        </Link>
+      </div>
     </>
   );
 }
