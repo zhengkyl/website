@@ -19,7 +19,7 @@
     "eslint-config-next": "^15.5.2",
     "fuqr": "^1.0.0",
     "lucide-react": "^0.542.0",
-    "next": "^15.5.7",
+    "next": "^15.5.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "remark-frontmatter": "^5.0.0",
