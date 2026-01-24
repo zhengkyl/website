@@ -1,0 +1,264 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+import kana1Img from "../assets/images/kana_1.png";
+import kana2Img from "../assets/images/kana_2.png";
+import pixelgameImg from "../assets/images/pixelgame.png";
+import qrframeImg from "../assets/images/qrframe.png";
+import reviewsImg from "../assets/images/reviews.png";
+
+const posts = await getCollection("posts");
+const sortedPosts = posts
+  .filter((post) => post.data.posted)
+  .sort(
+    (a, b) =>
+      new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <p>I'm a programmer.</p>
+  <div class="flex gap-4 font-mono my-2">
+    <a
+      href="https://github.com/zhengkyl"
+      class="font-bold underline text-blue-600"
+      target="_blank"
+    >
+      github
+    </a>
+    <a
+      href="https://www.linkedin.com/in/zhengkyl/"
+      class="font-bold underline text-blue-600"
+      target="_blank"
+    >
+      linkedin
+    </a>
+    <a
+      href="./Kyle_Zheng_Resume.pdf"
+      class="font-bold underline text-blue-600"
+      target="_blank"
+    >
+      resume
+    </a>
+  </div>
+  <h2 class="text-2xl font-bold mt-4 mb-2 font-mono">posts</h2>
+  <div class="flex flex-col gap-4">
+    {
+      sortedPosts.map((post) => {
+        return (
+          <a href={`/posts/${post.id}`}>
+            <h3 class="font-bold font-mono group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
+              {post.id.replaceAll("_", " ")}
+            </h3>
+            <div class="flex flex-wrap gap-2 items-center text-stone-500">
+              <h4 class="font-light italic pr-1">{post.data.description}</h4>
+              {post.data.tags.map((tag) => (
+                <div
+                  class="border-stone-400 border text-xs px-1 data-[interactive=true]:text-orange data-[high-effort=true]:text-purple"
+                  data-interactive={tag === "interactive"}
+                  data-high-effort={tag === "high effort"}
+                >
+                  {tag}
+                </div>
+              ))}
+            </div>
+          </a>
+        );
+      })
+    }
+    <a href="/posts" class="underline text-blue-600"> see all posts </a>
+  </div>
+  <h2 class="text-2xl font-bold mt-4 mb-2 font-mono">projects</h2>
+  <div class="flex flex-col gap-8">
+    <div>
+      <h3 class="font-bold font-mono">
+        <a
+          class="underline text-blue-600"
+          href="https://qrframe.kylezhe.ng"
+          target="_blank"
+        >
+          qrframe.kylezhe.ng
+        </a>
+      </h3>
+      <p>
+        I wanted to make cool custom QR codes, so I made this generator from
+        scratch to learn just how far I can push the boundaries.
+      </p>
+      <Image
+        class="py-1 max-h-50vh object-cover object-top"
+        src={qrframeImg}
+        alt="qr code editor"
+        loading="eager"
+      />
+      <div class="font-mono">
+        <span class="font-bold">Github: </span>
+        <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/qrframe"
+          target="_blank"
+        >
+          qrframe
+        </a>, <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/fuqr"
+          target="_blank"
+        >
+          fuqr
+        </a>
+      </div>
+    </div>
+    <div>
+      <h3 class="font-bold font-mono">
+        <a
+          class="underline text-blue-600"
+          href="https://kana.kylezhe.ng"
+          target="_blank"
+        >
+          kana.kylezhe.ng
+        </a>
+      </h3>
+      <p>
+        Here's a chart and pratice tool for Japanese hiragana and katakana. It
+        comes with pronunciations, animated stroke diagrams, and a practice
+        quiz.
+      </p>
+      <div class="flex gap-3 py-1">
+        <div class="border max-h-50vh overflow-hidden">
+          <Image src={kana1Img} alt="kana chart" />
+        </div>
+        <div class="border max-h-50vh overflow-hidden">
+          <Image src={kana2Img} alt="kana chart" />
+        </div>
+      </div>
+      <div class="font-mono">
+        <span class="font-bold">Github: </span>
+        <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/kana"
+          target="_blank"
+        >
+          kana
+        </a>, <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/strokesvg"
+          target="_blank"
+        >
+          strokesvg
+        </a>
+      </div>
+    </div>
+    <div>
+      <h3 class="font-bold font-mono">
+        <a
+          class="underline text-blue-600"
+          href="https://pixelgame.kylezhe.ng"
+          target="_blank"
+        >
+          pixelgame.kylezhe.ng
+        </a>
+      </h3>
+      <p>
+        This is tic-tac-toe but overcomplicated as I tried to learn why
+        developers love Elixir and Phoenix.
+      </p>
+      <Image
+        class="py-1 max-h-50vh object-cover object-top"
+        src={pixelgameImg}
+        alt="tic-tac-toe game board"
+      />
+      <div class="font-mono">
+        <span class="font-bold">Github: </span>
+        <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/pixelgame"
+          target="_blank"
+        >
+          pixelgame
+        </a>
+      </div>
+    </div>
+    <div>
+      <h3 class="font-bold font-mono">
+        <span class="bg-gray-100 border px-1"> ssh reviews.kylezhe.ng </span>
+      </h3>
+      <p>
+        I like movies, but not rating systems. This is a minimalist movie review
+        app I wrote to try out Rust, Go, and terminal user interfaces.
+      </p>
+      <Image
+        class="py-1 max-h-50vh object-cover object-top"
+        src={reviewsImg}
+        alt="movie review tui"
+      />
+      <div class="font-mono">
+        <span class="font-bold">Github: </span>
+        <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/review-ssh"
+          target="_blank"
+        >
+          review-ssh
+        </a>, <a
+          class="underline text-blue-600"
+          href="https://github.com/zhengkyl/review-api"
+          target="_blank"
+        >
+          review-api
+        </a>
+      </div>
+    </div>
+  </div>
+  <h2 class="text-2xl font-bold mt-4 mb-2 font-mono">experience</h2>
+  <div class="font-mono">
+    <h3>
+      2022 summer intern at{" "}
+      <a
+        href="https://tulip.co/"
+        class="font-bold underline text-blue-600"
+        target="_blank"
+      >
+        Tulip
+      </a>
+    </h3>
+    <p></p>
+    <h3>
+      2021 summer intern at{" "}
+      <a
+        href="https://lifeomic.com/"
+        class="font-bold underline text-blue-600"
+        target="_blank"
+      >
+        LifeOmic
+      </a>
+    </h3>
+    <p></p>
+    <h3>
+      2020-23 programmer at{" "}
+      <a
+        href="https://learninglab.psych.purdue.edu/"
+        class="font-bold underline text-blue-600"
+        target="_blank"
+      >
+        PCLLAB
+      </a>
+    </h3>
+    <h3>
+      2019-23 cs student at{" "}
+      <a
+        href="https://learninglab.psych.purdue.edu/"
+        class="font-bold underline text-blue-600"
+        target="_blank"
+      >
+        Purdue
+      </a>
+    </h3>
+  </div>
+  <h2 class="text-2xl font-bold mt-4 mb-2 font-mono">other</h2>
+  <div>
+    kyle{" "}
+    <a href="/draws" class="underline text-blue-600"> draws </a>
+  </div>
+</BaseLayout>

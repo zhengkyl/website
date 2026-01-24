@@ -1,0 +1,183 @@
+---
+title: SSH Game of Life
+description: Learning Go in Javascript rehab
+tags: ["interactive"]
+posted: 2023-08-04
+---
+
+import { Gol } from "../../../components/Gol";
+import { Link } from "../../../components/mdx";
+
+<Gol client:visible width={30} height={60}>
+
+I made Conway's Game of Life, except it's **multiplayer**, runs in the **terminal**, and accessible via **ssh**.
+
+```sh
+ssh gol.kylezhe.ng
+```
+
+![multiplayer game of life](./multiplayer.gif)
+
+{
+
+<div className="border p-4">
+  <Link title="Code">{"https://github.com/zhengkyl/gol"}</Link>
+</div>
+}
+
+## The Idea
+
+![game of life menu](./menu.png)
+
+Somehow I got hoodwinked by [@purduehackers](https://www.purduehackers.com) into holding a workshop to teach Go. This was good, because it justified the previous week I spent learning Go.
+
+Conway's Game of Life seemed like a simple interactive program that someone could reasonably code in a new programming language.
+
+After a little work, I ended up with a small (less than 200 line) terminal application, written in Go using the [bubbletea](https://github.com/charmbracelet/bubbletea) library made by [@charm](https://charm.sh/), and a slideshow using [slides](https://github.com/maaslalani/slides), a terminal slideshow app.
+
+## The Workshop
+
+![me talking](./workshop.jpg)
+
+Not many people showed up, and I think only 1 person actually coded the program from start to finish. Having the finished project available on Github beforehand was a good idea, but the live coding was not very successful.
+
+Talking while typing was hard even though I was very familiar with the code, and the whole experience just wasn't very engaging. People typed along or watched without absorbing much, and I just ended up talking to myself.
+
+At the end, when someone asked what they could actually use Go for, I struggled to give a suggestion outside of "make a web server". Turns out, I'm not an expert in Go (or useful code).
+
+Ultimately, I think the code was still too complicated for the given time and the end result was too niche.
+
+This was a ~~canon event~~ learning experience.
+
+<details>
+<summary className="font-light italic text-stone-500 text-xl py-2">Learn more about the workshop</summary>
+<div className="flex flex-col gap-4">
+{
+  <div className="border p-4">
+    <Link title="Event Post">
+      {"https://events.purduehackers.com/go-game-of-life-workshop"}
+    </Link>
+    <Link title="Code">{"https://github.com/zhengkyl/gol/tree/workshop"}</Link>
+  </div>
+}
+
+Here is a super brief rundown of all the logic needed for Conway's Game of Life.
+
+```go
+package life
+
+func NewBoard(width, height int) [][]bool {
+  board := make([][]bool, height)
+  for i := range board {
+    board[i] = make([]bool, width)
+  }
+  return board
+}
+
+func NextBoard(board [][]bool) [][]bool {
+  boardHeight := len(board)
+  boardWidth := len(board[0])
+
+  newBoard := NewBoard(boardWidth, boardHeight)
+
+  for y := range board {
+    for x, alive := range board[y] {
+
+      neighbors := 0
+
+      for dy := -1; dy <= 1; dy++ {
+        for dx := -1; dx <= 1; dx++ {
+          if dy == 0 && dx == 0 {
+            continue
+          }
+
+          ny := (y + dy + boardHeight) % boardHeight
+          nx := (x + dx + boardWidth) % boardWidth
+
+          if board[ny][nx] {
+            neighbors++
+          }
+        }
+      }
+
+      if alive && (neighbors == 2 || neighbors == 3) {
+        newBoard[y][x] = true
+      } else if !alive && neighbors == 3 {
+        newBoard[y][x] = true
+      }
+
+    }
+  }
+
+  return newBoard
+}
+```
+
+You might be thinking that the code could be more efficient. I also felt the urge to optimize especially after reading about some [mind-bending optimizations](https://www.jagregory.com/abrash-black-book/#chapter-18-its-a-plain-wonderful-life), but I ran a benchmark first.
+
+The code was **waaaaaaaay** more than fast enough. I guess the real premature optimization was the advancements in hardware made along the way.
+
+</div>
+</details>
+
+## SSH & Multiplayer
+
+Inspired by [SSHTron](https://github.com/zachlatta/sshtron), I decided that I had to add multiplayer. The workshop was over, so there was no point, but I wasn't quite ready to let go... of my gol...
+
+This is where the [wish](https://github.com/charmbracelet/wish) library, also made by [@charm](https://charm.sh/), came in handy. It handles ssh connections and even comes with built in middleware for [bubbletea](https://github.com/charmbracelet/bubbletea) applications.
+
+With a few lines of code, the workshop project became an SSH app.
+
+```go
+s, err := wish.NewServer(
+    wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
+    wish.WithMiddleware(
+      MiddlewareWithProgramHandler(teaHandler(gm), termenv.ANSI256, gm),
+    ),
+  )
+```
+
+Of course, the true challenge was the multiplayer experience and debugging countless race conditions caused by my poor decision making.
+
+Here is a diagram of the [complexity demon](https://grugbrain.dev/) I summoned. For simplicity, only one player is shown. In reality, one lobby exists for each game, which has up to 10 players, each with their own `playerState`. <span text="sm">(In actual reality, there are zero players, but you get the point)</span>.
+
+![complexity demon data flow](./chart.png)
+
+<div className="flex flex-col gap-4 border p-4">
+`manager` controls the creation and joining and leaving of game lobbies.
+
+`player` represents one connected user, which their own goroutine handling input and displaying the board. They send commands to a `lobby` and update their `playerState`.
+
+`lobby` runs one Game of Life board and sends updates to all players.
+
+</div>
+
+I'm not proud of it, so I'll save you any further details, but I'm 100% sure I solved 90% of the possible game breaking bugs with the careful usage of a few mutexes.
+
+## Everything Else
+
+Although the game board has a fixed size, I decided to make it tile infinitely to fill terminals of any size and allow seamless player movement. This was hard, but only in the way math is.
+
+![testing tiling and movement](./dev_tiling.gif)
+
+I contemplated summoning more complexity demons for the sake of rendering optimization, but thankfully I gave up and just added more colors.
+
+![testing many player colors](./dev_multi.gif)
+
+And months later, I gave it some polish and wrote this post.
+
+![thanks](./thanks.gif)
+
+I started this when I was excited about working on anything other than another web app using some Javascript framework. In fact, I ended up writing another ssh app using the same libraries to track the movies I watch. The code is at [review-ssh](https://github.com/zhengkyl/review-ssh) and the app is live at `ssh reviews.kylezhe.ng`. Suprisingly, I actually use it.
+
+These two projects gave me a taste of Go, even if they are somewhat niche projects that don't play to the language's strengths. Here are my unqualified thoughts about the language.
+
+- It definitely reached the goal of a being a static language that feels dynamic.
+- It's nice to know that I can come back anytime and instantly understand the code I wrote.
+- I don't forsee myself using Go very much. It is productive, but it does not spark joy.
+
+Thanks to [@purduehackers](https://www.purduehackers.com) and [@matthiewstanciu](https://www.matthewstanciu.com) for the idea and motivation and fun times!
+
+![original workshop idea dm](./msg.png)
+
+</Gol>

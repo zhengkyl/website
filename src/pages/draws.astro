@@ -1,0 +1,111 @@
+---
+import { Book } from "../components/Book";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="draws">
+  <div>
+    <p>
+      I saw my friend's art progress after one year and thought,{" "}
+      <span class="italic">could I get that good in one year?</span>
+      <br />
+      Yes and no.
+    </p>
+    <p class="my-8 mb-16">
+      Below are partial digital recreations of my sketchbooks. Click to flip the
+      pages.
+    </p>
+  </div>
+  <div class="flex flex-col gap-8">
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">moleskine sketchbook (red)</h2>
+        <div class="text-right font-light whitespace-pre">
+          JAN '24 - APR '24
+        </div>
+      </div>
+      <p class="font-mono mb-2">104 pages 5x8.25in</p>
+      <p>Luxurious, but not worth it for pen/pencil sketches.</p>
+      <Book
+        client:visible
+        numSheets={6}
+        pagesDir="/images/moleskine"
+        className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:7/11] [--cover-radius:5.5%_3.5%] [--page-aspect:69/109] [--page-height:98%] [--page-radius:5.45%_3.45%] [--cover-color:#b91c1c]"
+      />
+    </div>
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">muji pocketnote</h2>
+        <div class="text-right font-light whitespace-pre">JUN - DEC '23</div>
+      </div>
+      <p class="font-mono mb-2">368 pages 5.4x7.7in</p>
+      <p>This should not be used as a sketchbook.</p>
+      <Book
+        client:visible
+        numSheets={7}
+        sheetOffsetK={1 / 100}
+        spineCurveK={0.51}
+        pagesDir="/images/muji"
+        className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:15/22] [--cover-radius:0] [--page-aspect:15/22] [--page-height:100%] [--page-radius:0] [--cover-color:#c7a36f]"
+      />
+    </div>
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">
+          pacific arc sketchbook (black)
+        </h2>
+        <div class="text-right font-light whitespace-pre">FEB - MAY '23</div>
+      </div>
+      <p class="font-mono mb-2">128 pages 5.6x8.25in</p>
+      <p>Good, cheap, and available at the University Bookstore</p>
+      <Book
+        client:visible
+        numSheets={5}
+        sheetOffsetK={1 / 120}
+        spineCurveK={0.51}
+        pagesDir="/images/pacific_arc"
+        className="h-[--cover-height] [--cover-height:calc(min(480px,70vw))] [--cover-aspect:2/3] [--cover-radius:0] [--page-aspect:2/3] [--page-height:100%] [--page-radius:0] [--cover-color:transparent]"
+      />
+    </div>
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">kurzgesagt notebook (ocean)</h2>
+        <div class="text-right font-light whitespace-pre">
+          MAY '22 - FEB '23
+        </div>
+      </div>
+      <p class="font-mono mb-2">80 pages 5.8x8.3in</p>
+      <p>This came with a sick dinosaur calendar.</p>
+      <p class="text-center font-mono font-light my-2 text-stone-500">
+        TO BE SCANNED
+      </p>
+    </div>
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">kurzgesagt notebook (ant)</h2>
+        <div class="text-right font-light whitespace-pre">FEB - MAY '22</div>
+      </div>
+      <p class="font-mono mb-2">80 pages 5.8x8.3in</p>
+      <p>This also came with the dinosaur calendar.</p>
+      <p class="text-center font-mono font-light my-2 text-stone-500">
+        TO BE SCANNED
+      </p>
+    </div>
+    <div class="mb-8">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-bold font-mono">xtern notebook</h2>
+        <div class="text-right font-light whitespace-pre">
+          DEC '21 - FEB '22
+        </div>
+      </div>
+      <p class="font-mono mb-2">? pages 5.5x8.5in</p>
+      <p>
+        I used this notebook to swat flies infesting our apartment. Here's to
+        disposable art!
+      </p>
+      <p class="text-center font-mono font-light my-2 text-stone-500">
+        TO BE SCANNED
+      </p>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,34 @@
+html {
+  color: rgb(41 37 36);
+  tab-size: 2;
+  line-height: 1.6;
+  font-size: 18px;
+  --un-default-border-color: rgb(41 37 36);
+}
+
+body {
+  /* stop books overflowing */
+  overflow-x: hidden;
+}
+
+/* QrTutorial */
+.scroll-highlight {
+  position: relative;
+}
+
+/* ::before causes scroll issues in ff when scale changes */
+.scroll-highlight::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: rgb(244 63 94);
+  scale: 1 var(--_yScale, 0);
+  translate: 0 var(--_top, 0);
+  transform-origin: top;
+  transition:
+    translate 200ms ease-out,
+    scale 200ms ease-out;
+}
