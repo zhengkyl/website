@@ -1,3 +1,5 @@
+import type { ComponentChildren } from "preact";
+
 export function A(props: {
   href?: string;
   children?: ComponentChildren;

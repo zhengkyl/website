@@ -209,7 +209,6 @@ export function Gol({
         onMouseLeave={() => (spawning.current = false)}
         onMouseMove={spawn}
       ></canvas>
-      <div className="z-10 flex flex-col gap-4">{children}</div>
     </>
   );
 }

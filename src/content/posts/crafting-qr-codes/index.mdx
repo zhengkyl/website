@@ -1,72 +1,73 @@
 ---
-title: Crafting QR codes
+title: Crafting QR Codes
 description: How they work and how to make 'em pretty
-tags: ["interactive"]
+tags: ["recommended", "interactive"]
 posted: 2024-09-27
 edited: 2025-08-22
 image: crafting.jpg
 ---
 
-import { Code, Sa } from "../../../components/mdx";
-import { QrTutorial } from "../../../components/QrTutorial";
 import { Image } from "astro:assets";
+import { Code, Sa } from "~/components/mdx";
+import { QrTutorial } from "~/components/QrTutorial";
 
-import escapeImg from "./escape.jpg";
-import stationImg from "./station.jpg";
-import logoInMcdonaldsImg from "./logo/in_mcdonalds.jpg";
-import logoSfUberImg from "./logo/sf_uber.jpg";
-import logoDuolingoImg from "./logo/duolingo.jpg";
-import logoInstagramImg from "./logo/instagram.svg";
-import imageQartGoImg from "./image/qart_go.png";
-import imageHalftoneEinsteinImg from "./image/halftone_einstein.png";
-import imageQrpictureAwesomeImg from "./image/qrpicture_awesome.png";
-import imageOverlayBurgerKingImg from "./image/overlay_burger_king.jpg";
-import bespokeQrcanvasImg from "./bespoke/qrcanvas.jpg";
-import bespokeAmicollectiveImg from "./bespoke/amicollective.png";
-import bespokeMinorImg from "./bespoke/minor.png";
-import bespokeElkoyImg from "./bespoke/elkoy.png";
-import qrbtfSp1Img from "./qrbtf/sp1.svg";
-import qrbtfSp2Img from "./qrbtf/sp2.svg";
-import qrframeStainedGlassImg from "./qrframe/stained_glass.svg";
-import qrframeQuantumImg from "./qrframe/quantum.svg";
-import qrframeWhiteboardImg from "./qrframe/whiteboard.png";
-import qrframeNeonImg from "./qrframe/neon.svg";
-import qrframeLayersImg from "./qrframe/layers.svg";
-import qrframeTileImg from "./qrframe/tile.png";
-import qrframeDotsImg from "./qrframe/dots.svg";
-import qrframeMondrianImg from "./qrframe/mondrian.svg";
-import stencil1Img from "./stencil_1.jpg";
-import stencil2Img from "./stencil_2.jpg";
 import barcodeImg from "./barcode.png";
+import bespokeAmicollectiveImg from "./bespoke/amicollective.png";
+import bespokeElkoyImg from "./bespoke/elkoy.png";
+import bespokeMinorImg from "./bespoke/minor.png";
+import bespokeQrcanvasImg from "./bespoke/qrcanvas.jpg";
+import escapeImg from "./escape.jpg";
+import fourHorsemenImg from "./four_horsemen.png";
+import imageHalftoneEinsteinImg from "./image/halftone_einstein.png";
+import imageOverlayBadAppleImg from "./image/overlay_bad_apple.jpg";
+import imageOverlayBurgerKingImg from "./image/overlay_burger_king.jpg";
+import imageQartGoImg from "./image/qart_go.png";
+import imageQrpictureAwesomeImg from "./image/qrpicture_awesome.png";
+import imageReverseBadAppleImg from "./image/reverse_bad_apple.jpg";
+import imageScannableBadAppleImg from "./image/scannable_bad_apple.png";
+import imageUnscannableBadAppleImg from "./image/unscannable_bad_apple.png";
+import logoDuolingoImg from "./logo/duolingo.jpg";
+import logoInMcdonaldsImg from "./logo/in_mcdonalds.jpg";
+import logoInstagramImg from "./logo/instagram.svg";
+import logoSfUberImg from "./logo/sf_uber.jpg";
 import mikeAmzqrImg from "./mike/amzqr.jpg";
-import mikeVisaleadImg from "./mike/visualead.jpg";
 import mikeHalftoneImg from "./mike/halftone.png";
 import mikeMicrographyImg from "./mike/micrography.png";
-import imageOverlayBadAppleImg from "./image/overlay_bad_apple.jpg";
-import mikeQartImg from "./mike/qart.png";
 import mikeMyqrartImg from "./mike/myqrart.svg";
+import mikeQartImg from "./mike/qart.png";
 import mikeQrpictureImg from "./mike/qrpicture.jpg";
-import imageReverseBadAppleImg from "./image/reverse_bad_apple.jpg";
-import imageUnscannableBadAppleImg from "./image/unscannable_bad_apple.png";
-import imageScannableBadAppleImg from "./image/scannable_bad_apple.png";
+import mikeVisaleadImg from "./mike/visualead.jpg";
 import nonimageCouplandImg from "./nonimage/coupland.jpg";
-import qrframeCouplandImg from "./qrframe/coupland.png";
-import nonimageQrartsImg from "./nonimage/qrarts.jpg";
-import qrframeQrartsImg from "./qrframe/qrarts.png";
-import nonimageQrbtfImg from "./nonimage/qrbtf.svg";
-import qrframeQrbtfImg from "./qrframe/qrbtf.svg";
-import stencil0Img from "./stencil_0.jpg";
-import qrframeChalkImg from "./qrframe/chalk.jpg";
 import nonimageMosaicImg from "./nonimage/mosaic.jpg";
-import qrframeMosaicImg from "./qrframe/mosaic.svg";
-import nonimageWavesJpgImg from "./nonimage/waves.jpg";
+import nonimageQrartsImg from "./nonimage/qrarts.jpg";
+import nonimageQrbtfImg from "./nonimage/qrbtf.svg";
 import nonimageWavesGifImg from "./nonimage/waves.gif";
-import fourHorsemenImg from "./four_horsemen.png";
+import nonimageWavesJpgImg from "./nonimage/waves.jpg";
+import qrbtfSp1Img from "./qrbtf/sp1.svg";
+import qrbtfSp2Img from "./qrbtf/sp2.svg";
+import qrframeChalkImg from "./qrframe/chalk.jpg";
+import qrframeCouplandImg from "./qrframe/coupland.png";
+import qrframeDotsImg from "./qrframe/dots.svg";
+import qrframeLayersImg from "./qrframe/layers.svg";
+import qrframeMondrianImg from "./qrframe/mondrian.svg";
+import qrframeMosaicImg from "./qrframe/mosaic.svg";
+import qrframeNeonImg from "./qrframe/neon.svg";
+import qrframeQrartsImg from "./qrframe/qrarts.png";
+import qrframeQrbtfImg from "./qrframe/qrbtf.svg";
+import qrframeQuantumImg from "./qrframe/quantum.svg";
+import qrframeStainedGlassImg from "./qrframe/stained_glass.svg";
+import qrframeTileImg from "./qrframe/tile.png";
+import qrframeWhiteboardImg from "./qrframe/whiteboard.png";
 import sfBookImg from "./sf_book.jpg";
+import stationImg from "./station.jpg";
+import stencil0Img from "./stencil_0.jpg";
+import stencil1Img from "./stencil_1.jpg";
+import stencil2Img from "./stencil_2.jpg";
 
-QR codes have invaded our world.
-
-Their prolific penetration is no surprise. They store information efficiently, scan fast and reliably, and now that QR code scanning is built-in on most phone cameras, there is nothing that even comes close to their convenience.
+QR codes have invaded our world. Their prolific penetration
+is no surprise. They store information efficiently, scan fast and reliably, and
+now that QR code scanning is built-in on most phone cameras, there is nothing
+that even comes close to their convenience.
 
 They are simply irreplaceable to _anyone looking to share a URL_ (read: everyone).
 

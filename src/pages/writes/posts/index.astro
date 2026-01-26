@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
 
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.posted.valueOf() - a.data.posted.valueOf(),
@@ -12,12 +12,15 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 ---
 
-<BaseLayout title="Notes">
+<BaseLayout title="Posts">
+  <div class="py-16">
+    <h1 class="Heading1">Posts</h1>
+  </div>
   <ul>
     {
       posts.map((post) => (
         <li>
-          <a href={`/posts/${post.id}`}>{post.data.title}</a>
+          <a href={`/writes/posts/${post.id}`}>{post.data.title}</a>
           <span>{dateFormat.format(post.data.posted)}</span>
         </li>
       ))
