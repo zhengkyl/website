@@ -32,7 +32,7 @@ const sortedNotes = notes
   <div class="py-16">
     <h1 class="Heading1">I'm a programmer.</h1>
   </div>
-  <div class="grid md:cols-2 gap-8">
+  <div class="grid md:cols-[1fr_2fr] gap-8">
     <div class="flex flex-col gap-8">
       <div>
         <h2 class="text-lg font-bold font-mono">Posts</h2>
@@ -123,132 +123,141 @@ const sortedNotes = notes
         <h2 class="text-lg font-bold font-mono">Projects</h2>
         <div class="flex flex-col gap-4">
           <hr />
-          <div>
-            <h3 class="font-bold font-mono">Custom QR Code Generators</h3>
-            <p>
-              I wanted to make cool custom QR codes, so I made this generator
-              from scratch to learn just how far I can push the boundaries.
-            </p>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Custom QR Code Generators</h3>
+              <p>
+                I wanted to make cool custom QR codes, so I made this generator
+                from scratch to learn just how far I can push the boundaries.
+              </p>
+              <div>
+                <span class="font-bold">Live: </span>
+                <a
+                  class="BlueLink"
+                  href="https://qrframe.kylezhe.ng"
+                  target="_blank">qrframe.kylezhe.ng</a
+                >
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/qrframe"
+                  target="_blank">qrframe</a
+                >, <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/fuqr"
+                  target="_blank">fuqr</a
+                >
+              </div>
+            </div>
             <Image
-              class="py-1 max-h-20vh object-cover object-top"
+              class="py-1 max-h-40vh object-cover object-top"
               src={qrframeImg}
               alt="qr code editor"
               loading="eager"
             />
-            <div class="font-mono">
-              <span class="font-bold">Github: </span>
-              <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/qrframe"
-                target="_blank"
-              >
-                qrframe
-              </a>, <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/fuqr"
-                target="_blank"
-              >
-                fuqr
-              </a>
-            </div>
           </div>
-          <div>
-            <h3 class="font-bold font-mono">
-              Japanese Kana Chart
-              <a
-                class="BlueLink"
-                href="https://kana.kylezhe.ng"
-                target="_blank"
-              >
-                kana.kylezhe.ng
-              </a>
-            </h3>
-            <p>
-              Here's a chart and pratice tool for Japanese hiragana and
-              katakana. It comes with pronunciations, animated stroke diagrams,
-              and a practice quiz.
-            </p>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Japanese Kana Chart</h3>
+              <p>
+                Here's a chart and pratice tool for Japanese hiragana and
+                katakana. It comes with pronunciations, animated stroke
+                diagrams, and a practice quiz.
+
+                <div>
+                  <span class="font-bold">Live: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://kana.kylezhe.ng"
+                    target="_blank"
+                  >
+                    kana.kylezhe.ng
+                  </a>
+                </div>
+                <div class="font-mono">
+                  <span class="font-bold">Github: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://github.com/zhengkyl/kana"
+                    target="_blank">kana</a
+                  >, <a
+                    class="BlueLink"
+                    href="https://github.com/zhengkyl/strokesvg"
+                    target="_blank">strokesvg</a
+                  >
+                </div>
+              </p>
+            </div>
             <div class="flex gap-3 py-1">
-              <div class="border max-h-20vh overflow-hidden">
+              <div class="border max-h-40vh overflow-hidden">
                 <Image src={kana1Img} alt="kana chart" />
               </div>
-              <div class="border max-h-20vh overflow-hidden">
+              <div class="border max-h-40vh overflow-hidden">
                 <Image src={kana2Img} alt="kana chart" />
               </div>
             </div>
-            <div class="font-mono">
-              <span class="font-bold">Github: </span>
-              <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/kana"
-                target="_blank"
-              >
-                kana
-              </a>, <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/strokesvg"
-                target="_blank"
-              >
-                strokesvg
-              </a>
-            </div>
           </div>
-          <div>
-            <h3 class="font-bold font-mono">Pixelgame</h3>
-            <p>
-              This is tic-tac-toe but overcomplicated as I tried to learn why
-              developers love Elixir and Phoenix.
-            </p>
-            <a
-              class="BlueLink"
-              href="https://pixelgame.kylezhe.ng"
-              target="_blank"
-            >
-              pixelgame.kylezhe.ng
-            </a>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Pixelgame</h3>
+              <p>
+                This is tic-tac-toe but overcomplicated as I tried to learn why
+                developers love Elixir and Phoenix.
+              </p>
+              <div>
+                <span class="font-bold">Live: </span>
+                <a
+                  class="BlueLink"
+                  href="https://pixelgame.kylezhe.ng"
+                  target="_blank">pixelgame.kylezhe.ng</a
+                >
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/pixelgame"
+                  target="_blank">pixelgame</a
+                >
+              </div>
+            </div>
             <Image
-              class="py-1 max-h-20vh object-cover object-top"
+              class="py-1 max-h-40vh object-cover object-top"
               src={pixelgameImg}
               alt="tic-tac-toe game board"
             />
-            <div class="font-mono">
-              <span class="font-bold">Github: </span>
-              <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/pixelgame"
-                target="_blank"
-              >
-                pixelgame
-              </a>
-            </div>
           </div>
-          <div>
-            <h3 class="font-bold font-mono">Movie Reviews TUI</h3>
-            <p>
-              This is a minimalist movie review app I wrote to try out Rust, Go,
-              and terminal user interfaces.
-            </p>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Movie Reviews TUI</h3>
+              <p>
+                This is a minimalist movie review app I wrote to try out Rust,
+                Go, and terminal user interfaces.
+              </p>
+              <div>
+                <span class="font-bold">Dead (RIP): </span>
+                <span class="font-mono">ssh reviews.kylezhe.ng</span>
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/review-ssh"
+                  target="_blank">review-ssh</a
+                >, <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/review-api"
+                  target="_blank">review-api</a
+                >
+              </div>
+            </div>
             <Image
-              class="py-1 max-h-20vh object-cover object-top"
+              class="py-1 max-h-40vh object-cover object-top"
               src={reviewsImg}
               alt="movie review tui"
             />
-            <div class="font-mono">
-              <span class="font-bold">Github: </span>
-              <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/review-ssh"
-                target="_blank"
-              >
-                review-ssh
-              </a>, <a
-                class="BlueLink"
-                href="https://github.com/zhengkyl/review-api"
-                target="_blank"
-              >
-                review-api
-              </a>
-            </div>
           </div>
         </div>
       </div>
