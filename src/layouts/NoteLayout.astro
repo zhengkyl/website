@@ -11,7 +11,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 ---
 
 <BaseLayout>
-  <article class="max-w-screen-sm flex flex-col gap-4 py-16">
+  <article class="max-w-screen-sm m-auto flex flex-col gap-4 py-16">
     <h1 class="Heading1">{frontmatter.title}</h1>
     <div class="text-xs opacity-80 font-mono">
       Posted {dateFormat.format(frontmatter.posted)}

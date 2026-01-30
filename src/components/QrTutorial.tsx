@@ -1,6 +1,7 @@
 "use client";
 
 import init, { ECL, generate, Mask, Mode, QrOptions, Version } from "fuqr";
+import wasmUrl from 'fuqr/fuqr_bg.wasm?url';
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
@@ -37,7 +38,7 @@ export function QrTutorial() {
 
     if (!globalInitStarted) {
       globalInitStarted = true;
-      init().then(() => {
+      init({module_or_path: wasmUrl}).then(() => {
         setInitDone(true);
         globalInitDone = true;
       });

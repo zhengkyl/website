@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { components } from "~/components/mdx";
 import NoteLayout from "~/layouts/NoteLayout.astro";
 
 export async function getStaticPaths() {
@@ -15,5 +16,5 @@ const { Content } = await render(note);
 ---
 
 <NoteLayout frontmatter={note.data}>
-  <Content />
+  <Content components={components} />
 </NoteLayout>

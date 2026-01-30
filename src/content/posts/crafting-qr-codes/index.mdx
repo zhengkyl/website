@@ -8,7 +8,8 @@ image: crafting.jpg
 ---
 
 import { Image } from "astro:assets";
-import { Code, Sa } from "~/components/mdx";
+import { Code } from "astro:components";
+import { Sa } from "~/components/mdx";
 import { QrTutorial } from "~/components/QrTutorial";
 
 import barcodeImg from "./barcode.png";
@@ -205,7 +206,7 @@ To this day, I still haven't seen anyone else make QR codes like this. I wanted 
   </div>
 }
 
-It's available at https://qrframe.kylezhe.ng, but it's more of a tool for crafting QR codes. It comes with presets that are simple to modify or create from scratch, because it's just Javascript that generates an SVG or renders to an HTML canvas.
+It's available at [qrframe.kylezhe.ng](https://qrframe.kylezhe.ng), but it's more of a tool for crafting QR codes. It comes with presets that are simple to modify or create from scratch, because it's just Javascript that generates an SVG or renders to an HTML canvas.
 
 Here's the [source code](https://github.com/zhengkyl/qrframe) for the perverts.
 
@@ -319,7 +320,7 @@ These techniques start with the desired output and modify the input data to matc
       Created using <Sa href="https://research.swtch.com/qr/draw">QArt Coder</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      URLs can have anchors like <Code>test.com#anchor</Code>. Usually, this scrolls to a specific part of a page, but an invalid anchor is just ignored. The math used to manipulate pixels by adding an anchor is covered in <a href="https://research.swtch.com/qart">QArt Codes</a>.
+      URLs can have anchors like <Code code="test.com#anchor" inline/>. Usually, this scrolls to a specific part of a page, but an invalid anchor is just ignored. The math used to manipulate pixels by adding an anchor is covered in <a href="https://research.swtch.com/qart">QArt Codes</a>.
     </p>
     <div className="font-thin text-xs text-center">
       <Image className="w-full" src={mikeMyqrartImg} alt="mike wazowski my qr art code"/>
@@ -474,7 +475,7 @@ Congratulations, you now know too much about QR codes!
 
 I hope you learned something interesting, even if it's not useful.
 
-If you'd like to design a QR code, and you're not afraid of writing a little code, give https://qrframe.kylezhe.ng a try.
+If you'd like to design a QR code, and you're not afraid of writing a little code, give [qrframe.kylezhe.ng](https://qrframe.kylezhe.ng) a try.
 
 The editor and rendering source code is available at [`qrframe`](https://github.com/zhengkyl/qrframe) while the QR code generator written in Rust that powers it is available at [`fuqr`](https://github.com/zhengkyl/fuqr).
 

@@ -14,5 +14,10 @@ export default defineConfig({
     "/posts/crafting_qr_codes": "/writes/posts/crafting-qr-codes",
     "/posts/few_word_why_tailwind_not_bad": "/writes/notes/few-word-why-tailwind-good",
     "/posts/time_travel_homework_2026": "/writes/notes/time-travel-homework-2026",
+  },
+  markdown: {
+    shikiConfig: {
+      theme: "plastic"
+    }
   }
 });
