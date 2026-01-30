@@ -1,0 +1,5 @@
+/* 3 line tall drop cap */
+article > p:first-of-type::first-letter {
+  font-size: 5rem;
+  padding: 0.5rem;
+}

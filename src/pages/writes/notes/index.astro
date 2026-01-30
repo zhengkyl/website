@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+
+const notes = (await getCollection("notes")).sort(
+  (a, b) => b.data.posted.valueOf() - a.data.posted.valueOf(),
+);
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<BaseLayout title="Notes">
+  <div class="py-16">
+    <h1 class="Heading1">Notes</h1>
+  </div>
+  <ul>
+    {
+      notes.map((note) => (
+        <li>
+          <a href={`/writes/notes/${note.id}`}>{note.data.title}</a>
+          <span>{dateFormat.format(note.data.posted)}</span>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

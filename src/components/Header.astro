@@ -1,0 +1,22 @@
+---
+const pathname = Astro.url.pathname;
+const sections =
+  pathname === "/" ? [] : pathname.replace(/\/$/, "").slice(1).split("/");
+sections.pop();
+---
+
+<nav class="text-lg font-bold font-mono">
+  <a href="/" class="hover:text-zinc-400 transition-colors cursor-pointer">
+    Kyle Zheng
+  </a>
+  {
+    sections.map((section, i) => (
+      <a
+        href={`/${sections.slice(0, i + 1).join("/")}`}
+        class="hover:text-zinc-400 transition-colors cursor-pointer"
+      >
+        {section.replaceAll("_", " ")}
+      </a>
+    ))
+  }
+</nav>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { frontmatter } = Astro.props;
+
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<BaseLayout>
+  <article class="max-w-screen-sm m-auto flex flex-col gap-4 py-16">
+    <h1 class="Heading1">{frontmatter.title}</h1>
+    <div class="text-xs opacity-80 font-mono">
+      Posted {dateFormat.format(frontmatter.posted)}
+      {
+        frontmatter.edited &&
+          "- Edited " + dateFormat.format(frontmatter.edited)
+      }
+    </div>
+    <hr />
+    <slot />
+  </article>
+</BaseLayout>

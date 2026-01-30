@@ -1,0 +1,266 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+
+import kana1Img from "~/assets/images/kana_1.png";
+import kana2Img from "~/assets/images/kana_2.png";
+import pixelgameImg from "~/assets/images/pixelgame.png";
+import qrframeImg from "~/assets/images/qrframe.png";
+import reviewsImg from "~/assets/images/reviews.png";
+
+const posts = await getCollection("posts");
+const sortedPosts = posts
+  .filter((post) => post.data.posted)
+  .sort(
+    (a, b) =>
+      new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
+  )
+  .slice(0, 5);
+
+const notes = await getCollection("notes");
+const sortedNotes = notes
+  .filter((note) => note.data.posted)
+  .sort(
+    (a, b) =>
+      new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
+  )
+  .slice(0, 5);
+---
+
+<BaseLayout>
+  <div class="py-16">
+    <h1 class="Heading1">I'm a programmer.</h1>
+  </div>
+  <div class="grid md:cols-[1fr_2fr] gap-8">
+    <div class="flex flex-col gap-8">
+      <div>
+        <h2 class="text-lg font-bold font-mono">Posts</h2>
+        <div class="flex flex-col gap-4">
+          <hr />
+          {
+            sortedPosts.map((post) => {
+              return (
+                <a href={`/writes/posts/${post.id}`}>
+                  <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
+                    {post.data.title}
+                  </h3>
+                  <div class="flex flex-wrap gap-2 items-center text-stone-500">
+                    <h4 class="font-light italic pr-1">
+                      {post.data.description}
+                    </h4>
+                    {post.data.tags.includes("recommended") && (
+                      <div class="border-stone-400 border text-xs px-1 text-orange">
+                        recommended
+                      </div>
+                    )}
+                  </div>
+                </a>
+              );
+            })
+          }
+          <!-- <a href="/posts" class="BlueLink"> see all posts </a> -->
+        </div>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold font-mono">Notes</h2>
+        <div class="flex flex-col gap-4">
+          <hr />
+          {
+            sortedNotes.map((note) => {
+              return (
+                <a href={`/writes/notes/${note.id}`}>
+                  <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
+                    {note.data.title}
+                  </h3>
+                  <div class="flex flex-wrap gap-2 items-center text-stone-500">
+                    <h4 class="font-light italic pr-1">
+                      {note.data.description}
+                    </h4>
+                  </div>
+                </a>
+              );
+            })
+          }
+          <!-- <a href="/posts" class="BlueLink"> see all posts </a> -->
+        </div>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold font-mono">Other</h2>
+        <div class="flex flex-col gap-4">
+          <hr />
+          <!-- <a href="/draws"
+            ><h3
+              class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer"
+            >
+              My sketchbooks
+            </h3>
+          </a> -->
+          <div class="flex gap-4">
+            <a
+              href="https://github.com/zhengkyl"
+              class="BlueLink"
+              target="_blank"
+            >
+              Github
+            </a>
+            <a
+              href="https://www.linkedin.com/in/zhengkyl/"
+              class="BlueLink"
+              target="_blank"
+            >
+              Linkedin
+            </a>
+            <a href="./Kyle_Zheng_Resume.pdf" class="BlueLink" target="_blank">
+              Resume
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-8">
+      <div>
+        <h2 class="text-lg font-bold font-mono">Projects</h2>
+        <div class="flex flex-col gap-4">
+          <hr />
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Custom QR Code Generators</h3>
+              <p>
+                I wanted to make cool custom QR codes, so I made this generator
+                from scratch to learn just how far I can push the boundaries.
+              </p>
+              <div>
+                <span class="font-bold">Live: </span>
+                <a
+                  class="BlueLink"
+                  href="https://qrframe.kylezhe.ng"
+                  target="_blank">qrframe.kylezhe.ng</a
+                >
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/qrframe"
+                  target="_blank">qrframe</a
+                >, <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/fuqr"
+                  target="_blank">fuqr</a
+                >
+              </div>
+            </div>
+            <Image
+              class="py-1 max-h-40vh object-cover object-top"
+              src={qrframeImg}
+              alt="qr code editor"
+              loading="eager"
+            />
+          </div>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Japanese Kana Chart</h3>
+              <p>
+                Here's a chart and pratice tool for Japanese hiragana and
+                katakana. It comes with pronunciations, animated stroke
+                diagrams, and a practice quiz.
+
+                <div>
+                  <span class="font-bold">Live: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://kana.kylezhe.ng"
+                    target="_blank"
+                  >
+                    kana.kylezhe.ng
+                  </a>
+                </div>
+                <div class="font-mono">
+                  <span class="font-bold">Github: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://github.com/zhengkyl/kana"
+                    target="_blank">kana</a
+                  >, <a
+                    class="BlueLink"
+                    href="https://github.com/zhengkyl/strokesvg"
+                    target="_blank">strokesvg</a
+                  >
+                </div>
+              </p>
+            </div>
+            <div class="flex gap-3 py-1">
+              <div class="border max-h-40vh overflow-hidden">
+                <Image src={kana1Img} alt="kana chart" />
+              </div>
+              <div class="border max-h-40vh overflow-hidden">
+                <Image src={kana2Img} alt="kana chart" />
+              </div>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Pixelgame</h3>
+              <p>
+                This is tic-tac-toe but overcomplicated as I tried to learn why
+                developers love Elixir and Phoenix.
+              </p>
+              <div>
+                <span class="font-bold">Live: </span>
+                <a
+                  class="BlueLink"
+                  href="https://pixelgame.kylezhe.ng"
+                  target="_blank">pixelgame.kylezhe.ng</a
+                >
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/pixelgame"
+                  target="_blank">pixelgame</a
+                >
+              </div>
+            </div>
+            <Image
+              class="py-1 max-h-40vh object-cover object-top"
+              src={pixelgameImg}
+              alt="tic-tac-toe game board"
+            />
+          </div>
+          <div class="grid md:grid-cols-2">
+            <div>
+              <h3 class="font-bold font-mono">Movie Reviews TUI</h3>
+              <p>
+                This is a minimalist movie review app I wrote to try out Rust,
+                Go, and terminal user interfaces.
+              </p>
+              <div>
+                <span class="font-bold">Dead (RIP): </span>
+                <span class="font-mono">ssh reviews.kylezhe.ng</span>
+              </div>
+              <div class="font-mono">
+                <span class="font-bold">Github: </span>
+                <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/review-ssh"
+                  target="_blank">review-ssh</a
+                >, <a
+                  class="BlueLink"
+                  href="https://github.com/zhengkyl/review-api"
+                  target="_blank">review-api</a
+                >
+              </div>
+            </div>
+            <Image
+              class="py-1 max-h-40vh object-cover object-top"
+              src={reviewsImg}
+              alt="movie review tui"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

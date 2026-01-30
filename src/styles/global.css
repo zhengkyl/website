@@ -1,0 +1,81 @@
+html {
+  color: #292524;
+  background-color: #f3eee5;
+  font-size: 18px;
+}
+
+body {
+  /* stop books overflowing */
+  overflow-x: hidden;
+}
+
+/* QrTutorial */
+.scroll-highlight {
+  position: relative;
+}
+
+/* ::before causes scroll issues in ff when scale changes */
+.scroll-highlight::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: rgb(244 63 94);
+  will-change: transform;
+  scale: 1 var(--_yScale, 0);
+  translate: 0 var(--_top, 0);
+  transform-origin: top;
+  transition:
+    translate 200ms ease-out,
+    scale 200ms ease-out;
+}
+.drop-cap {
+  float: left;
+  /* margin: 0.05em 0.15em 0 0; */
+  margin-right: 4px;
+  height: 3rem; /* 2 * 1.5 */
+  width: 3rem;
+}
+/* chrome is weird with ::first-letter*/
+article > p:first-of-type {
+  cursor: text;
+}
+article > p:first-of-type::first-letter {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 0.7;
+  margin-right: 6px;
+  float: left;
+  padding: 0.5rem;
+  background-color: yellow;
+  box-shadow: 1px 1px black;
+  /* ff no lineheight + differs upper/lowercase */
+  text-transform: uppercase;
+}
+
+/* Inline code */
+code {
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+  font-size: 0.9em;
+  background-color: #24292e;
+  color: #e1e4e8;
+}
+
+/* Code blocks - reset inline styles */
+pre code {
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  background-color: unset;
+  color: unset;
+}
+
+/* Code block container */
+pre {
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+}
