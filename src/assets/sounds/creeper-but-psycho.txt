@@ -1,0 +1,31 @@
+// based on transcription from
+// https://www.hooktheory.com/theorytab/view/ava-max/sweet-but-psycho
+// https://onlinesequencer.net/1730483#
+
+61 major 135
+
+:verse
+|   f233 |   f232 |1  f233 |   f232 |1fff3553|    232 |1   233 |   2222 |
+
+:prechorus
+|6       |A    321|3 1f 221|3 1f 221|6       |A    321|3 1f 221|3 1f    |
+
+:chorus
+|4 4 4343| 1 11233|52 23232|f3331221|4 4 4343| 1 11233|52 23232|f3331221|
+
+:leadout
+|111 1eff|11 11ef1|22 2533 |34322221|4 4 4343| 1 11233|52 23232|f3331221|
+
+chorus
+verse
+prechorus
+chorus
+leadout
+verse
+prechorus
+chorus
+leadout
+|fffff   |11111   |eeeee   |fffeeeee|111f111 |f1111232|e22ggggf|f1g1gffe|
+|111f111f|11111232|e22ggggf|f556A656|
+chorus
+leadout
