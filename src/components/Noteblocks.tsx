@@ -163,6 +163,7 @@ export function Noteblocks() {
   const scrubberRef = useRef<HTMLInputElement>(null);
   const cubeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastSlotRef = useRef(-1);
+  const particlesRef = useRef<Set<HTMLElement>>(new Set());
 
   const stop = () => {
     clearTimeout(timeoutRef.current!);
@@ -172,6 +173,8 @@ export function Noteblocks() {
     activeCtx = null;
     scrubberRef.current!.value = "0";
     lastSlotRef.current = -1;
+    for (const el of particlesRef.current) el.remove();
+    particlesRef.current.clear();
     setPlayState("idle");
   };
 
@@ -182,34 +185,24 @@ export function Noteblocks() {
 
     if (slot !== lastSlotRef.current) {
       lastSlotRef.current = slot;
-      if (slot >= 0 && slot < notes.length) {
-        const midi = notes[slot];
-        if (midi !== null) {
-          const idx = BASE_MIDI + 12 - midi;
-          if (idx >= 0 && idx <= 24) {
-            const el = cubeRefs.current[idx];
-            if (el) {
-              el.classList.remove("nb-bounce");
-              void el.offsetWidth;
-              el.classList.add("nb-bounce");
+      const midi = slot >= 0 && slot < notes.length ? notes[slot] : null;
+      if (midi !== null) {
+        const idx = BASE_MIDI + 12 - midi;
+        const el = idx >= 0 && idx <= 24 ? cubeRefs.current[idx] : null;
+        if (el) {
+          el.classList.remove("nb-bounce");
+          void el.offsetWidth;
+          el.classList.add("nb-bounce");
 
-              const noteEl = document.createElement("span");
-              noteEl.textContent = "♪";
-              noteEl.style.cssText = `
-                position:fixed;
-                right:4.5vh;
-                top:calc(${idx * 4}vh + 1vh);
-                color:${CUBE_COLORS[idx]};
-                font-size:1.5vh;
-                line-height:1;
-                pointer-events:none;
-                z-index:9999;
-                animation:nb-note 0.8s ease-out forwards;
-              `;
-              document.body.appendChild(noteEl);
-              noteEl.addEventListener("animationend", () => noteEl.remove());
-            }
-          }
+          const noteEl = document.createElement("span");
+          noteEl.textContent = "♪";
+          noteEl.style.cssText = `position:fixed;right:4.5vh;top:calc(${idx * 4}vh + 1vh);color:${CUBE_COLORS[idx]};font-size:1.5vh;line-height:1;pointer-events:none;z-index:9999;animation:nb-note 0.8s ease-out forwards`;
+          particlesRef.current.add(noteEl);
+          document.body.appendChild(noteEl);
+          noteEl.addEventListener("animationend", () => {
+            particlesRef.current.delete(noteEl);
+            noteEl.remove();
+          });
         }
       }
     }
