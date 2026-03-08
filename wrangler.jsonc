@@ -3,5 +3,6 @@
   "compatibility_date": "2026-01-29", // Update to the day you deploy
   "assets": {
     "directory": "./dist",
+    "html_handling": "drop-trailing-slash"
   }
 }
