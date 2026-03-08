@@ -2,30 +2,91 @@
 // https://www.hooktheory.com/theorytab/view/ava-max/sweet-but-psycho
 // https://onlinesequencer.net/1730483#
 
-61 major 135
+61 major 135 0
 
-:verse
+:verse1
 |   f233 |   f232 |1  f233 |   f232 |1fff3553|    232 |1   233 |   2222 |
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"   112  "   2 12 "   2 2  "   1112 "  112 1 "    112 "    12  "   12 2 "
+> I mine deeper, looking for diamonds
+> Surprise creeper, kills me in seconds
+> I'll be coming back, for my diamonds
+> My chestplate, and diamond pickaxe
+
+:verse2
+|   f233 |   f232 |1  f233 |   f232 |1fff3553|    232 |1   233 |   2222 |
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"   1111 "   2 12 "   4    "   1112 "    3   "    111 "1   1111"   12 11"
+> To fight a witch, avoid her potions
+> Guard-i-ans live in the ocean
+> Endermen, don't look at them
+> But when creepers sneak, you're gonna blow up
 
 :prechorus
 |6       |A    321|3 1f 221|3 1f 221|6       |A    321|3 1f 221|3 1f    |
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"1       "1    114"     111"4    111"1       "1    111"1 11 111"13      "
+> No, no, my stuff's despa-a-awned
+> My diamonds are go-o-one
+> I keep saying, "No, no"
+> Then I'm saying, "Yes, yes, yes"
+> They're still in my enderchest
 
 :chorus
 |4 4 4343| 1 11233|52 23232|f3331221|4 4 4343| 1 11233|52 23232|f3331221|
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"1 1 2 11" 1 12 13"   2 12 " 2 2 12 "3   1111" 1 12 12" 1 2 12 " 2 2 12 "
+> All these creepers, I might go a little bit psycho
+> Tonight no sleepin, I'm about to mine
+> Farming's not safe at night bro, there's diamonds to find, though
+> Tonight no sleepin, I'm about to mine
 
-:leadout
+:postchorus
 |111 1eff|11 11ef1|22 2533 |34322221|4 4 4343| 1 11233|52 23232|f3331221|
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"2 1 1112"   12 12"   2 2  "2 2 12  "1 1 2 11" 1 12 13"   2 12 " 2 2 12 "
+> "Digging straight down" kind of crazy, fall into a ravine
+> Water bucket clutch and walk away
+> All these creepers, I might go a little bit psycho
+> Tonight no sleepin, I'm about to mine
 
-chorus
-verse
+// chorus without chords
+:intro
+|4 4 4343| 1 11233|52 23232|f3331221|4 4 4343| 1 11233|52 23232|f3331221|
+"1 1 2 11" 1 12 13"   2 12 " 2 2 12 "3   1111" 1 12 12" 1 2 12 " 2 2 12 "
+> All these creepers, I might go a little bit psycho
+> Tonight no sleepin, I'm about to mine
+> Farming's not safe at night bro, there's diamonds to find, though
+> Tonight no sleepin, I'm about to mine
+
+// postchorus with extra note
+:leadout
+|111 1eff|11 11ef1|22 25336|34322221|4 4 4343| 1 11233|52 23232|f3331221|
+!4       !1       !5       !6  5    !4       !1       !5       !6  5    !
+"2 1 1112"   12 12"   2 2  "2 2 12  "1 1 2 11" 1 12 13"   2 12 " 2 2 12 "
+> "Digging straight down" kind of crazy, fall into a ravine
+> Water bucket clutch and walk away
+> All these creepers, I might go a little bit psycho
+> Tonight no sleepin, I'm about to mine
+
+:bridge
+|fffff   |11111   |eeeee   |fffeeeee|
+|111f111 |f1111232|e22ggggf|f1g1gffe|111f111f|11111232|e22ggggf|f556A656|
+"   1111 "   1112 "   2 12 "  2 3   "    12 1"    1111"  2 12  " 1112 2 "
+> You're just like me, you love to mine
+> Diggin for ores, avoiding Herobrine
+> You're telling me, strip mines are lame
+> Boy, don't forget this is a mining game
+
+intro
+verse1
 prechorus
 chorus
-leadout
-verse
+postchorus
+verse2
 prechorus
 chorus
-leadout
-|fffff   |11111   |eeeee   |fffeeeee|111f111 |f1111232|e22ggggf|f1g1gffe|
-|111f111f|11111232|e22ggggf|f556A656|
+postchorus
+bridge
 chorus
 leadout

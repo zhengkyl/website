@@ -1,0 +1,35 @@
+@keyframes nb-bounce {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(-15%) scale(1.15);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+.nb-bounce {
+  animation: nb-bounce 0.25s ease-out;
+}
+@keyframes nb-note {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-4vh, -1vh);
+  }
+}
+.nb-active {
+  position: relative;
+}
+.nb-active:before {
+  content: "";
+  background-color: rgb(251, 188, 188);
+  position: absolute;
+  border-radius: 4px;
+  inset: -2px;
+  z-index: -1;
+}
