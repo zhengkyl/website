@@ -2,16 +2,6 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { defineCollection } from "astro:content";
 
-const notes = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/notes" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    tags: z.array(z.string()),
-    posted: z.date(),
-    edited: z.date().optional(),
-  }),
-});
 const posts = defineCollection({
   loader: glob({
     pattern: "**/[^_]*.mdx",
@@ -25,9 +15,20 @@ const posts = defineCollection({
     //   alt: z.string(),
     // }),
     tags: z.array(z.string()),
-    posted: z.date(),
-    edited: z.date().optional(),
+
+    // "YYYY-MM-DD" parsed as UTC, so need to reconstruct in local time.
+    posted: z
+      .date()
+      .transform(
+        (d) => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
+      ),
+    edited: z
+      .date()
+      .transform(
+        (d) => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
+      )
+      .optional(),
   }),
 });
 
-export const collections = { notes, posts };
+export const collections = { posts };

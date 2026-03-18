@@ -16,16 +16,7 @@ const sortedPosts = posts
     (a, b) =>
       new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
   )
-  .slice(0, 5);
-
-const notes = await getCollection("notes");
-const sortedNotes = notes
-  .filter((note) => note.data.posted)
-  .sort(
-    (a, b) =>
-      new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
-  )
-  .slice(0, 5);
+  .slice(0, 10);
 ---
 
 <BaseLayout>
@@ -41,7 +32,7 @@ const sortedNotes = notes
           {
             sortedPosts.map((post) => {
               return (
-                <a href={`/writes/posts/${post.id}`}>
+                <a href={`/writes/${post.id}`}>
                   <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
                     {post.data.title}
                   </h3>
@@ -54,29 +45,11 @@ const sortedNotes = notes
                         recommended
                       </div>
                     )}
-                  </div>
-                </a>
-              );
-            })
-          }
-          <!-- <a href="/posts" class="BlueLink"> see all posts </a> -->
-        </div>
-      </div>
-      <div>
-        <h2 class="text-lg font-bold font-mono">Notes</h2>
-        <div class="flex flex-col gap-4">
-          <hr />
-          {
-            sortedNotes.map((note) => {
-              return (
-                <a href={`/writes/notes/${note.id}`}>
-                  <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
-                    {note.data.title}
-                  </h3>
-                  <div class="flex flex-wrap gap-2 items-center text-stone-500">
-                    <h4 class="font-light italic pr-1">
-                      {note.data.description}
-                    </h4>
+                    {post.data.tags.includes("hypermedia") && (
+                      <div class="border-stone-400 border text-xs px-1 text-red">
+                        hypermedia
+                      </div>
+                    )}
                   </div>
                 </a>
               );
