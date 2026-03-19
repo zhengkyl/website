@@ -88,7 +88,7 @@ function drawUpTo(
   }
 }
 
-export default function Scrawl({ data, width, height }: Props) {
+export function Scrawl({ data, width, height }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const animRef = useRef<number>(0);
@@ -190,5 +190,127 @@ export default function Scrawl({ data, width, height }: Props) {
         />
       </div>
     </div>
+  );
+}
+
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
+export function ScrawlGrid({
+  sonnets,
+  width,
+  height,
+}: {
+  sonnets: { scrawlUrl: string; text: string }[];
+  width: number;
+  height: number;
+}) {
+  const [loaded, setLoaded] = useState<boolean[]>(() =>
+    sonnets.map(() => false),
+  );
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const dataRef = useRef<string[]>(new Array(sonnets.length).fill(""));
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (activeIndex !== null) {
+      dialogRef.current!.showModal();
+    } else {
+      dialogRef.current!.close();
+    }
+  }, [activeIndex]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const i = Number((entry.target as HTMLElement).dataset.index);
+          if (dataRef.current[i]) continue;
+          observer.unobserve(entry.target);
+
+          fetch(sonnets[i].scrawlUrl)
+            .then((r) => r.text())
+            .then((text) => {
+              dataRef.current[i] = text;
+              setLoaded((prev) => {
+                const next = [...prev];
+                next[i] = true;
+                return next;
+              });
+            });
+        }
+      },
+      { rootMargin: "400px" },
+    );
+
+    for (const el of containerRef.current!.children) {
+      observer.observe(el);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <>
+      <dialog
+        ref={dialogRef}
+        onClose={() => setActiveIndex(null)}
+        onClick={(e) => {
+          if (e.target === dialogRef.current) setActiveIndex(null);
+        }}
+        class="max-w-screen-xl w-full backdrop:bg-black/50"
+      >
+        {activeIndex !== null && (
+          <div class="p-4">
+            <div class="flex justify-between items-center pb-4 px-2">
+              <h2 class="font-bold text-lg">Sonnet {activeIndex + 1}</h2>
+              <button onClick={() => setActiveIndex(null)}>✕</button>
+            </div>
+            <div class="grid md:grid-cols-2">
+              <Scrawl
+                data={dataRef.current[activeIndex]}
+                width={750}
+                height={600}
+              />
+              <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
+                {sonnets[activeIndex].text}
+              </pre>
+            </div>
+          </div>
+        )}
+      </dialog>
+      <div
+        ref={containerRef}
+        class="w-screen max-w-1536px ml-[calc(50%-min(768px,50vw))] grid sm:grid-cols-2 lg:grid-cols-4 p-4"
+      >
+        {sonnets.map((src, i) => (
+          <div
+            key={src}
+            data-index={i}
+            onClick={() => setActiveIndex(i)}
+            class="@hover:shadow cursor-pointer"
+          >
+            <div class="p-4">
+              <div class="text-xs leading-none">
+                {dateFormat.format(new Date(2026, 2, 17 + i))}
+              </div>
+              <h3 class="font-bold">Sonnet {i + 1}</h3>
+            </div>
+            {loaded[i] ? (
+              <Scrawl data={dataRef.current[i]} width={width} height={height} />
+            ) : (
+              <div
+                class="bg-gray-100"
+                style={{ aspectRatio: `${width}/${height}` }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
