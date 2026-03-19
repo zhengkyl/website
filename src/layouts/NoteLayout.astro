@@ -10,7 +10,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 ---
 
-<BaseLayout>
+<BaseLayout title={frontmatter.title}>
   <article class="max-w-xl m-auto flex flex-col gap-4 py-16">
     <h1 class="Heading1">{frontmatter.title}</h1>
     <div class="text-xs opacity-80 font-mono">
