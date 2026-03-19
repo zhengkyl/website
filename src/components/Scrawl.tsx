@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { PauseIcon, PlayIcon } from "./icons/controls";
 
 interface AbsPoint {
   x: number;
@@ -170,14 +171,16 @@ export function Scrawl({ data, width, height }: Props) {
         style={{ display: "block", width: "100%", height: "auto" }}
       />
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "4px 0",
-        }}
+        class="flex items-center gap-2 p-2 cursor-default"
+        onClick={(e) => e.stopImmediatePropagation()}
       >
-        <button onClick={handlePlay}>{isPlaying ? "Pause" : "Play"}</button>
+        <button onClick={handlePlay}>
+          {isPlaying ? (
+            <PauseIcon class="size-4" />
+          ) : (
+            <PlayIcon class="size-4" />
+          )}
+        </button>
         <input
           ref={inputRef}
           type="range"
@@ -292,7 +295,7 @@ export function ScrawlGrid({
             key={src}
             data-index={i}
             onClick={() => setActiveIndex(i)}
-            class="@hover:shadow cursor-pointer"
+            class="@hover:shadow-[0_0_4px_0px_rgba(0,0,0,0.2)] cursor-pointer"
           >
             <div class="p-4">
               <div class="text-xs leading-none">
