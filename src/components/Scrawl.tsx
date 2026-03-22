@@ -203,9 +203,13 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 function formatDuration(ms: number): string {
-  const s = Math.round(ms / 1000);
-  if (s < 60) return `${s}s`;
-  return `${Math.floor(s / 60)}m ${s % 60}s`;
+  // nearest half minute
+  const s = Math.round(ms / 30000) * 30;
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  if (m === 0) return `~${rem}s`;
+  if (rem === 0) return `~${m}m`;
+  return `~${m}m ${rem}s`;
 }
 
 export function ScrawlGrid({
@@ -284,13 +288,16 @@ export function ScrawlGrid({
       >
         {activeIndex !== null && (
           <div class="p-4">
-            <div class="flex justify-between items-center pb-4 px-2">
+            <div class="flex justify-between items-baseline pb-4 px-2">
               <div>
-                <h2 class="font-bold text-lg">Sonnet {activeIndex + 1}</h2>
-                {durations[activeIndex] !== null && (
-                  <div class="text-xs text-gray-500">{formatDuration(durations[activeIndex]!)}</div>
-                )}
+                <div class="text-xs leading-none">
+                  {dateFormat.format(new Date(2026, 2, 17 + activeIndex))}
+                </div>
+                <h2 class="font-bold">Sonnet {activeIndex + 1}</h2>
               </div>
+              <span class="text-xs text-gray-500">
+                {formatDuration(durations[activeIndex]!)}
+              </span>
               <button onClick={() => setActiveIndex(null)}>✕</button>
             </div>
             <div class="grid md:grid-cols-2">
@@ -323,9 +330,9 @@ export function ScrawlGrid({
               </div>
               <div class="flex justify-between items-baseline">
                 <h3 class="font-bold">Sonnet {i + 1}</h3>
-                {durations[i] !== null && (
-                  <span class="text-xs text-gray-500">{formatDuration(durations[i]!)}</span>
-                )}
+                <span class="text-xs text-gray-500">
+                  {formatDuration(durations[i]!)}
+                </span>
               </div>
             </div>
             {loaded[i] ? (
