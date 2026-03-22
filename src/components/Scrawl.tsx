@@ -202,6 +202,12 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
+function formatDuration(ms: number): string {
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  return `${Math.floor(s / 60)}m ${s % 60}s`;
+}
+
 export function ScrawlGrid({
   sonnets,
   width,
@@ -213,6 +219,9 @@ export function ScrawlGrid({
 }) {
   const [loaded, setLoaded] = useState<boolean[]>(() =>
     sonnets.map(() => false),
+  );
+  const [durations, setDurations] = useState<(number | null)[]>(() =>
+    sonnets.map(() => null),
   );
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dataRef = useRef<string[]>(new Array(sonnets.length).fill(""));
@@ -240,6 +249,12 @@ export function ScrawlGrid({
             .then((r) => r.text())
             .then((text) => {
               dataRef.current[i] = text;
+              const duration = parseScrawl(text).at(-1)?.t ?? 0;
+              setDurations((prev) => {
+                const next = [...prev];
+                next[i] = duration;
+                return next;
+              });
               setLoaded((prev) => {
                 const next = [...prev];
                 next[i] = true;
@@ -270,13 +285,18 @@ export function ScrawlGrid({
         {activeIndex !== null && (
           <div class="p-4">
             <div class="flex justify-between items-center pb-4 px-2">
-              <h2 class="font-bold text-lg">Sonnet {activeIndex + 1}</h2>
+              <div>
+                <h2 class="font-bold text-lg">Sonnet {activeIndex + 1}</h2>
+                {durations[activeIndex] !== null && (
+                  <div class="text-xs text-gray-500">{formatDuration(durations[activeIndex]!)}</div>
+                )}
+              </div>
               <button onClick={() => setActiveIndex(null)}>✕</button>
             </div>
             <div class="grid md:grid-cols-2">
               <Scrawl
                 data={dataRef.current[activeIndex]}
-                width={750}
+                width={780}
                 height={600}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
@@ -301,7 +321,12 @@ export function ScrawlGrid({
               <div class="text-xs leading-none">
                 {dateFormat.format(new Date(2026, 2, 17 + i))}
               </div>
-              <h3 class="font-bold">Sonnet {i + 1}</h3>
+              <div class="flex justify-between items-baseline">
+                <h3 class="font-bold">Sonnet {i + 1}</h3>
+                {durations[i] !== null && (
+                  <span class="text-xs text-gray-500">{formatDuration(durations[i]!)}</span>
+                )}
+              </div>
             </div>
             {loaded[i] ? (
               <Scrawl data={dataRef.current[i]} width={width} height={height} />
