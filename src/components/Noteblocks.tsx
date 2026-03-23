@@ -1,3 +1,4 @@
+import { Fragment } from "preact";
 import { useMemo, useRef, useState } from "preact/hooks";
 import noteblockUrl from "../assets/images/noteblock.png?url";
 
@@ -391,6 +392,7 @@ export function Noteblocks({
     const slot = Math.floor(elapsed / secPerSlot);
 
     if (slot !== lastSlotRef.current) {
+      const prevSlot = lastSlotRef.current;
       lastSlotRef.current = slot;
       if (slot >= 0 && slot < notes.length) {
         const midi = notes[slot];
@@ -399,9 +401,14 @@ export function Noteblocks({
         if (chord !== null) {
           for (const note of chord) animateMidi(note);
         }
-        if (onsets[slot]) {
+        const fromSlot = Math.max(0, prevSlot + 1);
+        let onsetsInRange = 0;
+        for (let i = fromSlot; i <= slot; i++) {
+          if (onsets[i]) onsetsInRange++;
+        }
+        if (onsetsInRange > 0) {
           const prev = wordIndexRef.current;
-          const next = prev + 1;
+          const next = prev + onsetsInRange;
           if (prev >= 0)
             wordElsRef.current[prev]?.classList.remove("nb-active");
           wordElsRef.current[next]?.classList.add("nb-active");
@@ -593,15 +600,24 @@ export function Noteblocks({
                 ...(li > 0 ? [<br key={`br${li}`} />] : []),
                 ...line.map((word) => {
                   const i = flatIdx++;
+                  const PUNCT = `",.`;
+                  const first = PUNCT.includes(word[0]) ? 1 : 0;
+                  const last = PUNCT.includes(word.at(-1)!) ? word.length - 1 : word.length;
+                  const lead = word.slice(0, first);
+                  const core = word.slice(first, last);
+                  const trail = word.slice(last);
                   return (
-                    <span
-                      key={i}
-                      ref={(el) => {
-                        wordElsRef.current[i] = el;
-                      }}
-                    >
-                      {word}{" "}
-                    </span>
+                    <Fragment key={i}>
+                      {lead}
+                      <span
+                        ref={(el) => {
+                          wordElsRef.current[i] = el;
+                        }}
+                      >
+                        {core}
+                      </span>
+                      {trail}{" "}
+                    </Fragment>
                   );
                 }),
               ])}
