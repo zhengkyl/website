@@ -203,8 +203,8 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 function formatDuration(ms: number): string {
-  // nearest half minute
-  const s = Math.round(ms / 30000) * 30;
+  // nearest 10s
+  const s = Math.round(ms / 10000) * 10;
   const m = Math.floor(s / 60);
   const rem = s % 60;
   if (m === 0) return `~${rem}s`;
