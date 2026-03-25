@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { PauseIcon, PlayIcon } from "./icons/controls";
+import { CloseIcon, PauseIcon, PlayIcon } from "./icons/controls";
 
 interface AbsPoint {
   x: number;
@@ -189,7 +189,7 @@ export function Scrawl({ data, width, height }: Props) {
           step="0.001"
           defaultValue="1"
           onInput={handleScrub}
-          style={{ flex: 1 }}
+          class="flex-1 min-w-0"
         />
       </div>
     </div>
@@ -210,6 +210,12 @@ function formatDuration(ms: number): string {
   if (m === 0) return `~${rem}s`;
   if (rem === 0) return `~${m}m`;
   return `~${m}m ${rem}s`;
+}
+
+function formatWpm(text: string, ms: number) {
+  return (
+    Math.round((text.replace(/\s/g, "").length / 5 / (ms / 60000)) * 10) / 10
+  );
 }
 
 export function ScrawlGrid({
@@ -288,17 +294,16 @@ export function ScrawlGrid({
       >
         {activeIndex !== null && (
           <div class="p-4">
-            <div class="flex justify-between items-baseline pb-4 px-2">
+            <div class="pl-2 flex justify-between items-baseline">
               <div>
-                <div class="text-xs leading-none">
+                <div class="text-xs leading-none text-gray-500">
                   {dateFormat.format(new Date(2026, 2, 17 + activeIndex))}
                 </div>
                 <h2 class="font-bold">Sonnet {activeIndex + 1}</h2>
               </div>
-              <span class="text-xs text-gray-500">
-                {formatDuration(durations[activeIndex]!)}
-              </span>
-              <button onClick={() => setActiveIndex(null)}>✕</button>
+              <button onClick={() => setActiveIndex(null)} class="p-2">
+                <CloseIcon class="size-4" />
+              </button>
             </div>
             <div class="grid md:grid-cols-2">
               <Scrawl
@@ -309,6 +314,17 @@ export function ScrawlGrid({
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
               </pre>
+              <div class="flex justify-center gap-2 text-sm text-gray-500">
+                <div>{formatDuration(durations[activeIndex]!)}</div>
+                <div>
+                  {durations[activeIndex] != null &&
+                    formatWpm(
+                      sonnets[activeIndex].text,
+                      durations[activeIndex]!,
+                    )}{" "}
+                  wpm
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -325,14 +341,22 @@ export function ScrawlGrid({
             class="@hover:shadow-[0_0_4px_0px_rgba(0,0,0,0.2)] cursor-pointer"
           >
             <div class="p-4">
-              <div class="text-xs leading-none">
+              <div class="text-xs leading-none text-gray-500">
                 {dateFormat.format(new Date(2026, 2, 17 + i))}
               </div>
               <div class="flex justify-between items-baseline">
-                <h3 class="font-bold">Sonnet {i + 1}</h3>
-                <span class="text-xs text-gray-500">
-                  {formatDuration(durations[i]!)}
-                </span>
+                <div class="font-bold">Sonnet {i + 1}</div>
+                {durations[i] != null && (
+                  <span class="text-xs text-gray-500">
+                    {Math.round(
+                      (sonnets[i].text.replace(/\s/g, "").length /
+                        5 /
+                        (durations[i]! / 60000)) *
+                        10,
+                    ) / 10}{" "}
+                    wpm
+                  </span>
+                )}
               </div>
             </div>
             {loaded[i] ? (
