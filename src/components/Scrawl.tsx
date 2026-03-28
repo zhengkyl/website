@@ -60,8 +60,13 @@ function drawUpTo(
     strokeY = 0;
   let isSinglePoint = false;
 
-  for (const pt of points) {
-    if (pt.t > t) break;
+  let nextUndrawnIndex = points.length;
+  for (let i = 0; i < points.length; i++) {
+    const pt = points[i];
+    if (pt.t > t) {
+      nextUndrawnIndex = i;
+      break;
+    }
     if (pt.strokeStart) {
       if (isSinglePoint) {
         ctx.arc(strokeX, strokeY, 1, 0, Math.PI * 2);
@@ -82,8 +87,11 @@ function drawUpTo(
   }
 
   if (isSinglePoint) {
-    ctx.arc(strokeX, strokeY, 1, 0, Math.PI * 2);
-    ctx.fill();
+    const nextPt = points[nextUndrawnIndex];
+    if (!nextPt || nextPt.strokeStart) {
+      ctx.arc(strokeX, strokeY, 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
   } else {
     ctx.stroke();
   }
@@ -308,7 +316,7 @@ export function ScrawlGrid({
             <div class="grid md:grid-cols-2">
               <Scrawl
                 data={dataRef.current[activeIndex]}
-                width={780}
+                width={900}
                 height={600}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
