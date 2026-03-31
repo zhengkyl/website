@@ -317,7 +317,7 @@ export function ScrawlGrid({
               <Scrawl
                 data={dataRef.current[activeIndex]}
                 width={900}
-                height={600}
+                height={640}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
