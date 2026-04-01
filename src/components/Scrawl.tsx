@@ -179,7 +179,7 @@ export function Scrawl({ data, width, height }: Props) {
         style={{ display: "block", width: "100%", height: "auto" }}
       />
       <div
-        class="flex items-center gap-2 p-2 cursor-default"
+        class="flex items-center gap-2 p-2 pt-0 cursor-default"
         onClick={(e) => e.stopImmediatePropagation()}
       >
         <button onClick={handlePlay}>
@@ -348,7 +348,7 @@ export function ScrawlGrid({
             onClick={() => setActiveIndex(i)}
             class="@hover:shadow-[0_0_4px_0px_rgba(0,0,0,0.2)] cursor-pointer"
           >
-            <div class="p-4">
+            <div class="p-4 pb-0">
               <div class="text-xs leading-none text-gray-500">
                 {dateFormat.format(new Date(2026, 2, 17 + i))}
               </div>
