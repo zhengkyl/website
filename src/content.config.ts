@@ -9,7 +9,7 @@ const posts = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
-    description: z.string(),
+    description: z.string().nullable().optional(),
     // image: z.object({
     //   url: z.string(),
     //   alt: z.string(),

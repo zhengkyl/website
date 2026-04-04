@@ -12,7 +12,14 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 
 <BaseLayout title={frontmatter.title}>
   <article class="max-w-xl m-auto flex flex-col gap-4 py-16">
-    <h1 class="Heading1">{frontmatter.title}</h1>
+    <div>
+      <h1 class="Heading1">{frontmatter.title}</h1>
+      {
+        frontmatter.description && (
+          <h2 class="Heading2">{frontmatter.description}</h2>
+        )
+      }
+    </div>
     <div class="text-xs opacity-80 font-mono">
       Posted {dateFormat.format(frontmatter.posted)}
       {

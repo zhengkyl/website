@@ -27,7 +27,7 @@ const sortedPosts = posts
     <div class="flex flex-col gap-8">
       <div>
         <h2 class="text-lg font-bold font-mono">Posts</h2>
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-8">
           <hr />
           {
             sortedPosts.map((post) => {
@@ -36,26 +36,31 @@ const sortedPosts = posts
                   <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
                     {post.data.title}
                   </h3>
-                  <div class="flex flex-wrap gap-2 items-center text-stone-500">
-                    <h4 class="font-light italic pr-1">
-                      {post.data.description}
-                    </h4>
-                    {post.data.tags.includes("recommended") && (
-                      <div class="border-stone-400 border text-xs px-1 text-orange">
-                        recommended
-                      </div>
+                  <div class="flex flex-wrap gap-x-1 items-center text-stone-500">
+                    {post.data.description && (
+                      <h4 class="font-light italic pr-1">
+                        {post.data.description}
+                      </h4>
                     )}
-                    {post.data.tags.includes("hypermedia") && (
-                      <div class="border-stone-400 border text-xs px-1 text-red">
-                        hypermedia
+                    {post.data.tags.map((tag) => (
+                      <div
+                        class:list={[
+                          "border-stone-400 border text-xs px-1",
+                          {
+                            "text-orange": tag === "recommended",
+                            "text-red": tag === "the arts",
+                            "text-blue": tag === "the sciences",
+                          },
+                        ]}
+                      >
+                        {tag}
                       </div>
-                    )}
+                    ))}
                   </div>
                 </a>
               );
             })
           }
-          <!-- <a href="/posts" class="BlueLink"> see all posts </a> -->
         </div>
       </div>
       <div>
@@ -94,7 +99,7 @@ const sortedPosts = posts
     <div class="flex flex-col gap-8">
       <div>
         <h2 class="text-lg font-bold font-mono">Projects</h2>
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-8">
           <hr />
           <div class="grid md:grid-cols-2">
             <div>
