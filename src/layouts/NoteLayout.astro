@@ -21,10 +21,10 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
       }
     </div>
     <div class="text-xs opacity-80 font-mono">
-      Posted {dateFormat.format(frontmatter.posted)}
+      {dateFormat.format(frontmatter.posted)}
       {
         frontmatter.edited &&
-          "- Edited " + dateFormat.format(frontmatter.edited)
+          "- Updated " + dateFormat.format(frontmatter.edited)
       }
     </div>
     <hr />
