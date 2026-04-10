@@ -10,13 +10,18 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 ---
 
-<BaseLayout title={frontmatter.title}>
+<BaseLayout
+  title={frontmatter.subtitle
+    ? `${frontmatter.title}: ${frontmatter.subtitle}`
+    : frontmatter.title}
+  description={frontmatter.description}
+>
   <article class="max-w-xl m-auto flex flex-col gap-4 py-16">
     <div>
       <h1 class="Heading1">{frontmatter.title}</h1>
       {
-        frontmatter.description && (
-          <h2 class="Heading2">{frontmatter.description}</h2>
+        frontmatter.subtitle && (
+          <h2 class="Heading2 italic">{frontmatter.subtitle}</h2>
         )
       }
     </div>

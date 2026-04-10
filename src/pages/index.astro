@@ -27,21 +27,19 @@ const sortedPosts = posts
     <div class="flex flex-col gap-8">
       <div>
         <h2 class="text-lg font-bold font-mono">Posts</h2>
-        <div class="flex flex-col gap-8">
-          <hr />
+        <hr />
+        <div class="flex flex-col gap-4 py-4">
           {
             sortedPosts.map((post) => {
               return (
                 <a href={`/writes/${post.id}`}>
-                  <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer">
+                  <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer leading-snug">
                     {post.data.title}
                   </h3>
-                  <div class="flex flex-wrap gap-x-1 items-center text-stone-500">
-                    {post.data.description && (
-                      <h4 class="font-light italic pr-1">
-                        {post.data.description}
-                      </h4>
-                    )}
+                  {post.data.subtitle && (
+                    <h4 class="text-sm italic">{post.data.subtitle}</h4>
+                  )}
+                  <div class="pt-2 flex flex-wrap gap-x-1 items-center text-stone-700">
                     {post.data.tags.map((tag) => (
                       <div
                         class:list={[
@@ -65,8 +63,8 @@ const sortedPosts = posts
       </div>
       <div>
         <h2 class="text-lg font-bold font-mono">Other</h2>
-        <div class="flex flex-col gap-4">
-          <hr />
+        <hr />
+        <div class="flex flex-col gap-4 py-4">
           <!-- <a href="/draws"
             ><h3
               class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer"
@@ -99,8 +97,8 @@ const sortedPosts = posts
     <div class="flex flex-col gap-8">
       <div>
         <h2 class="text-lg font-bold font-mono">Projects</h2>
-        <div class="flex flex-col gap-8">
-          <hr />
+        <hr />
+        <div class="flex flex-col gap-8 py-4">
           <div class="grid md:grid-cols-2">
             <div>
               <h3 class="font-bold font-mono">Custom QR Code Generators</h3>
