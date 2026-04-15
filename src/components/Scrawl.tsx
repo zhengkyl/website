@@ -316,8 +316,8 @@ export function ScrawlGrid({
             <div class="grid md:grid-cols-2">
               <Scrawl
                 data={dataRef.current[activeIndex]}
-                width={900}
-                height={640}
+                width={width}
+                height={height + (activeIndex >= 28 ? 40 : 0)}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
@@ -368,7 +368,11 @@ export function ScrawlGrid({
               </div>
             </div>
             {loaded[i] ? (
-              <Scrawl data={dataRef.current[i]} width={width} height={height} />
+              <Scrawl
+                data={dataRef.current[i]}
+                width={width}
+                height={height + (i >= 28 ? 40 : 0)}
+              />
             ) : (
               <div
                 class="bg-gray-100"
