@@ -317,7 +317,7 @@ export function ScrawlGrid({
               <Scrawl
                 data={dataRef.current[activeIndex]}
                 width={width}
-                height={height + (activeIndex >= 28 ? 40 : 0)}
+                height={height + (activeIndex >= 28 ? 50 : 0)}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
@@ -371,7 +371,7 @@ export function ScrawlGrid({
               <Scrawl
                 data={dataRef.current[i]}
                 width={width}
-                height={height + (i >= 28 ? 40 : 0)}
+                height={height + (i >= 28 ? 50 : 0)}
               />
             ) : (
               <div
