@@ -7,6 +7,7 @@ import kana1Img from "~/assets/images/kana_1.png";
 import kana2Img from "~/assets/images/kana_2.png";
 import pixelgameImg from "~/assets/images/pixelgame.png";
 import qrframeImg from "~/assets/images/qrframe.png";
+import qrsharkImg from "~/assets/images/qrshark.png";
 import reviewsImg from "~/assets/images/reviews.png";
 
 const posts = await getCollection("posts");
@@ -99,12 +100,27 @@ const sortedPosts = posts
         <h2 class="text-lg font-bold font-mono">Projects</h2>
         <hr />
         <div class="flex flex-col gap-8 py-4">
-          <div class="grid md:grid-cols-2">
+          <div class="grid md:grid-cols-2 gap-2">
+            <h3 class="md:col-span-2 font-bold font-mono">
+              A Couple Creative Custom QR Code Creators
+            </h3>
             <div>
-              <h3 class="font-bold font-mono">Custom QR Code Generators</h3>
               <p>
-                I wanted to make cool custom QR codes, so I made this generator
-                from scratch to learn just how far I can push the boundaries.
+                The most user-friendly custom QR code generator in the world.
+              </p>
+              <div>
+                <span class="font-bold">Live: </span>
+                <a
+                  class="BlueLink"
+                  href="https://www.qrshark.net"
+                  target="_blank">qrshark.net</a
+                >
+              </div>
+            </div>
+            <div>
+              <p>
+                Pushing the boundaries of programmatically generating artistic
+                QR codes.
               </p>
               <div>
                 <span class="font-bold">Live: </span>
@@ -128,13 +144,19 @@ const sortedPosts = posts
               </div>
             </div>
             <Image
-              class="py-1 max-h-40vh object-cover object-top"
+              class="py-1 h-40vh object-cover object-top"
+              src={qrsharkImg}
+              alt="qr shark qr code generator"
+              loading="eager"
+            />
+            <Image
+              class="py-1 h-40vh object-cover object-top"
               src={qrframeImg}
-              alt="qr code editor"
+              alt="qrframe qr code editor"
               loading="eager"
             />
           </div>
-          <div class="grid md:grid-cols-2">
+          <div class="grid md:grid-cols-2 gap-2">
             <div>
               <h3 class="font-bold font-mono">Japanese Kana Chart</h3>
               <p>
@@ -175,7 +197,7 @@ const sortedPosts = posts
               </div>
             </div>
           </div>
-          <div class="grid md:grid-cols-2">
+          <div class="grid md:grid-cols-2 gap-2">
             <div>
               <h3 class="font-bold font-mono">Pixelgame</h3>
               <p>
@@ -205,7 +227,7 @@ const sortedPosts = posts
               alt="tic-tac-toe game board"
             />
           </div>
-          <div class="grid md:grid-cols-2">
+          <div class="grid md:grid-cols-2 gap-2">
             <div>
               <h3 class="font-bold font-mono">Movie Reviews TUI</h3>
               <p>
