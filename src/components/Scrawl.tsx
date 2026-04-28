@@ -229,7 +229,7 @@ function formatWpm(text: string, ms: number) {
 
 type Sonnet = { scrawlUrl: string; text: string };
 
-const HIGHLIGHTED_SONNETS = [18, 29] as const;
+const HIGHLIGHTED_SONNETS = [18, 29, 42] as const;
 
 type ScrawlContextValue = {
   sonnets: Sonnet[];
