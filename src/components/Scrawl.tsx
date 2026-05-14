@@ -329,7 +329,7 @@ function ScrawlGridSection({
               <Scrawl
                 data={dataRef.current[globalI]}
                 width={width}
-                height={height + (globalI >= 28 ? 50 : 0)}
+                height={height + (globalI >= 28 ? 100 : 0)}
               />
             ) : (
               <div
@@ -423,7 +423,7 @@ export function ScrawlGallery({
               <Scrawl
                 data={dataRef.current[activeIndex]}
                 width={width}
-                height={height + (activeIndex >= 28 ? 50 : 0)}
+                height={height + (activeIndex >= 28 ? 100 : 0)}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
