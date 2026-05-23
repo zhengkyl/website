@@ -9,6 +9,8 @@ import pixelgameImg from "~/assets/images/pixelgame.png";
 import qrframeImg from "~/assets/images/qrframe.png";
 import qrsharkImg from "~/assets/images/qrshark.png";
 import reviewsImg from "~/assets/images/reviews.png";
+import wordmongering1Img from "~/assets/images/wordmongering_1.png";
+import wordmongering2Img from "~/assets/images/wordmongering_2.png";
 
 const posts = await getCollection("posts");
 const sortedPosts = posts
@@ -101,8 +103,49 @@ const sortedPosts = posts
         <hr />
         <div class="flex flex-col gap-8 py-4">
           <div class="grid md:grid-cols-2 gap-2">
+            <div>
+              <h3 class="font-bold font-mono">Wordmongering</h3>
+              <p>
+                A daily word game where you try using all the letters in as few
+                words as possible.
+                <div>
+                  <span class="font-bold">Live: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://wordmongering.com"
+                    target="_blank"
+                  >
+                    wordmongering.com
+                  </a>
+                </div>
+                <div class="font-mono">
+                  <span class="font-bold">Github: </span>
+                  <a
+                    class="BlueLink"
+                    href="https://github.com/zhengkyl/wordmongering"
+                    target="_blank">wordmongering</a
+                  >
+                </div>
+              </p>
+            </div>
+            <div class="flex gap-3 py-1">
+              <div>
+                <Image
+                  src={wordmongering1Img}
+                  alt="wordmongering game screen"
+                />
+              </div>
+              <div>
+                <Image
+                  src={wordmongering2Img}
+                  alt="wordmongering postgame analysis"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-2">
             <h3 class="md:col-span-2 font-bold font-mono">
-              A Couple Creative Custom QR Code Creators
+              Custom QR Code Creators
             </h3>
             <div>
               <p>
@@ -189,11 +232,11 @@ const sortedPosts = posts
               </p>
             </div>
             <div class="flex gap-3 py-1">
-              <div class="border max-h-40vh overflow-hidden">
+              <div>
                 <Image src={kana1Img} alt="kana chart" />
               </div>
-              <div class="border max-h-40vh overflow-hidden">
-                <Image src={kana2Img} alt="kana chart" />
+              <div>
+                <Image src={kana2Img} alt="kana chart stroke animations" />
               </div>
             </div>
           </div>
