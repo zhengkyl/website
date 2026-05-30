@@ -11,14 +11,14 @@ import quickLeft from "./quick-left.scrawl?raw";
 import quickRight from "./quick-right.scrawl?raw";
 
 export const texts = Object.values(
-  import.meta.glob("./sonnets/text/*.txt", {
+  import.meta.glob("./text/*.txt", {
     query: "?raw",
     import: "default",
     eager: true,
   }),
 );
 export const sonnets = Object.values(
-  import.meta.glob("./sonnets/scrawl/*.scrawl", {
+  import.meta.glob("./scrawl/*.scrawl", {
     query: "?url",
     import: "default",
     eager: true,

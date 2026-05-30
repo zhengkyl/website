@@ -23,6 +23,7 @@ export default defineConfig({
       "/writes/few-word-why-tailwind-good",
     "/writes/notes/time-travel-homework-2026":
       "/writes/time-travel-homework-2026",
+    "/writes/left-hand-shakespeare": "/writes/shakespeares-sonnets",
   },
   markdown: {
     shikiConfig: {
