@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import { getPostedPosts } from "~/lib/posts";
 
-const posts = (await getCollection("posts")).sort(
-  (a, b) => b.data.posted.valueOf() - a.data.posted.valueOf(),
+const posts = (await getPostedPosts()).sort(
+  (a, b) => b.data.posted!.valueOf() - a.data.posted!.valueOf(),
 );
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   day: "2-digit",

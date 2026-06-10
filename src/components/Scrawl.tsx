@@ -13,6 +13,7 @@ type Props = {
   data: string;
   width: number;
   height: number;
+  text?: string;
 };
 
 function parseScrawl(data: string): AbsPoint[] {
@@ -44,14 +45,94 @@ function parseScrawl(data: string): AbsPoint[] {
   return points;
 }
 
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// jagged outline in objectBoundingBox units (0..1) for an svg clipPath
+function makeTornPath(seed: number): string {
+  const rand = mulberry32(seed);
+  const STEPS = 12; // tear points per edge
+  const AMP = 0.015; // inward tear depth as a fraction of the edge
+  type Pt = [number, number];
+  const edges: ((t: number, j: number) => Pt)[] = [
+    (t, j) => [t, j], // top, left to right
+    (t, j) => [1 - j, t], // right, top to bottom
+    (t, j) => [1 - t, 1 - j], // bottom, right to left
+    (t, j) => [j, 1 - t], // left, bottom to top
+  ];
+  const pts: Pt[] = [];
+  for (const edge of edges) {
+    for (let i = 0; i < STEPS; i++) {
+      const t = i === 0 ? 0 : (i + (rand() - 0.5) * 0.6) / STEPS;
+      pts.push(edge(t, rand() * AMP));
+    }
+  }
+  return `M${pts.map(([x, y]) => `${x.toFixed(4)} ${y.toFixed(4)}`).join("L")}Z`;
+}
+
+const TORN_PATHS = [1, 2, 3, 4].map((seed) => makeTornPath(seed));
+
+const tornClipId = (variant: number) => `scrawl-torn-${variant}`;
+const paperFilterId = (variant: number) => `scrawl-paper-${variant}`;
+
+// shared defs for every Scrawl on the page; must be rendered exactly once
+// alongside them (ScrawlGallery does)
+export function ScrawlDefs() {
+  return (
+    <svg class="absolute size-0" aria-hidden="true">
+      <defs>
+        {TORN_PATHS.map((d, variant) => (
+          <clipPath
+            key={variant}
+            id={tornClipId(variant)}
+            clipPathUnits="objectBoundingBox"
+          >
+            <path d={d} />
+          </clipPath>
+        ))}
+        {TORN_PATHS.map((_, variant) => (
+          <filter key={variant} id={paperFilterId(variant)}>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.04"
+              numOctaves="3"
+              seed={variant + 1}
+              result="noise"
+            />
+            <feDiffuseLighting
+              in="noise"
+              lighting-color="#ffe7ba"
+              surfaceScale="1"
+              result="paper"
+            >
+              <feDistantLight azimuth="45" elevation="60" />
+            </feDiffuseLighting>
+            <feComposite in="paper" in2="SourceAlpha" operator="in" />
+          </filter>
+        ))}
+      </defs>
+    </svg>
+  );
+}
+
 function drawUpTo(
   ctx: CanvasRenderingContext2D,
   points: AbsPoint[],
   t: number,
+  offset: { dx: number; dy: number },
 ) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.strokeStyle = "black";
-  ctx.fillStyle = "black";
+  ctx.save();
+  ctx.translate(offset.dx, offset.dy);
+  ctx.strokeStyle = "#210c00";
+  ctx.fillStyle = "#210c00";
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
@@ -96,9 +177,10 @@ function drawUpTo(
   } else {
     ctx.stroke();
   }
+  ctx.restore();
 }
 
-export function Scrawl({ data, width, height }: Props) {
+export function Scrawl({ data, width, height, text }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const animRef = useRef<number>(0);
@@ -109,11 +191,45 @@ export function Scrawl({ data, width, height }: Props) {
   const points = useMemo(() => parseScrawl(data), [data]);
   const totalTime = points.at(-1)?.t ?? 0;
 
+  // size the canvas tight against the ink's bounding box, plus padding
+  const PAD = 40;
+  const { canvasWidth, canvasHeight, offset } = useMemo(() => {
+    if (points.length === 0) {
+      return {
+        canvasWidth: width,
+        canvasHeight: height,
+        offset: { dx: 0, dy: 0 },
+      };
+    }
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
+    for (const pt of points) {
+      if (pt.x < minX) minX = pt.x;
+      if (pt.x > maxX) maxX = pt.x;
+      if (pt.y < minY) minY = pt.y;
+      if (pt.y > maxY) maxY = pt.y;
+    }
+    return {
+      canvasWidth: maxX - minX + PAD * 2,
+      canvasHeight: maxY - minY + PAD * 2,
+      offset: { dx: PAD - minX, dy: PAD - minY },
+    };
+  }, [points]);
+
+  // display the parchment at the same scale as the full recording surface,
+  // shrinking only if the padded ink box outgrows the slot
+  const scale = Math.min(1, width / canvasWidth, height / canvasHeight);
+  const widthPct = (canvasWidth / width) * scale * 100;
+
+  const variant = data.length % TORN_PATHS.length;
+
   useEffect(() => {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
 
-    drawUpTo(ctx, points, totalTime);
+    drawUpTo(ctx, points, totalTime, offset);
     currentTimeRef.current = totalTime;
     inputRef.current!.value = "1";
 
@@ -145,7 +261,7 @@ export function Scrawl({ data, width, height }: Props) {
 
       currentTimeRef.current = t;
       if (inputRef.current) inputRef.current.value = String(t / totalTime);
-      drawUpTo(ctx, points, t);
+      drawUpTo(ctx, points, t, offset);
 
       if (done) {
         setIsPlaying(false);
@@ -168,17 +284,35 @@ export function Scrawl({ data, width, height }: Props) {
 
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
-    drawUpTo(ctx, points, t);
+    drawUpTo(ctx, points, t, offset);
   };
 
   return (
     <div>
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        style={{ display: "block", width: "100%", height: "auto" }}
-      />
+      <div
+        class="flex items-center justify-center"
+        style={{ aspectRatio: `${width}/${height}` }}
+      >
+        <div
+          class="relative drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
+          style={{ width: `${widthPct}%` }}
+        >
+          <div
+            class="absolute inset-0 bg-[#ffe7ba]"
+            style={{
+              clipPath: `url(#${tornClipId(variant)})`,
+              filter: `url(#${paperFilterId(variant)})`,
+            }}
+          />
+          <canvas
+            ref={canvasRef}
+            width={canvasWidth}
+            height={canvasHeight}
+            class="relative block w-full h-auto shadow-[inset_0_0_32px_rgba(146,103,40,0.18)]"
+            style={{ clipPath: `url(#${tornClipId(variant)})` }}
+          />
+        </div>
+      </div>
       <div
         class="flex items-center gap-2 p-2 pt-0 cursor-default"
         onClick={(e) => e.stopImmediatePropagation()}
@@ -292,7 +426,7 @@ function ScrawlGridSection({
   return (
     <div
       ref={containerRef}
-      class="w-screen max-w-1536px ml-[calc(50%-min(768px,50vw))] grid sm:grid-cols-2 lg:grid-cols-4 p-4"
+      class="w-screen max-w-1536px ml-[calc(50%-min(768px,50vw))] grid sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4"
     >
       {sonnets.map((sonnet, localI) => {
         const globalI = offset + localI;
@@ -314,13 +448,7 @@ function ScrawlGridSection({
                 <div class="font-bold">Sonnet {globalI + 1}</div>
                 {durations[globalI] != null && (
                   <span class="text-xs text-gray-500">
-                    {Math.round(
-                      (sonnet.text.replace(/\s/g, "").length /
-                        5 /
-                        (durations[globalI]! / 60000)) *
-                        10,
-                    ) / 10}{" "}
-                    wpm
+                    {formatWpm(sonnet.text, durations[globalI]!)} wpm
                   </span>
                 )}
               </div>
@@ -332,10 +460,7 @@ function ScrawlGridSection({
                 height={height + (globalI >= 28 ? 100 : 0)}
               />
             ) : (
-              <div
-                class="bg-gray-100"
-                style={{ aspectRatio: `${width}/${height}` }}
-              />
+              <div style={{ aspectRatio: `${width}/${height}` }} />
             )}
           </div>
         );
@@ -398,6 +523,7 @@ export function ScrawlGallery({
         notifyLoaded,
       }}
     >
+      <ScrawlDefs />
       <dialog
         ref={dialogRef}
         onClose={() => setActiveIndex(null)}
@@ -424,6 +550,7 @@ export function ScrawlGallery({
                 data={dataRef.current[activeIndex]}
                 width={width}
                 height={height + (activeIndex >= 28 ? 100 : 0)}
+                text={sonnets[activeIndex].text}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
