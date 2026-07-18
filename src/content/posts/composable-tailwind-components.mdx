@@ -1,0 +1,67 @@
+---
+title: Composable Tailwind Components
+tags: ["the third thing"]
+posted: 2026-07-17
+---
+
+When you create a component with Tailwind styling, there is no clean way to override existing classes.
+
+```tsx
+function Card({ className }) {
+  return <div className={`m-2 p-4 ${className}`}></div>;
+}
+```
+
+```tsx
+<Card className="p-2">
+```
+
+This doesn't work; the class that takes effect is whichever is defined last in the CSS file, not the class string.
+
+Here is a common solution.
+
+```tsx
+function Card({ className }) {
+  return <div className={twMerge("m-2 p-4", className)}></div>;
+}
+```
+
+Although your first instinct may be to recoil in horror, this is mostly fine. But why does this feel so wrong?
+
+- The browser already handles overriding styles, but we have to reimplement it imperfectly in Javascript for atomic classes.
+
+- This always incurs a cost at runtime, even without an overriding class. Yet, all the information is known ahead of time. The existing classes are static and the dynamic classes always take precedence.
+
+Is there a way to define low precedence styles for components, so that any new styling will override automatically based on the rules of CSS?
+
+Yes. CSS layers do exactly that.
+
+But, you need to use an implementation of Tailwind that supports them (aka UnoCSS).
+
+```tsx
+function Card({ className }) {
+  // UnoCSS supports grouping variants, so you don't need to repeat layer-name:
+  // But this is just to be clear what's happening
+  return <div className={`layer-name:(m-2 p-4) ${className || ""}`}></div>;
+}
+```
+
+This is basically just duplicating all classes that need to be overriden into a lower layer. I think this is fine--Tailwind was never the best choice for bundle size; if you're Facebook, you'll just use StyleX.
+
+But, if you're going to use UnoCSS anyways, there's an alternative to duplicating classes into a new layer.
+
+Compiling classes.
+
+```tsx
+// Input
+function Card({ className }) {
+  return <div className={`:uno: m-2 p-4 ${className || ""}`}></div>;
+}
+
+// Output
+function Card({ className }) {
+  return <div className={`uno-a0sd8 ${className || ""}`}></div>;
+}
+```
+
+All the statically analyzable classes following `:uno:` get compiled into one class. This compiled class is output to a lower layer, so the regular utility classes override naturally. Since components are often reused, this may result in a smaller bundle size since only the final class name is repeated. The original classes are replaced with the final compiled class during a build step, so this really only works in Javascript-land.
