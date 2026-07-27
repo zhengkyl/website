@@ -27,7 +27,7 @@ function Foo({ className }) {
 }
 ```
 
-`twMerge` tries its best to remove classes on the left that should be overriden by classes on the right. But it's solvable without Javascript, because the problem isn't dynamic and doesn't change at runtime.
+`twMerge` tries its best to remove classes on the left that should be overriden by classes on the right. But this problem is solvable without Javascript; it's not dynamic and nothing changes at runtime.
 
 The existing component classes should **always** be overriden. In other words, the component classes should have lower CSS precedence.
 
@@ -49,7 +49,7 @@ function Foo({ className }) {
 
 The only problem is, we still want to use regular utility classes to style components. This is where a Javascript-ecosystem Tailwind implementation like UnoCSS shines. It can modify classes during the build step.
 
-Here's a straightforward version that simply duplicates classes into a lower layer.
+Here's a straightforward version that duplicates classes into a lower layer. UnoCSS's variant group transformer makes this easy to write.
 
 ```tsx
 function Foo({ className }) {
@@ -75,7 +75,7 @@ function Foo({ className }) {
 }
 ```
 
-Here's an interesting alternative using the compilation feature.
+Here's an interesting alternative using the UnoCSS's class compilation transformer.
 
 ```tsx
 function Foo({ className }) {
@@ -97,3 +97,19 @@ function Foo({ className }) {
 ```
 
 Since components are often reused, this may result in a smaller bundle size; only the final class name is repeated compared to a potentially giant class string.
+
+Here's an example of the `uno.config.ts` required to setup the variant groups and class compilation.
+
+```ts
+import {
+  defineConfig,
+  presetWind4,
+  transformerCompileClass,
+  transformerVariantGroup,
+} from "unocss";
+
+export default defineConfig({
+  presets: [presetWind4()],
+  transformers: [transformerVariantGroup(), transformerCompileClass()],
+});
+```
