@@ -1,67 +1,99 @@
 ---
-title: Composable Tailwind Components
+title: A Way to Make Composable Tailwind Components
 tags: ["the third thing"]
 posted: 2026-07-17
+edited: 2026-07-27
 ---
 
-When you create a component with Tailwind styling, there is no clean way to override existing classes.
+{/* @unocss-ignore */}
+
+When you create a component with Tailwind styling, you run into a problem with combining classes. The following doesn't work.
 
 ```tsx
-function Card({ className }) {
-  return <div className={`m-2 p-4 ${className}`}></div>;
+function Foo({ className }) {
+  return <div className={`p-2 ${className || ""}`}></div>;
+}
+
+<Foo className="p-4">
+```
+
+If the styles collide, the class that appears last in the CSS takes precedence; the order in the class string is irrelevant.
+
+Without help from the browser or the natural cascade of CSS, the problem is commonly solved with Javascript like so.
+
+```tsx
+function Foo({ className }) {
+  return <div className={twMerge("p-2", className)}></div>;
+}
+```
+
+`twMerge` tries its best to remove classes on the left that should be overriden by classes on the right. But it's solvable without Javascript, because the problem isn't dynamic and doesn't change at runtime.
+
+The existing component classes should **always** be overriden. In other words, the component classes should have lower CSS precedence.
+
+Here's an example using CSS layers supported by the official Tailwind implementation.
+
+```css
+@layer components {
+  .foo {
+    padding: 0.5rem;
+  }
 }
 ```
 
 ```tsx
-<Card className="p-2">
+function Foo({ className }) {
+  return <div className={`foo ${className || ""}`}></div>;
+}
 ```
 
-This doesn't work; the class that takes effect is whichever is defined last in the CSS file, not the class string.
+The only problem is, we still want to use regular utility classes to style components. This is where a Javascript-ecosystem Tailwind implementation like UnoCSS shines. It can modify classes during the build step.
 
-Here is a common solution.
+Here's a straightforward version that simply duplicates classes into a lower layer.
 
 ```tsx
-function Card({ className }) {
-  return <div className={twMerge("m-2 p-4", className)}></div>;
+function Foo({ className }) {
+  return <div className={`layer-name:(p-2 m-2) ${className || ""}`}></div>;
+}
+
+// UnoCSS expands grouped classes during build
+function Foo({ className }) {
+  return (
+    <div className={`layer-name:p-2 layer-name:m-2 ${className || ""}`}></div>
+  );
 }
 ```
 
-Although your first instinct may be to recoil in horror, this is mostly fine. But why does this feel so wrong?
+```css
+@layer name {
+  .layer-name\:p-2 {
+    padding: 0.5rem;
+  }
+  .layer-name\:m-2 {
+    margin: 0.5rem;
+  }
+}
+```
 
-- The browser already handles overriding styles, but we have to reimplement it imperfectly in Javascript for atomic classes.
-
-- This always incurs a cost at runtime, even without an overriding class. Yet, all the information is known ahead of time. The existing classes are static and the dynamic classes always take precedence.
-
-Is there a way to define low precedence styles for components, so that any new styling will override automatically based on the rules of CSS?
-
-Yes. CSS layers do exactly that.
-
-But, you need to use an implementation of Tailwind that supports them (aka UnoCSS).
+Here's an interesting alternative using the compilation feature.
 
 ```tsx
-function Card({ className }) {
-  // UnoCSS supports grouping variants, so you don't need to repeat layer-name:
-  // But this is just to be clear what's happening
-  return <div className={`layer-name:(m-2 p-4) ${className || ""}`}></div>;
+function Foo({ className }) {
+  return <div className={`:uno: p-2 m-2 ${className || ""}`}></div>;
+}
+
+// Static classes following :uno: get compiled during build
+function Foo({ className }) {
+  return <div className={`uno-so8f74 ${className || ""}`}></div>;
 }
 ```
 
-This is basically just duplicating all classes that need to be overriden into a lower layer. I think this is fine--Tailwind was never the best choice for bundle size; if you're Facebook, you'll just use StyleX.
-
-But, if you're going to use UnoCSS anyways, there's an alternative to duplicating classes into a new layer.
-
-Compiling classes.
-
-```tsx
-// Input
-function Card({ className }) {
-  return <div className={`:uno: m-2 p-4 ${className || ""}`}></div>;
+```css
+.uno-so8f74 {
+  margin: 0.5rem;
+  padding: 0.5rem;
 }
-
-// Output
-function Card({ className }) {
-  return <div className={`uno-a0sd8 ${className || ""}`}></div>;
-}
+/* utility classes below */
 ```
 
-All the statically analyzable classes following `:uno:` get compiled into one class. This compiled class is output to a lower layer, so the regular utility classes override naturally. Since components are often reused, this may result in a smaller bundle size since only the final class name is repeated. The original classes are replaced with the final compiled class during a build step, so this really only works in Javascript-land.
+Since components are often reused, this may result in a smaller bundle size; only the final class name is repeated compared to a potentially giant class string.
