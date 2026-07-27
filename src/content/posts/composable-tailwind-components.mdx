@@ -1,6 +1,6 @@
 ---
 title: A Way to Make Composable Tailwind Components
-tags: ["the third thing"]
+tags: ["recommended", "the sciences"]
 posted: 2026-07-17
 edited: 2026-07-27
 ---
@@ -49,7 +49,7 @@ function Foo({ className }) {
 
 The only problem is, we still want to use regular utility classes to style components. This is where a Javascript-ecosystem Tailwind implementation like UnoCSS shines. It can modify classes during the build step.
 
-Here's a straightforward version that duplicates classes into a lower layer. UnoCSS's variant group transformer makes this easy to write.
+Here's a straightforward version that duplicates classes into a lower layer. UnoCSS's variant groups makes this easy to write.
 
 ```tsx
 function Foo({ className }) {
@@ -75,7 +75,7 @@ function Foo({ className }) {
 }
 ```
 
-Here's an interesting alternative using the UnoCSS's class compilation transformer.
+Here's an interesting alternative using the UnoCSS's class compilation.
 
 ```tsx
 function Foo({ className }) {
@@ -98,9 +98,10 @@ function Foo({ className }) {
 
 Since components are often reused, this may result in a smaller bundle size; only the final class name is repeated compared to a potentially giant class string.
 
-Here's an example of the `uno.config.ts` required to setup the variant groups and class compilation.
+Here's an example of the configuration required to setup the variant groups and class compilation.
 
 ```ts
+// uno.config.ts
 import {
   defineConfig,
   presetWind4,

@@ -17,14 +17,16 @@ const sortedPosts = posts
   .filter((post) => post.data.posted)
   .sort(
     (a, b) =>
-      new Date(b.data.posted).getTime() - new Date(a.data.posted).getTime(),
+      new Date(b.data.posted!).getTime() - new Date(a.data.posted!).getTime(),
   )
   .slice(0, 10);
 ---
 
 <BaseLayout>
   <div class="py-16">
-    <h1 class="Heading1">I'm a programmer.</h1>
+    <h1 class="Heading1">
+      I like to write computer programs and human stories.
+    </h1>
   </div>
   <div class="grid md:cols-[1fr_2fr] gap-8">
     <div class="flex flex-col gap-8">
@@ -34,8 +36,12 @@ const sortedPosts = posts
         <div class="flex flex-col gap-4 py-4">
           {
             sortedPosts.map((post) => {
+              const recommended = post.data.tags.includes("recommended");
               return (
-                <a href={`/writes/${post.id}`}>
+                <a
+                  href={`/writes/${post.id}`}
+                  class:list={{ "opacity-60": !recommended }}
+                >
                   <h3 class="font-bold group-hover:(underline text-zinc-400) transition-colors cursor-pointer leading-snug">
                     {post.data.title}
                   </h3>
@@ -43,20 +49,21 @@ const sortedPosts = posts
                     <h4 class="text-sm italic">{post.data.subtitle}</h4>
                   )}
                   <div class="pt-2 flex flex-wrap gap-x-1 items-center text-stone-700">
-                    {post.data.tags.map((tag) => (
-                      <div
-                        class:list={[
-                          "border-stone-400 border text-xs px-1",
-                          {
-                            "text-orange": tag === "recommended",
-                            "text-red": tag === "the arts",
-                            "text-blue": tag === "the sciences",
-                          },
-                        ]}
-                      >
-                        {tag}
-                      </div>
-                    ))}
+                    {post.data.tags
+                      .filter((tag) => tag !== "recommended")
+                      .map((tag) => (
+                        <div
+                          class:list={[
+                            "border-stone-400 border text-xs px-1",
+                            {
+                              "text-red": tag === "the arts",
+                              "text-blue": tag === "the sciences",
+                            },
+                          ]}
+                        >
+                          {tag}
+                        </div>
+                      ))}
                   </div>
                 </a>
               );

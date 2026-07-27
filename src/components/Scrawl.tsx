@@ -9,11 +9,19 @@ interface AbsPoint {
   strokeStart: boolean;
 }
 
+// a clock several Scrawls share, so the gallery can drive every canvas from one
+// play button instead of one per scrawl
+type Timeline = {
+  subscribe: (draw: (t: number) => void) => () => void;
+  getTime: () => number;
+};
+
 type Props = {
   data: string;
   width: number;
   height: number;
-  text?: string;
+  // when present, the scrawl follows this clock and renders no controls
+  timeline?: Timeline;
 };
 
 function parseScrawl(data: string): AbsPoint[] {
@@ -122,69 +130,62 @@ export function ScrawlDefs() {
   );
 }
 
-function drawUpTo(
+// A canvas keeps its pixels between frames, so playing forward only has to ink
+// the segments that became due since the last call. Replaying the whole point
+// list every frame is what pins the CPU once a gallery of these is animating.
+function createRenderer(
   ctx: CanvasRenderingContext2D,
   points: AbsPoint[],
-  t: number,
   offset: { dx: number; dy: number },
 ) {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.save();
   ctx.translate(offset.dx, offset.dy);
   ctx.strokeStyle = "#210c00";
   ctx.fillStyle = "#210c00";
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  ctx.beginPath();
 
-  let strokeX = 0,
-    strokeY = 0;
-  let isSinglePoint = false;
+  // how many points are already on the canvas
+  let drawn = 0;
 
-  let nextUndrawnIndex = points.length;
-  for (let i = 0; i < points.length; i++) {
-    const pt = points[i];
-    if (pt.t > t) {
-      nextUndrawnIndex = i;
-      break;
-    }
-    if (pt.strokeStart) {
-      if (isSinglePoint) {
-        ctx.arc(strokeX, strokeY, 1, 0, Math.PI * 2);
+  const clear = () => {
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.restore();
+    drawn = 0;
+  };
+
+  return (t: number) => {
+    // seeking backwards is the only case that has to start over
+    if (drawn > 0 && points[drawn - 1].t > t) clear();
+
+    while (drawn < points.length && points[drawn].t <= t) {
+      const pt = points[drawn];
+      ctx.beginPath();
+      if (pt.strokeStart) {
+        // a round cap of lineWidth 2 and this dot are the same mark, so a
+        // stroke that turns out to be longer just paints over it
+        ctx.arc(pt.x, pt.y, 1, 0, Math.PI * 2);
         ctx.fill();
-        ctx.beginPath();
       } else {
+        const prev = points[drawn - 1];
+        ctx.moveTo(prev.x, prev.y);
+        ctx.lineTo(pt.x, pt.y);
         ctx.stroke();
-        ctx.beginPath();
       }
-      ctx.moveTo(pt.x, pt.y);
-      strokeX = pt.x;
-      strokeY = pt.y;
-      isSinglePoint = true;
-    } else {
-      ctx.lineTo(pt.x, pt.y);
-      isSinglePoint = false;
+      drawn++;
     }
-  }
-
-  if (isSinglePoint) {
-    const nextPt = points[nextUndrawnIndex];
-    if (!nextPt || nextPt.strokeStart) {
-      ctx.arc(strokeX, strokeY, 1, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  } else {
-    ctx.stroke();
-  }
-  ctx.restore();
+  };
 }
 
-export function Scrawl({ data, width, height, text }: Props) {
+export function Scrawl({ data, width, height, timeline }: Props) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const animRef = useRef<number>(0);
   const currentTimeRef = useRef<number>(0);
+  const renderRef = useRef<(t: number) => void>(() => {});
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -226,14 +227,41 @@ export function Scrawl({ data, width, height, text }: Props) {
   const variant = data.length % TORN_PATHS.length;
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvasRef.current!.getContext("2d")!;
+    const render = createRenderer(ctx, points, offset);
+    renderRef.current = render;
 
-    drawUpTo(ctx, points, totalTime, offset);
-    currentTimeRef.current = totalTime;
-    inputRef.current!.value = "1";
+    if (!timeline) {
+      render(totalTime);
+      currentTimeRef.current = totalTime;
+      inputRef.current!.value = "1";
+      return () => cancelAnimationFrame(animRef.current);
+    }
 
-    return () => cancelAnimationFrame(animRef.current);
+    // the renderer runs past the last point harmlessly, so scrawls shorter than
+    // the gallery's longest just sit finished until the timeline catches up
+    render(timeline.getTime());
+
+    // a gallery frame only pays for the scrawls on screen; the rest catch up in
+    // one batch when they scroll back into view
+    let visible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) render(timeline.getTime());
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(rootRef.current!);
+
+    const unsubscribe = timeline.subscribe((t) => {
+      if (visible) render(t);
+    });
+
+    return () => {
+      observer.disconnect();
+      unsubscribe();
+    };
   }, []);
 
   const handlePlay = () => {
@@ -247,9 +275,6 @@ export function Scrawl({ data, width, height, text }: Props) {
       currentTimeRef.current = 0;
     }
 
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
-
     const startWallTime = performance.now();
     const startScrawlTime = currentTimeRef.current;
     setIsPlaying(true);
@@ -261,7 +286,7 @@ export function Scrawl({ data, width, height, text }: Props) {
 
       currentTimeRef.current = t;
       if (inputRef.current) inputRef.current.value = String(t / totalTime);
-      drawUpTo(ctx, points, t, offset);
+      renderRef.current(t);
 
       if (done) {
         setIsPlaying(false);
@@ -281,14 +306,11 @@ export function Scrawl({ data, width, height, text }: Props) {
     }
     const t = parseFloat(target.value) * totalTime;
     currentTimeRef.current = t;
-
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
-    drawUpTo(ctx, points, t, offset);
+    renderRef.current(t);
   };
 
   return (
-    <div>
+    <div ref={rootRef}>
       <div
         class="flex items-center justify-center"
         style={{ aspectRatio: `${width}/${height}` }}
@@ -313,28 +335,30 @@ export function Scrawl({ data, width, height, text }: Props) {
           />
         </div>
       </div>
-      <div
-        class="flex items-center gap-2 p-2 pt-0 cursor-default"
-        onClick={(e) => e.stopImmediatePropagation()}
-      >
-        <button onClick={handlePlay}>
-          {isPlaying ? (
-            <PauseIcon class="size-4" />
-          ) : (
-            <PlayIcon class="size-4" />
-          )}
-        </button>
-        <input
-          ref={inputRef}
-          type="range"
-          min="0"
-          max="1"
-          step="0.001"
-          defaultValue="1"
-          onInput={handleScrub}
-          class="flex-1 min-w-0"
-        />
-      </div>
+      {!timeline && (
+        <div
+          class="flex items-center gap-2 p-2 pt-0 cursor-default"
+          onClick={(e) => e.stopImmediatePropagation()}
+        >
+          <button onClick={handlePlay}>
+            {isPlaying ? (
+              <PauseIcon class="size-4" />
+            ) : (
+              <PlayIcon class="size-4" />
+            )}
+          </button>
+          <input
+            ref={inputRef}
+            type="range"
+            min="0"
+            max="1"
+            step="0.001"
+            defaultValue="1"
+            onInput={handleScrub}
+            class="flex-1 min-w-0"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -372,6 +396,7 @@ type ScrawlContextValue = {
   loaded: boolean[];
   durations: (number | null)[];
   dataRef: { current: string[] };
+  timeline: Timeline;
   setActiveIndex: (i: number | null) => void;
   notifyLoaded: (i: number, data: string, duration: number) => void;
 };
@@ -389,6 +414,7 @@ function ScrawlGridSection({
     loaded,
     durations,
     dataRef,
+    timeline,
     setActiveIndex,
     notifyLoaded,
     width,
@@ -458,6 +484,7 @@ function ScrawlGridSection({
                 data={dataRef.current[globalI]}
                 width={width}
                 height={height + (globalI >= 28 ? 100 : 0)}
+                timeline={timeline}
               />
             ) : (
               <div style={{ aspectRatio: `${width}/${height}` }} />
@@ -487,6 +514,81 @@ export function ScrawlGallery({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dataRef = useRef<string[]>(new Array(sonnets.length).fill(""));
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const sliderRef = useRef<HTMLInputElement>(null);
+  const animRef = useRef<number>(0);
+  // Infinity until the first scrub or play, so every scrawl starts finished
+  const currentTimeRef = useRef<number>(Infinity);
+  const subscribersRef = useRef(new Set<(t: number) => void>());
+
+  // the longest scrawl sets the timeline's length, and grows as lazily loaded
+  // scrawls arrive; the rAF loop reads it through a ref to stay fresh
+  const maxDuration = durations.reduce<number>(
+    (max, d) => (d != null && d > max ? d : max),
+    0,
+  );
+  const maxDurationRef = useRef(maxDuration);
+  maxDurationRef.current = maxDuration;
+
+  const timeline = useMemo<Timeline>(
+    () => ({
+      getTime: () => currentTimeRef.current,
+      subscribe: (draw) => {
+        subscribersRef.current.add(draw);
+        return () => subscribersRef.current.delete(draw);
+      },
+    }),
+    [],
+  );
+
+  useEffect(() => () => cancelAnimationFrame(animRef.current), []);
+
+  const seek = (t: number) => {
+    currentTimeRef.current = t;
+    for (const draw of subscribersRef.current) draw(t);
+  };
+
+  const handlePlay = () => {
+    if (isPlaying) {
+      cancelAnimationFrame(animRef.current);
+      setIsPlaying(false);
+      return;
+    }
+    if (currentTimeRef.current >= maxDurationRef.current) seek(0);
+
+    const startWallTime = performance.now();
+    const startScrawlTime = currentTimeRef.current;
+    setIsPlaying(true);
+
+    const loop = (now: number) => {
+      let t = startScrawlTime + (now - startWallTime);
+      const done = t >= maxDurationRef.current;
+      if (done) t = maxDurationRef.current;
+
+      seek(t);
+      if (sliderRef.current) {
+        sliderRef.current.value = String(t / maxDurationRef.current);
+      }
+
+      if (done) {
+        setIsPlaying(false);
+        return;
+      }
+      animRef.current = requestAnimationFrame(loop);
+    };
+
+    animRef.current = requestAnimationFrame(loop);
+  };
+
+  const handleScrub = (e: Event) => {
+    if (isPlaying) {
+      cancelAnimationFrame(animRef.current);
+      setIsPlaying(false);
+    }
+    const fraction = parseFloat((e.target as HTMLInputElement).value);
+    seek(fraction * maxDurationRef.current);
+  };
 
   useEffect(() => {
     if (activeIndex !== null) {
@@ -519,6 +621,7 @@ export function ScrawlGallery({
         loaded,
         durations,
         dataRef,
+        timeline,
         setActiveIndex,
         notifyLoaded,
       }}
@@ -550,7 +653,6 @@ export function ScrawlGallery({
                 data={dataRef.current[activeIndex]}
                 width={width}
                 height={height + (activeIndex >= 28 ? 100 : 0)}
-                text={sonnets[activeIndex].text}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
@@ -570,9 +672,37 @@ export function ScrawlGallery({
           </div>
         )}
       </dialog>
-      <ScrawlGridSection sonnets={sonnets.slice(0, 28)} offset={0} />
-      <p class="my-4">At this point I stopped using lined "paper".</p>
-      <ScrawlGridSection sonnets={sonnets.slice(28)} offset={28} />
+      {/* the bar below sticks to the viewport only while this wrapper (the
+          gallery) is on screen, so it stays out of the surrounding prose */}
+      <div>
+        <ScrawlGridSection sonnets={sonnets.slice(0, 28)} offset={0} />
+        <p class="my-4">At this point I stopped using lined "paper".</p>
+        <ScrawlGridSection sonnets={sonnets.slice(28)} offset={28} />
+        <div class="sticky bottom-0 z-10 flex items-center gap-2 p-2 bg-orange-50 border-t border-orange-200">
+          <button
+            onClick={handlePlay}
+            aria-label={isPlaying ? "Pause" : "Play"}
+            disabled={maxDuration === 0}
+          >
+            {isPlaying ? (
+              <PauseIcon class="size-4" />
+            ) : (
+              <PlayIcon class="size-4" />
+            )}
+          </button>
+          <input
+            ref={sliderRef}
+            type="range"
+            min="0"
+            max="1"
+            step="0.001"
+            defaultValue="1"
+            onInput={handleScrub}
+            disabled={maxDuration === 0}
+            class="flex-1 min-w-0"
+          />
+        </div>
+      </div>
     </ScrawlContext.Provider>
   );
 }

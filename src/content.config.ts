@@ -22,7 +22,8 @@ const posts = defineCollection({
       .date()
       .transform(
         (d) => new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
-      ),
+      )
+      .optional(),
     edited: z
       .date()
       .transform(

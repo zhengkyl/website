@@ -1,4 +1,9 @@
-import { defineConfig, presetWind3, transformerVariantGroup } from "unocss";
+import {
+  defineConfig,
+  presetWind3,
+  transformerCompileClass,
+  transformerVariantGroup,
+} from "unocss";
 
 export default defineConfig({
   content: {
@@ -11,6 +16,6 @@ export default defineConfig({
   },
   blocklist: ["my", "me", "h2", "h3", "b", "transform", "filter"],
   rules: [["pixelated", { "image-rendering": "pixelated" }]],
-  transformers: [transformerVariantGroup()],
+  transformers: [transformerVariantGroup(), transformerCompileClass()],
   presets: [presetWind3()],
 });

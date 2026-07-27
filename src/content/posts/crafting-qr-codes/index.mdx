@@ -239,32 +239,15 @@ Can you tell what I did wrong with these QR codes I drew using chalk?
 
 The first one is janky, but I was legitimately confused why my second attempt failed.
 
-Computer vision is commonly used in code scanners nowadays, but the tradeoff of non-dedicated scanners (like the default smartphone camera app) is that they need to first detect a QR code before any scanning occurs. This ends up being much pickier than dumb scanners which constantly try to decode what they see.
+Multipurpose scanners (like the default smartphone camera app) must first detect a QR code before any scanning is attempted. Compared to constantly active dumb scanners, smartphones are much pickier about what they'll accept. It must "look like a QR code" to the black box that is the on-device computer vision model.
 
-{
-
-  <div className="grid cols-1 sm:cols-2 gap-2 pixelated">
-    <div>
-      The upside is that you can probably scan this barcode too.
-    </div>
-    <div className="font-thin text-xs text-center ">
-      <Image className="w-full" src={barcodeImg} alt="normal barcode"/>
-      Created using <Sa href="https://barcode.tec-it.com/en/UPCA">TEC-IT Barcode Generator</Sa>
-    </div>
-  </div>
-}
-
-I'm no expert in this domain, and computer vision is somewhat of a black box anyway, so the only way I know to tell if a QR code will scan is to try scanning it, and moving closer or farther can sometimes help.
-
-In my experience, **solid colors** and **high contrast** are good indicators (and what my chalk drawing lacked), but once a QR code strays from black and white pixels, its fate is partially in the hands of God.
+A rule of thumb is to use **solid and highly contrasting colors** while maintaining a good balance between dark and light pixels, but there's no alternative to testing with real devices.
 
 With that in mind, let's cover existing ways people have successfully created artistic codes programmatically.
 
-## Image Techniques
+## Turning An Image Into QR Squares
 
-There is a wide breadth and depth of research into recreating images with QR codes, but they can be broadly categorized into the following categories.
-
-### Overlaying data
+### Overlaying Data Pixels
 
 {
 
@@ -307,9 +290,23 @@ There is a wide breadth and depth of research into recreating images with QR cod
   </div>
 }
 
-### Reverse-engineering data
+## Turning QR Squares Into An Image
 
-These techniques start with the desired output and modify the input data to match. These are basically incompatible with a normal QR code generator and require deep custom logic.
+### Using Errors
+
+Using up error correction capacity is obviously not ideal, but it's also space inefficient. The correction capacity only increases by one byte for every two error correction bytes. And of course, some capacity has to be reserved for actual scanning errors, so the drawable area is quite limited.
+
+The benefit is that the error correction process fixes errors at unknown locations, but what if we know where we want to introduce changes?
+
+### Using Padding
+
+The data of a QR code is made up of message bytes and its corresponding error correction bytes. Any part of the message can be freely set, but changing the message defeats the purpose of a QR code.
+
+Luckily, short messages are padded to fill up the capacity, and the padding can be freely set without changing the decoded content.
+
+### Padding Solving For Fixed Error Correction
+
+Since the error correction is calculated from the message, is there a way to calculate a message based on desired error correction? Yes, because Reed-Solomon codes are Maximum Distance Seperable (MDS) codes. We can solve a linear system to find the padding value that leads to an error correction byte.
 
 {
 
