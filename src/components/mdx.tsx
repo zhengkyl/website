@@ -6,7 +6,7 @@ export function Sa(props: { href?: string; children?: ComponentChildren }) {
     props.href ??
     (typeof props.children === "string" ? props.children : undefined);
   return (
-    <a className="@hover-underline font-semibold" href={url} target="_blank">
+    <a className="@hover-underline font-semibold font-sans text-stone-500" href={url} target="_blank">
       {typeof text === "string" ? text.replace("https://", "") : text}
     </a>
   );
