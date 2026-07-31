@@ -1,7 +1,21 @@
 ---
+import Gallery from "~/content/posts/shakespeares-sonnets/Gallery.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="" description="">
-  <div class="layer-name:(p-2 m-2)"></div>
+<BaseLayout
+  title="Full Gallery: Writing 154 Shakespeare Sonnets With My Left Hand"
+  description="Every day's handwriting from copying Shakespeare's sonnets with my left hand."
+>
+  <div class="max-w-xl m-auto flex flex-col gap-4 py-16">
+    <h1 class="Heading1">Full Gallery</h1>
+    <p>
+      Every day of <a
+        class="@hover-underline font-semibold font-sans text-stone-500"
+        href="/writes/shakespeares-sonnets"
+        >Writing 154 Shakespeare Sonnets With My Left Hand</a
+      >. Click any day to read the sonnet.
+    </p>
+    <Gallery />
+  </div>
 </BaseLayout>

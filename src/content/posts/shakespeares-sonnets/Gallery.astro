@@ -1,0 +1,26 @@
+---
+import { ScrawlGallery } from "./Scrawl";
+
+const texts = Object.values(
+  import.meta.glob("./text/*.txt", {
+    query: "?raw",
+    import: "default",
+    eager: true,
+  }),
+) as string[];
+
+const sonnets = (
+  Object.values(
+    import.meta.glob("./scrawl/*.scrawl", {
+      query: "?url",
+      import: "default",
+      eager: true,
+    }),
+  ) as string[]
+).map((scrawlUrl, i) => ({
+  scrawlUrl,
+  text: texts[i],
+}));
+---
+
+<ScrawlGallery sonnets={sonnets} width={900} height={640} client:visible />

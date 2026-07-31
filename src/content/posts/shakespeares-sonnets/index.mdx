@@ -5,7 +5,8 @@ posted: 2026-03-17
 edited: 2026-07-27
 ---
 
-import { Scrawl, ScrawlGallery } from "~/components/Scrawl";
+import { lettersInText, Scrawl } from "./Scrawl";
+import { WeeklyScrawl } from "./WeeklyScrawl";
 import quickLeft from "./quick-left.scrawl?raw";
 import quickRight from "./quick-right.scrawl?raw";
 
@@ -16,22 +17,44 @@ export const texts = Object.values(
     eager: true,
   }),
 );
-export const sonnets = Object.values(
+
+export const days = Object.values(
+  // only the derived wpm crosses to the client; the stroke data stays here
+  import.meta.glob("./scrawl/*.scrawl", {
+    query: "?raw",
+    import: "default",
+    eager: true,
+  }),
+).map((scrawl, i) => {
+  let totalMs = 0;
+  for (const line of scrawl.split("\n")) {
+    if (!line.trim()) continue;
+    for (const point of line.split(";")) {
+      const dt = Number(point.split(",")[2]);
+      if (!Number.isNaN(dt)) totalMs += dt;
+    }
+  }
+  const wpm = lettersInText(texts[i]) / 5 / (totalMs / 60_000);
+  return { wpm };
+});
+
+export const scrawlUrls = Object.values(
   import.meta.glob("./scrawl/*.scrawl", {
     query: "?url",
     import: "default",
     eager: true,
   }),
-).map((scrawlUrl, i) => ({
-  scrawlUrl,
-  text: texts[i],
-}));
+);
 
-With a few minutes of practice a day, you can pick up any number of strange and useless skills. Like writing with your spare hand.
+export const chosen = [
+  2, 12, 18, 26, 29, 42, 44, 52, 62, 65, 71, 79, 91, 94, 99, 106, 116, 124, 130,
+];
 
-While this was a trial more commonly endured by left-handed children in history books, I, overgrown and right-handed, am here to train my lazy left.
+With a few minutes of practice a day, you can pick up any number of odd skills. This time, I'm learning to write with my spare hand.
 
-By chance, I happened to be in the mood for Shakespeare, who happened to write a training arc's worth of sonnets. They are not all good. Few of them hit like "_Shall I compare thee to a summer's day?_" But one by one, I read them all, and I'd like to show how my writing improved while copying these love poems.
+Unlike those poor left-handed children in history books, I, in the present-day, overgrown and right-handed, will willingly master my lazy left. And what a coincidence! Shakespeare has a training arc's worth of sonnets.
+
+Each of these 14 line love poems take around 10 minutes to copy, which is short enough that I have a chance of perservering each day for the next 5 months. I'm using a drawing tablet and my vibe-coded [writing reanimation tool](https://rescrawl.kylezhe.ng) to record my writing and track my improvement in speed (words per minute) and tidiness (subjective).
 
 Here is my handwriting from March, 17, 2026, the start of this project.
 
@@ -46,15 +69,18 @@ Here is my handwriting from March, 17, 2026, the start of this project.
 </div>
 <Scrawl data={quickLeft} width={800} height={100} client:visible />
 
-For your viewing pleasure, I'm using a drawing tablet and my vibe-coded writing reanimation tool ([https://rescrawl.kylezhe.ng](https://rescrawl.kylezhe.ng)).
+There's a [full gallery](/writes/shakespeares-sonnets/gallery) of all 154 days, but the condensed version is below. See my speed each day and my favorite sonnet from each week.
 
-## Gallery
+## Week by week
 
-<ScrawlGallery sonnets={sonnets} width={900} height={640} client:visible />
-
-## Methodology
-
-For the WPM calculations, a word is 5 non-space characters, and pauses longer than 2 seconds are excluded from the total time.
+<WeeklyScrawl
+  days={days}
+  scrawlUrls={scrawlUrls}
+  chosen={chosen}
+  width={900}
+  height={640}
+  client:visible
+/>
 
 ## Works Cited
 
@@ -65,8 +91,8 @@ For the WPM calculations, a word is 5 non-space characters, and pauses longer th
   https://www.folger.edu/explore/shakespeares-works/shakespeares-sonnets/
 </small>
 
-<small>
-  \*I naively referenced the Poetry Foundation website to write the first three
-  sonnets, which has different punctuation. For consistency however, all text
-  shown uses The Folger Shakespeare version.
-</small>
+## Misc
+
+For the words per minute calculation, words are 5 letters and pauses longer than 2 seconds are excluded.
+
+I referenced the Poetry Foundation website to write the first three sonnets, which has different punctuation. For consistency however, all text, and all other writing shown uses The Folger Shakespeare version.

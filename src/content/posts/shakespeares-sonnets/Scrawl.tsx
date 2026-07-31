@@ -1,6 +1,6 @@
 import { createContext } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { CloseIcon, PauseIcon, PlayIcon } from "./icons/controls";
+import { CloseIcon, PauseIcon, PlayIcon } from "~/components/icons/controls";
 
 interface AbsPoint {
   x: number;
@@ -22,6 +22,9 @@ type Props = {
   height: number;
   // when present, the scrawl follows this clock and renders no controls
   timeline?: Timeline;
+  // fill the parent's height instead of its width, deriving the width from
+  // width/height; the parent must have a definite height
+  fitHeight?: boolean;
 };
 
 function parseScrawl(data: string): AbsPoint[] {
@@ -179,13 +182,13 @@ function createRenderer(
   };
 }
 
-export function Scrawl({ data, width, height, timeline }: Props) {
+export function Scrawl({ data, width, height, timeline, fitHeight }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const animRef = useRef<number>(0);
   const currentTimeRef = useRef<number>(0);
-  const renderRef = useRef<(t: number) => void>(() => {});
+  const renderRef = useRef<(t: number) => void>(() => { });
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -309,32 +312,48 @@ export function Scrawl({ data, width, height, timeline }: Props) {
     renderRef.current(t);
   };
 
-  return (
-    <div ref={rootRef}>
+  const parchment = (
+    <div
+      class="relative drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
+      style={{ width: `${widthPct}%` }}
+    >
       <div
-        class="flex items-center justify-center"
-        style={{ aspectRatio: `${width}/${height}` }}
-      >
-        <div
-          class="relative drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
-          style={{ width: `${widthPct}%` }}
-        >
+        class="absolute inset-0 bg-[#ffe7ba]"
+        style={{
+          clipPath: `url(#${tornClipId(variant)})`,
+          filter: `url(#${paperFilterId(variant)})`,
+        }}
+      />
+      <canvas
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        class="relative block w-full h-auto shadow-[inset_0_0_32px_rgba(146,103,40,0.18)]"
+        style={{ clipPath: `url(#${tornClipId(variant)})` }}
+      />
+    </div>
+  );
+
+  const aspectRatio = `${width}/${height}`;
+
+  return (
+    <div ref={rootRef} class={fitHeight ? "h-full flex flex-col" : undefined}>
+      {fitHeight ? (
+        // the inner box takes its height from the row and its width from the
+        // aspect ratio, so a tall scrawl narrows instead of stretching the row
+        <div class="flex-1 min-h-0 flex items-center justify-center">
           <div
-            class="absolute inset-0 bg-[#ffe7ba]"
-            style={{
-              clipPath: `url(#${tornClipId(variant)})`,
-              filter: `url(#${paperFilterId(variant)})`,
-            }}
-          />
-          <canvas
-            ref={canvasRef}
-            width={canvasWidth}
-            height={canvasHeight}
-            class="relative block w-full h-auto shadow-[inset_0_0_32px_rgba(146,103,40,0.18)]"
-            style={{ clipPath: `url(#${tornClipId(variant)})` }}
-          />
+            class="h-full max-w-full flex items-center justify-center"
+            style={{ aspectRatio }}
+          >
+            {parchment}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div class="flex items-center justify-center" style={{ aspectRatio }}>
+          {parchment}
+        </div>
+      )}
       {!timeline && (
         <div
           class="flex items-center gap-2 p-2 pt-0 cursor-default"
@@ -369,6 +388,12 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
+// one sonnet a day, starting March 17, 2026
+export const sonnetDate = (index: number) => new Date(2026, 2, 17 + index);
+
+// from sonnet 29 on I stopped using lined "paper", and the writing runs taller
+export const UNLINED_INDEX = 28;
+
 function formatDuration(ms: number): string {
   // nearest 10s
   const s = Math.round(ms / 10000) * 10;
@@ -379,9 +404,21 @@ function formatDuration(ms: number): string {
   return `~${m}m ${rem}s`;
 }
 
+const letterRe = /\p{L}/u
+
+export function lettersInText(text: string) {
+  let count = 0
+  for (const c of text) {
+    if (letterRe.test(c)) {
+      count++
+    }
+  }
+  return count
+}
+
 function formatWpm(text: string, ms: number) {
   return (
-    Math.round((text.replace(/\s/g, "").length / 5 / (ms / 60000)) * 10) / 10
+    Math.round((lettersInText(text) / 5 / (ms / 60000)) * 10) / 10
   );
 }
 
@@ -468,7 +505,7 @@ function ScrawlGridSection({
           >
             <div class="p-4 pb-0">
               <div class="text-xs leading-none text-gray-500">
-                {dateFormat.format(new Date(2026, 2, 17 + globalI))}
+                {dateFormat.format(sonnetDate(globalI))}
               </div>
               <div class="flex justify-between items-baseline">
                 <div class="font-bold">Sonnet {globalI + 1}</div>
@@ -483,7 +520,7 @@ function ScrawlGridSection({
               <Scrawl
                 data={dataRef.current[globalI]}
                 width={width}
-                height={height + (globalI >= 28 ? 100 : 0)}
+                height={height + (globalI >= UNLINED_INDEX ? 100 : 0)}
                 timeline={timeline}
               />
             ) : (
@@ -640,7 +677,7 @@ export function ScrawlGallery({
             <div class="pl-2 flex justify-between items-baseline">
               <div>
                 <div class="text-xs leading-none text-gray-500">
-                  {dateFormat.format(new Date(2026, 2, 17 + activeIndex))}
+                  {dateFormat.format(sonnetDate(activeIndex))}
                 </div>
                 <h2 class="font-bold">Sonnet {activeIndex + 1}</h2>
               </div>
@@ -652,7 +689,7 @@ export function ScrawlGallery({
               <Scrawl
                 data={dataRef.current[activeIndex]}
                 width={width}
-                height={height + (activeIndex >= 28 ? 100 : 0)}
+                height={height + (activeIndex >= UNLINED_INDEX ? 100 : 0)}
               />
               <pre class="text-xs/6 font-serif whitespace-pre-wrap tab-4 mx-auto">
                 {sonnets[activeIndex].text}
@@ -675,9 +712,15 @@ export function ScrawlGallery({
       {/* the bar below sticks to the viewport only while this wrapper (the
           gallery) is on screen, so it stays out of the surrounding prose */}
       <div>
-        <ScrawlGridSection sonnets={sonnets.slice(0, 28)} offset={0} />
+        <ScrawlGridSection
+          sonnets={sonnets.slice(0, UNLINED_INDEX)}
+          offset={0}
+        />
         <p class="my-4">At this point I stopped using lined "paper".</p>
-        <ScrawlGridSection sonnets={sonnets.slice(28)} offset={28} />
+        <ScrawlGridSection
+          sonnets={sonnets.slice(UNLINED_INDEX)}
+          offset={UNLINED_INDEX}
+        />
         <div class="sticky bottom-0 z-10 flex items-center gap-2 p-2 bg-orange-50 border-t border-orange-200">
           <button
             onClick={handlePlay}
