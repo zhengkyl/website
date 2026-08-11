@@ -5,10 +5,11 @@ posted: 2026-03-17
 edited: 2026-07-27
 ---
 
-import { lettersInText, Scrawl } from "./Scrawl";
-import { WeeklyScrawl } from "./WeeklyScrawl";
+import { LineChart } from "./LineChart";
 import quickLeft from "./quick-left.scrawl?raw";
 import quickRight from "./quick-right.scrawl?raw";
+import { lettersInText, Scrawl } from "./Scrawl";
+import { WeeklyScrawl } from "./WeeklyScrawl";
 
 export const texts = Object.values(
   import.meta.glob("./text/*.txt", {
@@ -19,7 +20,7 @@ export const texts = Object.values(
 );
 
 export const days = Object.values(
-  // only the derived wpm crosses to the client; the stroke data stays here
+  // only the derived wpm and duration cross to the client; the stroke data stays here
   import.meta.glob("./scrawl/*.scrawl", {
     query: "?raw",
     import: "default",
@@ -34,8 +35,8 @@ export const days = Object.values(
       if (!Number.isNaN(dt)) totalMs += dt;
     }
   }
-  const wpm = lettersInText(texts[i]) / 5 / (totalMs / 60_000);
-  return { wpm };
+  const minutes = totalMs / 60_000;
+  return { wpm: lettersInText(texts[i]) / 5 / minutes, minutes };
 });
 
 export const scrawlUrls = Object.values(
@@ -48,16 +49,16 @@ export const scrawlUrls = Object.values(
 
 export const chosen = [
   2, 12, 18, 26, 29, 42, 44, 52, 62, 65, 71, 79, 91, 94, 99, 106, 116, 124, 130,
-  135,
+  135, 145,
 ];
 
 With a few minutes of practice a day, you can pick up any number of odd skills. This time, I'm learning to write with my spare hand.
 
-Unlike those poor left-handed children in history books, I, in the present-day, overgrown and right-handed, will willingly master my lazy left. And what a coincidence! Shakespeare has a training arc's worth of sonnets.
+Unlike those poor left-handed children in history books, I, in the present-day, overgrown and right-handed, do this of my own volition and I plan to enjoy it. And what a coincidence! Shakespeare has a training arc's worth of sonnets.
 
 Each of these 14 line love poems take around 10 minutes to copy, which is short enough that I have a chance of perservering each day for the next 5 months. I'm using a drawing tablet and my vibe-coded [writing reanimation tool](https://rescrawl.kylezhe.ng) to record my writing and track my improvement in speed (words per minute) and tidiness (subjective).
 
-Here is my handwriting from March, 17, 2026, the start of this project.
+Here is my handwriting from March, 17, 2026, writing the same phrase at a comfortable speed.
 
 <div class="flex justify-between text-sm">
   <span class="font-bold">Right hand</span>
@@ -80,6 +81,27 @@ There's a [full gallery](/writes/shakespeares-sonnets/gallery) of all 154 days, 
   chosen={chosen}
   width={900}
   height={640}
+  client:visible
+/>
+
+## Day by day
+
+<LineChart
+  title="Speed (words per minute)"
+  values={days.map((d) => d.wpm)}
+  max={24}
+  step={6}
+  format="wpm"
+  reference={{ value: 21.8, label: "21.8 right hand" }}
+  client:visible
+/>
+
+<LineChart
+  title="Time spent writing (minutes)"
+  values={days.map((d) => d.minutes)}
+  max={15}
+  step={5}
+  format="duration"
   client:visible
 />
 
