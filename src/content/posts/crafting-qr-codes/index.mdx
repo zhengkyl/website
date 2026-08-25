@@ -302,8 +302,10 @@ Instead of a generating QR code beforehand and then combining it with an image, 
   ### Extended Padding Abuse / Padding Solving
 
   It's possible to use our control over the padding bytes to also control the error correction bytes. If there are `p` padding bytes, then a mix of up to `p` padding or error correction can be arbitrarily set.
-  
-  QR codes use Reed-Solomon error correction. Reed-Solomon codes are [Maximum Distance Seperable](https://en.wikipedia.org/wiki/Singleton_bound#MDS_codes), meaning they have the optimal error correction for a given size. If there are `k` message symbols in a code and `r` error correction symbols, then **any** `k` symbols are enough to decode the original message. Since we don't want to change the message content, the true limit is `p` padding bytes.
+
+  <div class="p-2">
+  QR codes use Reed-Solomon error correction. Reed-Solomon codes are [Maximum Distance Seperable](https://en.wikipedia.org/wiki/Singleton_bound#MDS_codes), meaning they have the optimal error correction for a given size. If there are `k` message symbols in a code and `r` error correction symbols, then **any** `k` symbols at known positions are enough to recover the remaining `r` symbols. (Compare this to error correction which can recover `r/2` symbols at unknown locations). Since we don't want to change the message content, the true limit is `p` padding bytes.
+  </div>
   
   ### Abusing Error Correction
   
