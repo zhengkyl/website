@@ -4,7 +4,7 @@ subtitle: A deep dive into QR code art
 description: An interactive explaination of how QR codes work and techniques for rendering artistic QR codes
 tags: ["recommended", "the arts", "the sciences"]
 posted: 2024-09-27
-edited: 2026-06-13
+edited: 2026-08-25
 image: crafting.jpg
 ---
 
@@ -244,7 +244,7 @@ A rule of thumb is to use **solid and highly contrasting colors** while maintain
 
 With that in mind, let's cover existing ways people have successfully created artistic codes programmatically.
 
-## Turning An Image Into QR Squares
+## Combining An Existing QR Code With An Image
 
 ### Overlaying Data Pixels
 
@@ -289,23 +289,28 @@ With that in mind, let's cover existing ways people have successfully created ar
   </div>
 }
 
-## Turning QR Squares Into An Image
+## Creating A QR Code With An Intrinsic Image
 
-### Using Errors
+Instead of a generating QR code beforehand and then combining it with an image, is it possible to manipulate the data to make the image appear in the data itself? Yes, using short messages and padding with arbitrary desired data.
 
-Using up error correction capacity is obviously not ideal, but it's also space inefficient. The correction capacity only increases by one byte for every two error correction bytes. And of course, some capacity has to be reserved for actual scanning errors, so the drawable area is quite limited.
+<details>
+  <summary>See Longer Explanation</summary>
+  
+  ### Abusing Padding
 
-The benefit is that the error correction process fixes errors at unknown locations, but what if we know where we want to introduce changes?
+  For a given size QR code, there is a fixed amount of space for the message and error correction. If the message is too short, it's padded with arbitrary data. Setting this padding gives you complete control over the middle section of a QR code.
+  
+  ### Extended Padding Abuse / Padding Solving
 
-### Using Padding
+  It's possible to use our control over the padding bytes to also control the error correction bytes. If there are `p` padding bytes, then a mix of up to `p` padding or error correction can be arbitrarily set.
+  
+  QR codes use Reed-Solomon error correction. Reed-Solomon codes are [Maximum Distance Seperable](https://en.wikipedia.org/wiki/Singleton_bound#MDS_codes), meaning they have the optimal error correction for a given size. If there are `k` message symbols in a code and `r` error correction symbols, then **any** `k` symbols are enough to decode the original message. Since we don't want to change the message content, the true limit is `p` padding bytes.
+  
+  ### Abusing Error Correction
+  
+  Every two error correction bytes provides enough information to fix one erroneous byte at a unknown location. Using this naively is the simplest type of QR art; just alter any pixels you need within the limit. Compared to the methods above, this is space inefficient; there's 2 bytes of overhead for every byte changed, but there is no restriction on where pixels can be changed. This is the only way to change pixels corresponding to the actual message content. 
 
-The data of a QR code is made up of message bytes and its corresponding error correction bytes. Any part of the message can be freely set, but changing the message defeats the purpose of a QR code.
-
-Luckily, short messages are padded to fill up the capacity, and the padding can be freely set without changing the decoded content.
-
-### Padding Solving For Fixed Error Correction
-
-Since the error correction is calculated from the message, is there a way to calculate a message based on desired error correction? Yes, because Reed-Solomon codes are Maximum Distance Seperable (MDS) codes. We can solve a linear system to find the padding value that leads to an error correction byte.
+</details>
 
 {
 

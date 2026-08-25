@@ -264,7 +264,7 @@ export function QrTutorial() {
             <input
               className="block w-full"
               value={version}
-              onChange={(e) => setVersion(e.currentTarget.valueAsNumber)}
+              onInput={(e) => setVersion(e.currentTarget.valueAsNumber)}
               type="range"
               min="1"
               max="40"
@@ -328,7 +328,7 @@ export function QrTutorial() {
             <input
               className="block w-full"
               value={version}
-              onChange={(e) => setVersion(e.currentTarget.valueAsNumber)}
+              onInput={(e) => setVersion(e.currentTarget.valueAsNumber)}
               type="range"
               min="1"
               max="40"
@@ -348,7 +348,7 @@ export function QrTutorial() {
             className="block border w-full p-2 my-2"
             type="text"
             value={text}
-            onChange={(e) => setText(e.currentTarget.value)}
+            onInput={(e) => setText(e.currentTarget.value)}
           />
         </div>
         <div
@@ -420,7 +420,7 @@ export function QrTutorial() {
             <input
               className="block w-full"
               value={version}
-              onChange={(e) => setVersion(e.currentTarget.valueAsNumber)}
+              onInput={(e) => setVersion(e.currentTarget.valueAsNumber)}
               type="range"
               min="1"
               max="40"
@@ -430,7 +430,7 @@ export function QrTutorial() {
             className="block border w-full p-2 my-2"
             type="text"
             value={text}
-            onChange={(e) => setText(e.currentTarget.value)}
+            onInput={(e) => setText(e.currentTarget.value)}
           />
           <small>
             THIS MAY LOOK VERY WEIRD. After the certain size, the data bytes are
@@ -490,7 +490,7 @@ export function QrTutorial() {
             <input
               className="block w-full"
               value={zRot}
-              onChange={(e) => setZRot(e.currentTarget.valueAsNumber)}
+              onInput={(e) => setZRot(e.currentTarget.valueAsNumber)}
               type="range"
               step="15"
               min="-180"
@@ -502,7 +502,7 @@ export function QrTutorial() {
               className="w-5 h-5"
               type="checkbox"
               checked={perspective}
-              onChange={(e) => setPerspective(e.currentTarget.checked)}
+              onInput={(e) => setPerspective(e.currentTarget.checked)}
             />
             Perspective
           </label>
@@ -511,7 +511,7 @@ export function QrTutorial() {
               className="w-5 h-5"
               type="checkbox"
               checked={mirror}
-              onChange={(e) => setMirror(e.currentTarget.checked)}
+              onInput={(e) => setMirror(e.currentTarget.checked)}
             />
             Mirror
           </label>
