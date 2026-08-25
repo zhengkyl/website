@@ -1,13 +1,7 @@
-"use client";
-
-import init, { ECL, generate, Mask, Mode, QrOptions, Version } from "fuqr";
-import wasmUrl from 'fuqr/fuqr_bg.wasm?url';
+import { type Ecl, generate, type Mask } from "fuqr";
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
-
-let globalInitStarted = false;
-let globalInitDone = false;
 
 export function QrTutorial() {
   const scrollHighlight = useRef<HTMLDivElement>(null!);
@@ -15,8 +9,8 @@ export function QrTutorial() {
 
   const [text, setText] = useState("hello there");
   const [version, setVersion] = useState(2);
-  const [mask, setMask] = useState(Mask.M0);
-  const [ecl, setECL] = useState(ECL.Low);
+  const [mask, setMask] = useState(0);
+  const [ecl, setECL] = useState(0);
 
   const [finderShape, setFinderShape] =
     useState<keyof typeof FinderShapes>("Perfect");
@@ -29,23 +23,11 @@ export function QrTutorial() {
   const [invert, setInvert] = useState(false);
   const [mirror, setMirror] = useState(false);
 
-  const [initDone, setInitDone] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // we need globals to track init status after unmounting
-    // but the first render sets up refs, which we NEED in QrCanvas
-    // so we always setInitDone() and do everything on second render
-
-    if (!globalInitStarted) {
-      globalInitStarted = true;
-      init({module_or_path: wasmUrl}).then(() => {
-        setInitDone(true);
-        globalInitDone = true;
-      });
-    } else if (globalInitDone) {
-      setInitDone(true);
-    }
-  }, []);
+  // QrCanvas draws during render, so it needs its canvas refs attached.
+  // That's only true from the second render on, hence this gate.
+  useEffect(() => setMounted(true), []);
 
   const observer = useRef<IntersectionObserver>(null!);
   const regions = useRef<HTMLDivElement[]>([]);
@@ -102,7 +84,7 @@ export function QrTutorial() {
   const prevText = useRef(text);
 
   if (
-    initDone &&
+    mounted &&
     (qrCode.current == null ||
       text !== prevText.current ||
       version !== qrCode.current.version ||
@@ -110,15 +92,12 @@ export function QrTutorial() {
       mask !== qrCode.current.mask)
   ) {
     try {
-      qrCode.current = generate(
-        text,
-        new QrOptions()
-          .mode(Mode.Byte)
-          .min_ecl(ecl)
-          .strict_ecl(true)
-          .min_version(new Version(version))
-          .mask(mask),
-      );
+      qrCode.current = generate(text, {
+        minEcl: ecl as Ecl,
+        maxEcl: ecl as Ecl,
+        minVersion: version,
+        mask: mask as Mask,
+      });
       prevText.current = text;
       setVersion(qrCode.current.version);
     } catch (e) {

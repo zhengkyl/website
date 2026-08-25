@@ -18,8 +18,8 @@ importers:
         specifier: ^5.16.15
         version: 5.16.15(jiti@2.6.1)(rollup@4.56.0)(typescript@5.9.3)
       fuqr:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.2.0
+        version: 2.2.0
       oxfmt:
         specifier: ^0.26.0
         version: 0.26.0
@@ -1431,8 +1431,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  fuqr@1.0.0:
-    resolution: {integrity: sha512-eQS/I9U1gPWUKJjoqDlwCCZws7HolcVvIOm4pxq7VaX3tiaVoVjFhOkz9zsQzBTfykzB4GlSwGWfgSdtIN1/pA==}
+  fuqr@2.2.0:
+    resolution: {integrity: sha512-ObVfTHR+vSHnT42WoRvQun16BWWljPpzHVdYZaMCWdRESbPWnkO/UT97YQKeirqFzNVe1zvTYe2IOE+mQm247Q==}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -3833,7 +3833,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  fuqr@1.0.0: {}
+  fuqr@2.2.0: {}
 
   gensync@1.0.0-beta.2: {}
 

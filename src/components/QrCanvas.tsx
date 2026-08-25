@@ -22,7 +22,13 @@ export function QrCanvas(props: Props) {
   const prevSection = useRef(props.section);
   let size = 1;
 
-  if (props.qrCode != null) {
+  // refs are null on the first render (and during SSR), and this draws
+  // during render, so there's nothing to draw into yet
+  if (
+    props.qrCode != null &&
+    canvasA.current != null &&
+    canvasB.current != null
+  ) {
     const animate =
       props.section !== prevSection.current || props.section === "finder";
 

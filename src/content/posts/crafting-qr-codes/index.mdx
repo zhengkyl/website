@@ -87,10 +87,9 @@ Of course, regular black and white QR codes are just the tip of the iceberg.
 
 Many people want something personalized and on-brand, which is easily done by slapping a logo right in the middle. This is possible because QR codes, like CDs and DVDs, use Reed-Solomon error correction to recover damaged information.
 
-While this can be executed with taste, it's most often done lazily to poor effect.
+This can be executed with taste; it can also be done lazily.
 
 {
-
   <div className="grid cols-2 sm:cols-4 gap-2">
     <Image className="w-full" src={logoInMcdonaldsImg} alt="mcdonalds app"/>
     <Image className="w-full" src={logoSfUberImg} alt="uber ad"/>
@@ -327,22 +326,21 @@ Instead of a generating QR code beforehand and then combining it with an image, 
       Created using <Sa href="https://my-qr.art/">MY-QR.ART</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      This site lets you draw the desired output data, which can be directly interpreted as part of the input text. The first half of the text is the url to a link redirect service and the random characters that follow act as a unique key. For details, see <a href="https://marienraat.nl/hacking-qr-codes.html">Hacking QR code design</a>.
+      This site lets you draw the desired output data, which can be directly interpreted as part of the input text. The first half of the text is the url to a link redirect service and the random characters that follow act as a unique key. For details, see <Sa href="https://marienraat.nl/hacking-qr-codes.html">Hacking QR code design</Sa>.
     </p>
     <div className="font-thin text-xs text-center">
       <Image className="w-full" src={mikeQrpictureImg} alt="mike wazowski qr picture"/>
       Created using <Sa href="https://qrpicture.com">QRpicture</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      Here, the data pixels match an image, but they are not part of the decoded message. In other words, they are changing the padding bytes. <a href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See their HN post</a>. <br/> (This padding manipulation method was first described in <a href="https://www.ieice.org/publications/conferences/summary.php?id=FIT0000009019&expandable=2&ConfCd=F&session_num=4V&lecture_number=O-006&year=2011&conf_type=F">Expansion of Image Displayable Area in Design QR Code
-and Its Applications, 2011</a>.)
+      Here, the data pixels match an image, but they are not part of the decoded message. In other words, they are changing the padding bytes. <Sa href="https://xyzzy.github.io/2020/08/20/Show-HN-Photo-Realistic-QR-Codes.html">See their HN post</Sa>.
     </p>
     <div className="font-thin text-xs text-center">
       <Image className="w-full" src={imageReverseBadAppleImg} alt="reverse bad apple video qr code"/>
       <Sa href="https://www.youtube.com/watch?v=dWkTWwRKUZ4">Bad Apple!! on a QR Code Generator</Sa>
     </div>
     <p className="sm:col-span-3 pb-8 sm:py-2">
-      In terms of animation, reverse-engineering the data for every "frame" is a bit more tedious, and the QR code is unlikely to be scannable. See their <a href="https://www.youtube.com/watch?v=R4p2OcRmTg4">behind the scenes video</a> to see how they approached it.
+      In terms of animation, reverse-engineering the data for every "frame" is a bit more tedious, and the QR code is unlikely to be scannable. See their <Sa href="https://www.youtube.com/watch?v=R4p2OcRmTg4">behind the scenes video</Sa> to see how they approached it.
     </p>
   </div>
 }
