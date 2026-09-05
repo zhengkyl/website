@@ -31,29 +31,18 @@ body {
     translate 200ms ease-out,
     scale 200ms ease-out;
 }
+
 .drop-cap {
+  display: inline;
   float: left;
-  /* margin: 0.05em 0.15em 0 0; */
-  margin-right: 4px;
-  height: 3rem; /* 2 * 1.5 */
-  width: 3rem;
+  inline-size: 3em;
+  block-size: 3em;
+  margin-inline-end: 0.2em;
+  user-select: none;
 }
-/* chrome is weird with ::first-letter*/
-article > p:first-of-type {
-  cursor: text;
-}
-article > p:first-of-type::first-letter {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 0.7;
-  margin-right: 6px;
-  float: left;
-  padding: 0.5rem;
-  background-color: yellow;
-  box-shadow: 1px 1px black;
-  /* ff no lineheight + differs upper/lowercase */
-  text-transform: uppercase;
+
+p:has(> .drop-cap)::first-letter {
+  font-size: 0;
 }
 
 /* Inline code */

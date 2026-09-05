@@ -65,7 +65,10 @@ import stencil0Img from "./stencil_0.jpg";
 import stencil1Img from "./stencil_1.jpg";
 import stencil2Img from "./stencil_2.jpg";
 
-Nobody willingly goes out of their way to scan a QR code. Yet they have infested the world, because it's the simplest way to visually share a URL. On signs, advertisements, and packaging of all sorts; if you look around and try to notice, it's hard to stop noticing.
+import DropCap from "~/components/DropCap.astro";
+
+{/* prettier-ignore */}
+<DropCap><g fill="currentColor"><path d="M5 6v34h10l1 21-11 1v34h35l-2-35H28l-2-21h7l37 54h10l9-1-5-52h12L95 6H62l-1 35h15l-4 33-33-42-1-26zm85 6v24l-22-1V13zm-58 0v22H11l1-21zm52 5-11 1 1 11h11zm-57 1H16l1 12h11zm5 49 2 22-22 1-1-22zm-4 5-12 1 1 12h12z"/><path d="M43 9v6h5v6h-5v6h6v6h5l1-7h-5v-5h9v-5l-5-1 1-7-7 1z"/><path d="M63 46v-4h-4v-5h-4v5l-5-1v5z"/><path d="M88 45v5h4v10l5-1v-9h-5v-5z"/><path d="M7 48h3v6H6Z"/><path d="M29 45v5l5-1-1-4z"/><path d="m48 66 1 6-4 1v4h9l1 5-5 1 1 5-6 1-1-7h5l-1-4-6 1-1-12z"/><path d="m56 82 1 12h6l-1-11Z"/><path d="M62 51v6l4-1v6h4v-6h-4v-5z"/><path d="M89 76h9l-1 5h-4l1 7-5-1z"/><path d="M88 63h9v6h-9z"/><path d="M29 54h10v4H29z"/></g></DropCap>Nobody willingly goes out of their way to scan a QR code. Yet they have infested the world, because it's the simplest way to visually share a URL. On signs, advertisements, and packaging of all sorts; if you look around and try to notice, it's hard to stop noticing.
 
 {
 
@@ -90,6 +93,7 @@ Many people want something personalized and on-brand, which is easily done by sl
 This can be executed with taste; it can also be done lazily.
 
 {
+
   <div className="grid cols-2 sm:cols-4 gap-2">
     <Image className="w-full" src={logoInMcdonaldsImg} alt="mcdonalds app"/>
     <Image className="w-full" src={logoSfUberImg} alt="uber ad"/>
@@ -294,22 +298,28 @@ Instead of a generating QR code beforehand and then combining it with an image, 
 
 <details>
   <summary>See Longer Explanation</summary>
-  
-  ### Abusing Padding
 
-  For a given size QR code, there is a fixed amount of space for the message and error correction. If the message is too short, it's padded with arbitrary data. Setting this padding gives you complete control over the middle section of a QR code.
-  
-  ### Extended Padding Abuse / Padding Solving
+### Abusing Padding
 
-  It's possible to use our control over the padding bytes to also control the error correction bytes. If there are `p` padding bytes, then a mix of up to `p` padding or error correction can be arbitrarily set.
+For a given size QR code, there is a fixed amount of space for the message and error correction. If the message is too short, it's padded with arbitrary data. Setting this padding gives you complete control over the middle section of a QR code.
 
-  <div class="p-2">
-  QR codes use Reed-Solomon error correction. Reed-Solomon codes are [Maximum Distance Seperable](https://en.wikipedia.org/wiki/Singleton_bound#MDS_codes), meaning they have the optimal error correction for a given size. If there are `k` message symbols in a code and `r` error correction symbols, then **any** `k` symbols at known positions are enough to recover the remaining `r` symbols. (Compare this to error correction which can recover `r/2` symbols at unknown locations). Since we don't want to change the message content, the true limit is `p` padding bytes.
-  </div>
-  
-  ### Abusing Error Correction
-  
-  Every two error correction bytes provides enough information to fix one erroneous byte at a unknown location. Using this naively is the simplest type of QR art; just alter any pixels you need within the limit. Compared to the methods above, this is space inefficient; there's 2 bytes of overhead for every byte changed, but there is no restriction on where pixels can be changed. This is the only way to change pixels corresponding to the actual message content. 
+### Extended Padding Abuse / Padding Solving
+
+It's possible to use our control over the padding bytes to also control the error correction bytes. If there are `p` padding bytes, then a mix of up to `p` padding or error correction can be arbitrarily set.
+
+<div class="p-2">
+  QR codes use Reed-Solomon error correction. Reed-Solomon codes are [Maximum
+  Distance Seperable](https://en.wikipedia.org/wiki/Singleton_bound#MDS_codes),
+  meaning they have the optimal error correction for a given size. If there are
+  `k` message symbols in a code and `r` error correction symbols, then **any**
+  `k` symbols at known positions are enough to recover the remaining `r`
+  symbols. (Compare this to error correction which can recover `r/2` symbols at
+  unknown locations). Since we don't want to change the message content, the
+  true limit is `p` padding bytes.
+</div>
+### Abusing Error Correction
+
+Every two error correction bytes provides enough information to fix one erroneous byte at a unknown location. Using this naively is the simplest type of QR art; just alter any pixels you need within the limit. Compared to the methods above, this is space inefficient; there's 2 bytes of overhead for every byte changed, but there is no restriction on where pixels can be changed. This is the only way to change pixels corresponding to the actual message content.
 
 </details>
 
