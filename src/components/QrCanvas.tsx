@@ -1,3 +1,13 @@
+import {
+  ByteEncoder,
+  ByteMode,
+  iterateMostlyDataModules,
+  MASKERS,
+  Module,
+  NUM_DATA_BITS,
+  type QrCode,
+} from "furious-qr";
+import { buildBlueprint } from "furious-qr/extras/blueprint";
 import { useRef } from "preact/hooks";
 
 type Props = {
@@ -7,12 +17,28 @@ type Props = {
   showZigzag: boolean;
   showBytes: boolean;
   text: string;
-  qrCode: any;
+  qrCode: QrCode;
 };
 
 const margin = 1;
 
 export const PALETTE = ["#ffe7e6", "#f1b858", "#21a0c0", "#6d034e"];
+
+const focusON = "#7f1d1d";
+const focusOFF = "#fee2e2";
+
+const fgColor = "#000";
+const bgColor = "#fff";
+const gray = "#ccc";
+
+// sections that highlight every module with a flag
+const HIGHLIGHT: Record<string, number> = {
+  alignment: Module.ALIGNMENT,
+  timing: Module.TIMING,
+  format: Module.FORMAT,
+  version: Module.VERSION,
+  data: Module.DATA,
+};
 
 export function QrCanvas(props: Props) {
   const canvasA = useRef<HTMLCanvasElement>(null);
@@ -41,359 +67,10 @@ export function QrCanvas(props: Props) {
     prevCanvas.style.zIndex = "-1";
     nextCanvas.style.zIndex = "1";
 
-    const { matrix, version, ecl, mask } = props.qrCode;
-    const ctx = nextCanvas.getContext("2d")!;
-    const qrWidth = version * 4 + 17;
-
-    size = qrWidth + 2 * margin;
-    ctx.canvas.width = size;
-    ctx.canvas.height = size;
-
-    const focusON = "#7f1d1d";
-    const focusOFF = "#fee2e2";
-
-    const fgColor = "#000";
-    const bgColor = "#fff";
-    const gray = "#ccc";
-
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, size, size);
-
-    switch (props.section) {
-      case "finder":
-        if (props.finderShape === "Perfect") {
-          ctx.fillStyle = focusOFF;
-          ctx.fillRect(margin, margin, 7, 7);
-          ctx.fillRect(margin + qrWidth - 7, margin, 7, 7);
-          ctx.fillRect(margin, margin + qrWidth - 7, 7, 7);
-          ctx.fillStyle = focusON;
-          renderFinder(ctx, props.finderShape, qrWidth);
-          ctx.fillStyle = gray;
-        } else {
-          ctx.fillStyle = fgColor;
-          renderFinder(ctx, props.finderShape, qrWidth);
-        }
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
-            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "alignment":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.ALIGNMENT) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "timing":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.TIMING) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "no-alignment-timing":
-        ctx.fillStyle = fgColor;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.TIMING) {
-              ctx.fillStyle = focusOFF;
-            } else if (
-              module & Module.ALIGNMENT &&
-              (!props.brap || x < qrWidth - 9 || y < qrWidth - 9)
-            ) {
-              ctx.fillStyle = focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = fgColor;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "format":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.FORMAT) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "version":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.VERSION) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "data":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) {
-              ctx.fillStyle = module & Module.ON ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      case "zigzag": {
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) continue;
-            if (!(module & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-
-        const eccEnd = (NUM_DATA_MODULES[version] >> 3) * 8;
-
-        let i = 0;
-        let start = qrWidth - 1;
-        let end = -1;
-        let inc = -1;
-
-        const colors = props.showBytes ? PALETTE : [focusOFF];
-        const endColor = "black";
-        ctx.fillStyle = colors[0];
-        for (let x = qrWidth - 1; x > 0; x -= 2) {
-          if (x === 6) {
-            x -= 1;
-          }
-          for (let y = start; y !== end; y += inc) {
-            if (matrix[y * qrWidth + x] & Module.DATA) {
-              if (i % 8 === 0) {
-                ctx.fillStyle =
-                  i < eccEnd
-                    ? colors[Math.floor(i / 8) % colors.length]
-                    : endColor;
-              }
-              ctx.fillRect(x + margin, y + margin, 1, 1);
-              i++;
-            }
-            if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-              if (i % 8 === 0) {
-                ctx.fillStyle =
-                  i < eccEnd
-                    ? colors[Math.floor(i / 8) % colors.length]
-                    : endColor;
-              }
-              ctx.fillRect(x - 1 + margin, y + margin, 1, 1);
-              i++;
-            }
-          }
-          start += inc * (qrWidth - 1);
-          end -= inc * (qrWidth + 1);
-          inc *= -1;
-        }
-        break;
-      }
-      case "codewords":
-      // INTENTIONAL FALL THROUGH
-      case "breakdown":
-      // INTENTIONAL FALL THROUGH
-      case "encoding":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) continue;
-            if (!(module & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-
-        // -- This section copied from fuqr -- //
-
-        const codewords = NUM_DATA_MODULES[version] >> 3;
-        const remainder_bits = NUM_DATA_MODULES[version] % 8;
-
-        const num_ec_codewords = NUM_EC_CODEWORDS[version][ecl];
-        const num_data_codewords = codewords - num_ec_codewords;
-
-        const blocks = NUM_BLOCKS[version][ecl];
-        const group_2_blocks = codewords % blocks;
-        const group_1_blocks = blocks - group_2_blocks;
-
-        const data_per_g1_block = Math.floor(num_data_codewords / blocks);
-        const data_per_g2_block = data_per_g1_block + 1;
-
-        const final_sequence = Array.from({
-          length: codewords + Math.floor((remainder_bits + 7) / 8),
-        }).fill(0) as number[];
-
-        for (let i = 0; i < group_1_blocks * data_per_g1_block; i++) {
-          let col = i % data_per_g1_block;
-          let row = Math.floor(i / data_per_g1_block);
-          final_sequence[col * blocks + row] = i;
-        }
-        for (let i = 0; i < group_2_blocks * data_per_g2_block; i++) {
-          let col = i % data_per_g2_block;
-          let row = Math.floor(i / data_per_g2_block);
-
-          // 0 iff last column, else group_1_blocks
-          let row_offset =
-            (1 - Math.floor(col / (data_per_g2_block - 1))) * group_1_blocks;
-          final_sequence[col * blocks + row + row_offset] =
-            i + group_1_blocks * data_per_g1_block;
-        }
-
-        // -- END SECTION COPIED FROM FUQR -- //
-
-        const headerBits = headerBitLen(version);
-        // const headerLength = dataStart / 8;
-
-        const remainderStart = codewords * 8;
-        const eccStart = remainderStart - NUM_EC_CODEWORDS[version][ecl] * 8;
-
-        const textBits = new TextEncoder().encode(props.text).length * 8;
-
-        let i = 0;
-        let start = qrWidth - 1;
-        let end = -1;
-        let inc = -1;
-
-        const colors =
-          props.section === "codewords"
-            ? [PALETTE[2], PALETTE[2], PALETTE[2], PALETTE[1], "black"]
-            : [PALETTE[3], PALETTE[2], PALETTE[0], PALETTE[1], "black"];
-
-        for (let x = qrWidth - 1; x > 0; x -= 2) {
-          if (x === 6) {
-            x -= 1;
-          }
-          for (let y = start; y !== end; y += inc) {
-            if (matrix[y * qrWidth + x] & Module.DATA) {
-              if (i >= remainderStart) {
-                ctx.fillStyle = colors[4];
-              } else if (i >= eccStart) {
-                ctx.fillStyle = colors[3];
-              } else {
-                const seqIndex = Math.floor(i / 8);
-                const seqPos = i % 8;
-                const dataIndex = final_sequence[seqIndex] * 8 + seqPos;
-                if (dataIndex >= textBits + headerBits) {
-                  ctx.fillStyle = colors[2];
-                } else if (dataIndex >= headerBits) {
-                  ctx.fillStyle = colors[1];
-                } else {
-                  ctx.fillStyle = colors[0];
-                }
-              }
-              ctx.fillRect(x + margin, y + margin, 1, 1);
-              i++;
-            }
-            if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-              if (i >= remainderStart) {
-                ctx.fillStyle = colors[4];
-              } else if (i >= eccStart) {
-                ctx.fillStyle = colors[3];
-              } else {
-                const seqIndex = Math.floor(i / 8);
-                const seqPos = i % 8;
-                const dataIndex = final_sequence[seqIndex] * 8 + seqPos;
-                if (dataIndex >= textBits + headerBits) {
-                  ctx.fillStyle = colors[2];
-                } else if (dataIndex >= headerBits) {
-                  ctx.fillStyle = colors[1];
-                } else {
-                  ctx.fillStyle = colors[0];
-                }
-              }
-              ctx.fillRect(x - 1 + margin, y + margin, 1, 1);
-              i++;
-            }
-          }
-          start += inc * (qrWidth - 1);
-          end -= inc * (qrWidth + 1);
-          inc *= -1;
-        }
-        break;
-      case "mask":
-        ctx.fillStyle = gray;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            const module = matrix[y * qrWidth + x];
-            if (module & Module.FINDER) continue;
-            if (module & Module.DATA) {
-              ctx.fillStyle = maskValue(mask, x, y) ? focusON : focusOFF;
-            } else {
-              if (!(module & Module.ON)) continue;
-              ctx.fillStyle = gray;
-            }
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-        break;
-      default:
-        ctx.fillStyle = fgColor;
-        renderFinder(ctx, props.finderShape, qrWidth);
-        for (let y = 0; y < qrWidth; y++) {
-          for (let x = 0; x < qrWidth; x++) {
-            if (matrix[y * qrWidth + x] & Module.FINDER) continue;
-            if (!(matrix[y * qrWidth + x] & Module.ON)) continue;
-            ctx.fillRect(x + margin, y + margin, 1, 1);
-          }
-        }
-    }
+    size = props.qrCode.version * 4 + 17 + 2 * margin;
+    nextCanvas.width = size;
+    nextCanvas.height = size;
+    drawQr(nextCanvas.getContext("2d")!, props);
 
     if (animate) {
       nextCanvas.animate([{ opacity: 0 }, { opacity: 1 }], {
@@ -424,10 +101,7 @@ export function QrCanvas(props: Props) {
         <polyline
           points={
             props.qrCode && props.section === "zigzag"
-              ? getZigzagPoints(
-                  props.qrCode.matrix,
-                  props.qrCode.version * 4 + 17,
-                )
+              ? getZigzagPoints(props.qrCode)
               : ""
           }
           fill="none"
@@ -438,6 +112,187 @@ export function QrCanvas(props: Props) {
       </svg>
     </>
   );
+}
+
+// fill color for a non-finder module, or undefined to leave it blank
+type ModuleColor = (module: number, x: number, y: number) => string | undefined;
+
+const ifOn = (color: string) => (module: number) =>
+  module & Module.ON ? color : undefined;
+
+const grayIfOn = ifOn(gray);
+
+function drawQr(ctx: CanvasRenderingContext2D, props: Props) {
+  const { matrix, version, mask } = props.qrCode;
+  const qrWidth = version * 4 + 17;
+  const size = qrWidth + 2 * margin;
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, size, size);
+
+  let finderColor = gray;
+  let color: ModuleColor = grayIfOn;
+
+  const highlight = HIGHLIGHT[props.section];
+  if (highlight != null) {
+    color = (module) =>
+      module & highlight
+        ? module & Module.ON
+          ? focusON
+          : focusOFF
+        : grayIfOn(module);
+  } else {
+    switch (props.section) {
+      case "finder":
+        if (props.finderShape === "Perfect") {
+          ctx.fillStyle = focusOFF;
+          ctx.fillRect(margin, margin, 7, 7);
+          ctx.fillRect(margin + qrWidth - 7, margin, 7, 7);
+          ctx.fillRect(margin, margin + qrWidth - 7, 7, 7);
+          finderColor = focusON;
+        } else {
+          finderColor = fgColor;
+          color = ifOn(fgColor);
+        }
+        break;
+      case "no-alignment-timing":
+        finderColor = fgColor;
+        color = (module, x, y) =>
+          module & Module.TIMING ||
+          (module & Module.ALIGNMENT &&
+            (!props.brap || x < qrWidth - 9 || y < qrWidth - 9))
+            ? focusOFF
+            : module & Module.ON
+              ? fgColor
+              : undefined;
+        break;
+      case "mask":
+        color = (module, x, y) =>
+          module & Module.DATA
+            ? MASKERS[mask](x, y)
+              ? focusON
+              : focusOFF
+            : grayIfOn(module);
+        break;
+      case "zigzag":
+      case "codewords":
+      case "breakdown":
+      case "encoding":
+        // data modules are drawn afterwards
+        color = (module) =>
+          module & Module.DATA ? undefined : grayIfOn(module);
+        break;
+      default:
+        finderColor = fgColor;
+        color = ifOn(fgColor);
+    }
+  }
+
+  ctx.fillStyle = finderColor;
+  renderFinder(ctx, props.finderShape, qrWidth);
+
+  for (let y = 0; y < qrWidth; y++) {
+    for (let x = 0; x < qrWidth; x++) {
+      const module = matrix[y * qrWidth + x];
+      if (module & Module.FINDER) continue;
+      const fill = color(module, x, y);
+      if (fill == null) continue;
+      ctx.fillStyle = fill;
+      ctx.fillRect(x + margin, y + margin, 1, 1);
+    }
+  }
+
+  switch (props.section) {
+    case "zigzag":
+      drawBytes(ctx, props.qrCode, props.showBytes);
+      break;
+    case "codewords":
+    case "breakdown":
+    case "encoding":
+      drawEncoding(ctx, props.qrCode, props.section, props.text);
+      break;
+  }
+}
+
+function forEachDataModule(
+  { matrix, version }: QrCode,
+  callback: (x: number, y: number) => void,
+) {
+  const qrWidth = version * 4 + 17;
+  iterateMostlyDataModules(qrWidth, (x, y) => {
+    if (matrix[y * qrWidth + x] & Module.DATA) callback(x, y);
+  });
+}
+
+// colors each byte in placement order, remainder bits are black
+function drawBytes(
+  ctx: CanvasRenderingContext2D,
+  qrCode: QrCode,
+  showBytes: boolean,
+) {
+  const numBits = (NUM_DATA_BITS[qrCode.version] >> 3) * 8;
+  const colors = showBytes ? PALETTE : [focusOFF];
+
+  let i = 0;
+  forEachDataModule(qrCode, (x, y) => {
+    ctx.fillStyle = i < numBits ? colors[(i >> 3) % colors.length] : "black";
+    ctx.fillRect(x + margin, y + margin, 1, 1);
+    i++;
+  });
+}
+
+// colors each bit by what it encodes: header, content, padding, ec, remainder
+function drawEncoding(
+  ctx: CanvasRenderingContext2D,
+  qrCode: QrCode,
+  section: string,
+  text: string,
+) {
+  const { version, ecl, mask } = qrCode;
+  const qrWidth = version * 4 + 17;
+  const blueprint = buildBlueprint(version, ecl, mask);
+
+  const headerEnd = 4 + ByteMode.cciLen(version);
+  const contentEnd = new ByteEncoder(text).bitLen(version);
+
+  const [header, content, padding, ec, remainder] =
+    section === "codewords"
+      ? [PALETTE[2], PALETTE[2], PALETTE[2], PALETTE[1], "black"]
+      : [PALETTE[3], PALETTE[2], PALETTE[0], PALETTE[1], "black"];
+
+  let i = 0;
+  forEachDataModule(qrCode, (x, y) => {
+    // (block << 8 | offset) + 1, or 0 for remainder bits
+    const key = blueprint.matrix[y * qrWidth + x] >>> 8;
+    if (key === 0) {
+      ctx.fillStyle = remainder;
+    } else {
+      const block = (key - 1) >> 8;
+      const offset = (key - 1) & 0xff;
+      // group 2 blocks hold one extra message byte
+      const g2Before = Math.max(0, block - blueprint.g1Blocks);
+      const messageLen =
+        blueprint.messagePerG1 + (block >= blueprint.g1Blocks ? 1 : 0);
+      if (offset >= messageLen) {
+        ctx.fillStyle = ec;
+      } else {
+        const blockStart = block * blueprint.messagePerG1 + g2Before;
+        const bit = (blockStart + offset) * 8 + (i % 8);
+        ctx.fillStyle =
+          bit < headerEnd ? header : bit < contentEnd ? content : padding;
+      }
+    }
+    ctx.fillRect(x + margin, y + margin, 1, 1);
+    i++;
+  });
+}
+
+function getZigzagPoints(qrCode: QrCode) {
+  let points = "";
+  forEachDataModule(qrCode, (x, y) => {
+    points += `${x},${y} `;
+  });
+  return points;
 }
 
 function renderFinder(
@@ -504,159 +359,3 @@ function renderFinder(
     }
   }
 }
-
-function getZigzagPoints(matrix: Uint8Array, qrWidth: number) {
-  let points = "";
-  let start = qrWidth - 1;
-  let end = -1;
-  let inc = -1;
-
-  for (let x = qrWidth - 1; x > 0; x -= 2) {
-    if (x === 6) {
-      x -= 1;
-    }
-    for (let y = start; y !== end; y += inc) {
-      if (matrix[y * qrWidth + x] & Module.DATA) {
-        points += `${x},${y} `;
-      }
-      if (matrix[y * qrWidth + x - 1] & Module.DATA) {
-        points += `${x - 1},${y} `;
-      }
-    }
-    start += inc * (qrWidth - 1);
-    end -= inc * (qrWidth + 1);
-    inc *= -1;
-  }
-  return points;
-}
-
-function maskValue(mask: number, x: number, y: number) {
-  switch (mask) {
-    case 0:
-      return (y + x) % 2 === 0;
-    case 1:
-      return y % 2 === 0;
-    case 2:
-      return x % 3 === 0;
-    case 3:
-      return (y + x) % 3 === 0;
-    case 4:
-      return (Math.floor(y / 2) + Math.floor(x / 3)) % 2 === 0;
-    case 5:
-      return ((y * x) % 2) + ((y * x) % 3) === 0;
-    case 6:
-      return (((y * x) % 2) + ((y * x) % 3)) % 2 === 0;
-    case 7:
-      return (((y + x) % 2) + ((y * x) % 3)) % 2 === 0;
-  }
-}
-
-const Module = {
-  ON: 1 << 0,
-  DATA: 1 << 1,
-  FINDER: 1 << 2,
-  ALIGNMENT: 1 << 3,
-  TIMING: 1 << 4,
-  FORMAT: 1 << 5,
-  VERSION: 1 << 6,
-  MODIFIER: 1 << 7,
-};
-
-function headerBitLen(version: number) {
-  return 4 + (version < 10 ? 8 : 16);
-}
-
-const NUM_DATA_MODULES = [
-  0, 208, 359, 567, 807, 1079, 1383, 1568, 1936, 2336, 2768, 3232, 3728, 4256,
-  4651, 5243, 5867, 6523, 7211, 7931, 8683, 9252, 10068, 10916, 11796, 12708,
-  13652, 14628, 15371, 16411, 17483, 18587, 19723, 20891, 22091, 23008, 24272,
-  25568, 26896, 28256, 29648,
-];
-
-const NUM_EC_CODEWORDS = [
-  [0, 0, 0, 0],
-  [7, 10, 13, 17],
-  [10, 16, 22, 28],
-  [15, 26, 36, 44],
-  [20, 36, 52, 64],
-  [26, 48, 72, 88],
-  [36, 64, 96, 112],
-  [40, 72, 108, 130],
-  [48, 88, 132, 156],
-  [60, 110, 160, 192],
-  [72, 130, 192, 224],
-  [80, 150, 224, 264],
-  [96, 176, 260, 308],
-  [104, 198, 288, 352],
-  [120, 216, 320, 384],
-  [132, 240, 360, 432],
-  [144, 280, 408, 480],
-  [168, 308, 448, 532],
-  [180, 338, 504, 588],
-  [196, 364, 546, 650],
-  [224, 416, 600, 700],
-  [224, 442, 644, 750],
-  [252, 476, 690, 816],
-  [270, 504, 750, 900],
-  [300, 560, 810, 960],
-  [312, 588, 870, 1050],
-  [336, 644, 952, 1110],
-  [360, 700, 1020, 1200],
-  [390, 728, 1050, 1260],
-  [420, 784, 1140, 1350],
-  [450, 812, 1200, 1440],
-  [480, 868, 1290, 1530],
-  [510, 924, 1350, 1620],
-  [540, 980, 1440, 1710],
-  [570, 1036, 1530, 1800],
-  [570, 1064, 1590, 1890],
-  [600, 1120, 1680, 1980],
-  [630, 1204, 1770, 2100],
-  [660, 1260, 1860, 2220],
-  [720, 1316, 1950, 2310],
-  [750, 1372, 2040, 2430],
-];
-
-const NUM_BLOCKS = [
-  [0, 0, 0, 0],
-  [1, 1, 1, 1],
-  [1, 1, 1, 1],
-  [1, 1, 2, 2],
-  [1, 2, 2, 4],
-  [1, 2, 4, 4],
-  [2, 4, 4, 4],
-  [2, 4, 6, 5],
-  [2, 4, 6, 6],
-  [2, 5, 8, 8],
-  [4, 5, 8, 8],
-  [4, 5, 8, 11],
-  [4, 8, 10, 11],
-  [4, 9, 12, 16],
-  [4, 9, 16, 16],
-  [6, 10, 12, 18],
-  [6, 10, 17, 16],
-  [6, 11, 16, 19],
-  [6, 13, 18, 21],
-  [7, 14, 21, 25],
-  [8, 16, 20, 25],
-  [8, 17, 23, 25],
-  [9, 17, 23, 34],
-  [9, 18, 25, 30],
-  [10, 20, 27, 32],
-  [12, 21, 29, 35],
-  [12, 23, 34, 37],
-  [12, 25, 34, 40],
-  [13, 26, 35, 42],
-  [14, 28, 38, 45],
-  [15, 29, 40, 48],
-  [16, 31, 43, 51],
-  [17, 33, 45, 54],
-  [18, 35, 48, 57],
-  [19, 37, 51, 60],
-  [19, 38, 53, 63],
-  [20, 40, 56, 66],
-  [21, 43, 59, 70],
-  [22, 45, 62, 74],
-  [24, 47, 65, 77],
-  [25, 49, 68, 81],
-];

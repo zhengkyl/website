@@ -1,4 +1,4 @@
-import { type Ecl, generate, type Mask } from "fuqr";
+import { type Ecl, generate, type Mask, type QrCode } from "furious-qr";
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { PALETTE, QrCanvas } from "./QrCanvas";
 import { Sa } from "./mdx";
@@ -79,8 +79,7 @@ export function QrTutorial() {
     ? 1
     : 1 / (Math.abs(Math.cos(angleRad)) + Math.abs(Math.sin(angleRad)));
 
-  // todo type from fuqr
-  const qrCode = useRef<any>(null!);
+  const qrCode = useRef<QrCode>(null!);
   const prevText = useRef(text);
 
   if (
@@ -116,11 +115,10 @@ export function QrTutorial() {
         <div
           className="max-w-[30vh] sm:max-w-unset mx-auto relative border"
           style={{
-            transform: `${
-              perspective
-                ? "scale(0.7) perspective(150vmin) rotateX(45deg)"
-                : ""
-            } rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
+            transform: `${perspective
+              ? "scale(0.7) perspective(150vmin) rotateX(45deg)"
+              : ""
+              } rotateZ(${zRot}deg) rotateY(${mirror ? 180 : 0}deg)`,
             filter: `invert(${invert ? 1 : 0})`,
             scale,
             transitionProperty: "transform, scale",
@@ -139,13 +137,12 @@ export function QrTutorial() {
           />
         </div>
         <div
-          className={`flex-wrap justify-center gap-x-4 gap-y-2 py-2 transition-opacity text-sm sm:text-base ${
-            section === "codewords" ||
+          className={`flex-wrap justify-center gap-x-4 gap-y-2 py-2 transition-opacity text-sm sm:text-base ${section === "codewords" ||
             section === "breakdown" ||
             section === "encoding"
-              ? "flex"
-              : "hidden"
-          }`}
+            ? "flex"
+            : "hidden"
+            }`}
         >
           {section !== "codewords" && (
             <div className="flex gap-1 items-center">
