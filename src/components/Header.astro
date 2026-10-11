@@ -11,12 +11,15 @@ sections.pop();
   </a>
   {
     sections.map((section, i) => (
-      <a
-        href={`/${sections.slice(0, i + 1).join("/")}`}
-        class="hover:text-zinc-400 transition-colors cursor-pointer"
-      >
-        {section.replaceAll("_", " ")}
-      </a>
+      <>
+        {" "}
+        <a
+          href={`/${sections.slice(0, i + 1).join("/")}`}
+          class="hover:text-zinc-400 transition-colors cursor-pointer"
+        >
+          {section.replaceAll("_", " ")}
+        </a>
+      </>
     ))
   }
 </nav>

@@ -8,7 +8,7 @@ import preact from "@astrojs/preact";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [mdx(), UnoCSS(), preact()],
+  integrations: [UnoCSS(), mdx(), preact()],
   redirects: {
     "/posts/ssh_game_of_life": "/writes/ssh-game-of-life",
     "/posts/crafting_qr_codes": "/writes/crafting-qr-codes",

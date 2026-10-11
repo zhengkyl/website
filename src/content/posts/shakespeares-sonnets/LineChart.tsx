@@ -183,7 +183,7 @@ export function LineChart({
             )}
           </svg>
         )}
-        {!width && <div style={{ height }} />}
+        {!width && <div style={{ height: `${height}px` }} />}
 
         {active !== null && (
           <div
