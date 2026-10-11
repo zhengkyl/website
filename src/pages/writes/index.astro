@@ -20,7 +20,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
     {
       posts.map((post) => (
         <li>
-          <a href={`/writes/${post.id}`}>{post.data.title}</a>
+          <a href={`/writes/${post.id}`}>{post.data.title}</a>{" "}
           <span>{dateFormat.format(post.data.posted)}</span>
         </li>
       ))
