@@ -602,7 +602,9 @@ export function Noteblocks({
                   const i = flatIdx++;
                   const PUNCT = `",.`;
                   const first = PUNCT.includes(word[0]) ? 1 : 0;
-                  const last = PUNCT.includes(word.at(-1)!) ? word.length - 1 : word.length;
+                  const last = PUNCT.includes(word.at(-1)!)
+                    ? word.length - 1
+                    : word.length;
                   const lead = word.slice(0, first);
                   const core = word.slice(first, last);
                   const trail = word.slice(last);

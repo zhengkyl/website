@@ -72,7 +72,12 @@ function LazyScrawl({
   );
 }
 
-function Bar({ day, wpm, max, chosen }: {
+function Bar({
+  day,
+  wpm,
+  max,
+  chosen,
+}: {
   day: number;
   wpm: number;
   max: number;
@@ -83,8 +88,9 @@ function Bar({ day, wpm, max, chosen }: {
   return (
     <div class="flex items-center">
       <span
-        class={`w-6 shrink-0 pr-1.5 text-right text-[10px] leading-none tabular-nums ${chosen ? "text-stone-700 font-bold" : "text-stone-400"
-          }`}
+        class={`w-6 shrink-0 pr-1.5 text-right text-[10px] leading-none tabular-nums ${
+          chosen ? "text-stone-700 font-bold" : "text-stone-400"
+        }`}
       >
         {day}
       </span>
@@ -94,8 +100,9 @@ function Bar({ day, wpm, max, chosen }: {
           style={{ width: `${(wpm / max) * 100}%` }}
         >
           <span
-            class={`absolute left-full top-1/2 -translate-y-1/2 ml-1.5 text-[10px] leading-none tabular-nums whitespace-nowrap ${chosen ? "text-stone-700 font-bold" : "text-stone-500"
-              }`}
+            class={`absolute left-full top-1/2 -translate-y-1/2 ml-1.5 text-[10px] leading-none tabular-nums whitespace-nowrap ${
+              chosen ? "text-stone-700 font-bold" : "text-stone-500"
+            }`}
           >
             {wpm.toFixed(1)}
           </span>

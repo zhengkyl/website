@@ -188,7 +188,7 @@ export function Scrawl({ data, width, height, timeline, fitHeight }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const animRef = useRef<number>(0);
   const currentTimeRef = useRef<number>(0);
-  const renderRef = useRef<(t: number) => void>(() => { });
+  const renderRef = useRef<(t: number) => void>(() => {});
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -404,22 +404,20 @@ function formatDuration(ms: number): string {
   return `~${m}m ${rem}s`;
 }
 
-const letterRe = /\p{L}/u
+const letterRe = /\p{L}/u;
 
 export function lettersInText(text: string) {
-  let count = 0
+  let count = 0;
   for (const c of text) {
     if (letterRe.test(c)) {
-      count++
+      count++;
     }
   }
-  return count
+  return count;
 }
 
 function formatWpm(text: string, ms: number) {
-  return (
-    Math.round((lettersInText(text) / 5 / (ms / 60000)) * 10) / 10
-  );
+  return Math.round((lettersInText(text) / 5 / (ms / 60000)) * 10) / 10;
 }
 
 type Sonnet = { scrawlUrl: string; text: string };
